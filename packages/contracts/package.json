@@ -1,0 +1,42 @@
+{
+  "name": "@web3-dapp-scaffold/contracts",
+  "private": true,
+  "scripts": {
+    "start": "hardhat node",
+    "test": "hardhat test",
+    "build": "hardhat compile",
+    "clean": "hardhat clean",
+    "deploy": "hardhat clean && hardhat run scripts/deploy.ts",
+    "deploy:local": "npm run deploy --network localhost",
+    "deploy:mumbai": "npm run deploy --network mumbai",
+    "deploy:rinkeby": "npm run deploy --network rinkeby",
+    "deploy:matic": "npm run deploy --network matic"
+  },
+  "dependencies": {
+    "@opengsn/contracts": "^2.2.5",
+    "@openzeppelin/contracts": "^4.4.2"
+  },
+  "devDependencies": {
+    "@ethersproject/abi": "^5.5.0",
+    "@ethersproject/bytes": "^5.5.0",
+    "@ethersproject/providers": "^5.5.0",
+    "@nomiclabs/hardhat-ethers": "^2.0.3",
+    "@nomiclabs/hardhat-etherscan": "^2.1.8",
+    "@typechain/ethers-v5": "^8.0.5",
+    "@typechain/hardhat": "^3.0.0",
+    "@types/chai": "^4.3.0",
+    "@types/mocha": "^9.0.0",
+    "@types/node": "^16.11.12",
+    "@typescript-eslint/eslint-plugin": "^5.7.0",
+    "@typescript-eslint/parser": "^5.7.0",
+    "chai": "^4.3.4",
+    "dotenv": "^10.0.0",
+    "eslint": "^8.4.1",
+    "ethers": "^5.5.2",
+    "hardhat": "^2.7.1",
+    "hardhat-gas-reporter": "^1.0.6",
+    "ts-node": "^10.4.0",
+    "typechain": "^6.0.5",
+    "typescript": "^4.5.3"
+  }
+}

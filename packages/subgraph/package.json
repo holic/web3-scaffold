@@ -1,0 +1,19 @@
+{
+  "name": "@web3-dapp-scaffold/subgraph",
+  "private":true,
+  "scripts": {
+    "codegen": "graph codegen subgraph*.yaml",
+    "build": "graph build subgraph*.yaml",
+    "deploy:matic": "graph deploy --node https://api.thegraph.com/deploy/ holic/example-nft subgraph-matic.yaml",
+    "deploy:mumbai": "graph deploy --node https://api.thegraph.com/deploy/ holic/example-nft-testnet subgraph-mumbai.yaml"
+  },
+  "dependencies": {
+    "@graphprotocol/graph-cli": "0.25.1",
+    "@graphprotocol/graph-ts": "0.24.1"
+  },
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^5.7.0",
+    "@typescript-eslint/parser": "^5.7.0",
+    "typescript": "^4.5.4"
+  }
+}
