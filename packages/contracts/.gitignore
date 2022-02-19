@@ -1,2 +1,5 @@
 cache
 .env
+artifacts
+typechain-types
+*.tsbuildinfo
