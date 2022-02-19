@@ -41,27 +41,15 @@ export const useTransaction = (
   // TODO: don't send transaction if wallet is in a non-idle state?
   // TODO: catch errors and build better messages
 
-  const sendTransaction = useCallback(async (): Promise<boolean> => {
+  const connectAndTransact = useCallback(async () => {
     let currentProvider = provider;
 
     if (!currentProvider) {
       debug("no provider, connecting to wallet");
       useStore.setState({ walletState: WalletState.connectingWallet });
-      try {
-        const connectState = await connect();
-        debug("got connect state", connectState);
-        currentProvider = connectState.provider;
-      } catch (walletError: any) {
-        // ugh, web3modal doesn't emit an error properly when you cancel
-        // a connect wallet request
-        // https://github.com/Web3Modal/web3modal/pull/300
-        if (typeof walletError === "undefined") {
-          debug("probably cancelled in metamask, returning generic error");
-          walletError = new Error("Could not connect to wallet");
-        }
-        useStore.setState({ walletState: WalletState.idle, walletError });
-        return false;
-      }
+      const connectState = await connect();
+      debug("got connect state", connectState);
+      currentProvider = connectState.provider;
     }
 
     // TODO: check this for metamask-provided chain IDs (doing just add and not switch gave an error)
@@ -74,20 +62,13 @@ export const useTransaction = (
     } catch (switchError: any) {
       // This error code indicates that the chain has not been added to MetaMask.
       if (switchError.code === 4902) {
-        try {
-          await currentProvider.send("wallet_addEthereumChain", [chain]);
-          // Immediately check if the network is correct, because web3modal
-          // doesn't throw if the network switch is cancelled from above call
-          // https://github.com/Web3Modal/web3modal/issues/363
-          const currentNetwork = await currentProvider.getNetwork();
-          if (currentNetwork.chainId !== chainId) {
-            throw new Error(
-              `You must switch your wallet to ${chain.chainName}`
-            );
-          }
-        } catch (walletError: any) {
-          useStore.setState({ walletState: WalletState.idle, walletError });
-          return false;
+        await currentProvider.send("wallet_addEthereumChain", [chain]);
+        // Immediately check if the network is correct, because web3modal
+        // doesn't throw if the network switch is cancelled from above call
+        // https://github.com/Web3Modal/web3modal/issues/363
+        const currentNetwork = await currentProvider.getNetwork();
+        if (currentNetwork.chainId !== chainId) {
+          throw new Error(`You must switch your wallet to ${chain.chainName}`);
         }
       } else {
         throw switchError;
@@ -96,46 +77,30 @@ export const useTransaction = (
 
     debug("asking wallet to send transaction");
     useStore.setState({ walletState: WalletState.sendingTransaction });
-    let tx: ContractTransaction;
-    try {
-      tx = await createTransaction(currentProvider);
-    } catch (walletError: any) {
-      console.log("got error", walletError);
-      useStore.setState({ walletState: WalletState.idle, walletError });
-      return false;
-    }
+    const tx = await createTransaction(currentProvider);
 
     debug("waiting for transaction confirmations");
     useStore.setState({ walletState: WalletState.confirmingTransaction });
+    await tx.wait();
+
+    debug("transaction complete!");
+  }, [connect, createTransaction, provider]);
+
+  const sendTransaction = useCallback(async () => {
     try {
-      await tx.wait();
+      await connectAndTransact();
+      useStore.setState({ walletState: WalletState.idle, walletError: null });
+      return true;
     } catch (walletError: any) {
+      debug("got error", walletError);
       useStore.setState({ walletState: WalletState.idle, walletError });
       return false;
     }
+  }, [connectAndTransact]);
 
-    debug("transaction complete!");
-    useStore.setState({ walletState: WalletState.idle, walletError: null });
-    return true;
-  }, [connect, createTransaction, provider]);
-
-  return { sendTransaction, walletState, walletError };
+  return {
+    sendTransaction,
+    walletState,
+    walletError,
+  };
 };
-
-// if (currentProvider.network.chainId !== chainId) {
-//   debug("wrong network, asking wallet to switch");
-//   try {
-//     useStore.setState({ walletState: WalletState.switchingNetwork });
-//     await currentProvider.send("wallet_switchEthereumChain", [
-//       { chainId: chain.chainId },
-//     ]);
-//   } catch (error: any) {
-//     if (error.code === 4902) {
-//       useStore.setState({ walletState: WalletState.addingNetwork });
-//       await currentProvider.send("wallet_addEthereumChain", [chain]);
-//     } else {
-//       useStore.setState({ walletState: WalletState.idle, walletError });
-//       return;
-//     }
-//   }
-// }

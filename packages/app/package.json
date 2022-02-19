@@ -14,12 +14,13 @@
     "@ethersproject/providers": "^5.5.0",
     "@web3-dapp-scaffold/contracts": "workspace:*",
     "classnames": "^2.3.1",
+    "debug": "^4.3.3",
     "graphql": "^16.2.0",
     "next": "12.1.0",
     "react": "17.0.2",
     "react-dom": "17.0.2",
     "urql": "^2.0.6",
-    "web3modal": "^1.9.4",
+    "web3modal": "^1.9.5",
     "zustand": "^3.6.7"
   },
   "devDependencies": {
@@ -28,6 +29,7 @@
     "@graphql-codegen/typescript-operations": "^2.2.2",
     "@graphql-codegen/typescript-urql": "^3.4.2",
     "@next/eslint-plugin-next": "^12.1.0",
+    "@types/debug": "^4.1.7",
     "@types/node": "17.0.0",
     "@types/react": "17.0.37",
     "autoprefixer": "^10.4.0",
