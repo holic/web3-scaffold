@@ -1,3 +1,5 @@
+import "@nomiclabs/hardhat-ethers";
+
 import { ContractFactory } from "ethers";
 import fs from "fs/promises";
 import hre, { ethers, network } from "hardhat";
