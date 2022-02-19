@@ -29,15 +29,15 @@ export default {
       },
     },
     mumbai: {
-      url: process.env.POLYGON_MUMBAI_URL,
+      url: process.env.POLYGON_MUMBAI_RPC_URL,
       accounts: [process.env.POLYGON_MUMBAI_DEPLOYER_PRIVATE_KEY],
     },
     rinkeby: {
-      url: process.env.ETHEREUM_RINKEBY_URL,
+      url: process.env.ETHEREUM_RINKEBY_RPC_URL,
       accounts: [process.env.ETHEREUM_RINKEBY_DEPLOYER_PRIVATE_KEY],
     },
     matic: {
-      url: process.env.POLYGON_MAINNET_URL,
+      url: process.env.POLYGON_MAINNET_RPC_URL,
       accounts: [process.env.POLYGON_MAINNET_DEPLOYER_PRIVATE_KEY],
     },
   },
