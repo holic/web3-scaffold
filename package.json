@@ -1,7 +1,9 @@
 {
   "name": "web3-dapp-scaffold",
   "private": true,
-  "scripts": {},
+  "scripts": {
+    "dev": "pnpm -r dev --stream"
+  },
   "devDependencies": {
     "eslint": "^8.4.1",
     "eslint-config-prettier": "^8.3.0",
