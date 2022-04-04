@@ -56,9 +56,11 @@ export const useTransaction = (
     debug("asking wallet to add/switch network");
     useStore.setState({ walletState: WalletState.switchingNetwork });
     try {
-      await currentProvider.send("wallet_switchEthereumChain", [
-        { chainId: chain.chainId },
-      ]);
+      if (currentProvider.network.chainId !== chainId) {
+        await currentProvider.send("wallet_switchEthereumChain", [
+          { chainId: chain.chainId },
+        ]);
+      }
     } catch (switchError: any) {
       // This error code indicates that the chain has not been added to MetaMask.
       if (switchError.code === 4902) {
