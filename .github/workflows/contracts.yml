@@ -1,0 +1,32 @@
+---
+name: contracts
+on:
+  push:
+jobs:
+  tests:
+    defaults:
+      run:
+        working-directory: ./packages/contracts
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [16.x]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v2
+        with:
+          node-version: ${{ matrix.node-version }}
+      - name: Install pnpm and install dependencies 
+        uses: pnpm/action-setup@v2.1.0
+        with:
+          version: 6.0.2
+          run_install: true
+      - name: Run tests
+        run: pnpm run test
+        env:
+          # FIXME hardhat currently pre-configured with many more vars than this
+          # it won't load at all unless they are all defined
+          RPC_ENDPOINT: ${{ secrets.RPC_ENDPOINT }}
+          PRIVATE_KEY: ${{ secrets.PRIVATE_KEY }}
