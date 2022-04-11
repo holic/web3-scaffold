@@ -1,6 +1,9 @@
 {
   "name": "web3-dapp-scaffold",
   "private": true,
+  "engines": {
+    "node": ">=14 <16"
+  },
   "scripts": {
     "dev": "pnpm -r dev --stream"
   },
