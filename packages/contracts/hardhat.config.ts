@@ -20,34 +20,38 @@ export default {
       },
     },
   },
-  networks: {
-    hardhat: {
-      chainId: 1337,
-      mining: {
-        auto: false,
-        interval: 1000,
-      },
-    },
-    mumbai: {
-      url: process.env.POLYGON_MUMBAI_RPC_URL,
-      accounts: [process.env.POLYGON_MUMBAI_DEPLOYER_PRIVATE_KEY],
-    },
-    rinkeby: {
-      url: process.env.ETHEREUM_RINKEBY_RPC_URL,
-      accounts: [process.env.ETHEREUM_RINKEBY_DEPLOYER_PRIVATE_KEY],
-    },
-    matic: {
-      url: process.env.POLYGON_MAINNET_RPC_URL,
-      accounts: [process.env.POLYGON_MAINNET_DEPLOYER_PRIVATE_KEY],
-    },
-  },
-  etherscan: {
-    apiKey: process.env.ETHERSCAN_API_KEY,
-  },
-  gasReporter: {
-    currency: "USD",
-    gasPrice: 100,
-    token: "MATIC",
-    coinmarketcap: process.env.COINMARKETCAP_API_KEY,
-  },
+  ...(process.env.NODE_ENV !== "production"
+    ? {
+        networks: {
+          hardhat: {
+            chainId: 1337,
+            mining: {
+              auto: false,
+              interval: 1000,
+            },
+          },
+          mumbai: {
+            url: process.env.POLYGON_MUMBAI_RPC_URL,
+            accounts: [process.env.POLYGON_MUMBAI_DEPLOYER_PRIVATE_KEY],
+          },
+          rinkeby: {
+            url: process.env.ETHEREUM_RINKEBY_RPC_URL,
+            accounts: [process.env.ETHEREUM_RINKEBY_DEPLOYER_PRIVATE_KEY],
+          },
+          matic: {
+            url: process.env.POLYGON_MAINNET_RPC_URL,
+            accounts: [process.env.POLYGON_MAINNET_DEPLOYER_PRIVATE_KEY],
+          },
+        },
+        etherscan: {
+          apiKey: process.env.ETHERSCAN_API_KEY,
+        },
+        gasReporter: {
+          currency: "USD",
+          gasPrice: 100,
+          token: "MATIC",
+          coinmarketcap: process.env.COINMARKETCAP_API_KEY,
+        },
+      }
+    : {}),
 };
