@@ -1,11 +1,10 @@
 {
   "name": "@web3-dapp-scaffold/subgraph",
-  "private": true,
+  "private":true,
   "engines": {
     "node": ">=14 <16"
   },
   "scripts": {
-    "preinstall": "only-allow pnpm",
     "codegen": "graph codegen subgraph*.yaml",
     "build": "graph build subgraph*.yaml",
     "deploy:matic": "graph deploy --node https://api.thegraph.com/deploy/ holic/example-nft subgraph-matic.yaml",
@@ -14,8 +13,5 @@
   "dependencies": {
     "@graphprotocol/graph-cli": "0.25.1",
     "@graphprotocol/graph-ts": "0.24.1"
-  },
-  "devDependencies": {
-    "only-allow": "^1.1.0"
   }
 }
