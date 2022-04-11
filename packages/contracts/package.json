@@ -5,6 +5,7 @@
     "node": ">=14 <16"
   },
   "scripts": {
+    "preinstall": "yes | npx only-allow pnpm",
     "prepare": "npm run build",
     "start": "hardhat node",
     "test": "hardhat test",
