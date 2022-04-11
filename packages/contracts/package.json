@@ -5,6 +5,7 @@
     "node": ">=14 <16"
   },
   "scripts": {
+    "preinstall": "only-allow pnpm",
     "prepare": "npm run build",
     "start": "hardhat node",
     "test": "hardhat test",
@@ -37,6 +38,7 @@
     "ethers": "^5.5.2",
     "hardhat": "^2.7.1",
     "hardhat-gas-reporter": "^1.0.6",
+    "only-allow": "^1.1.0",
     "ts-node": "^10.4.0",
     "typechain": "^6.0.5",
     "typescript": "^4.5.5"
