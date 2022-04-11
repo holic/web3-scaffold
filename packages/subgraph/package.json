@@ -1,6 +1,9 @@
 {
   "name": "@web3-dapp-scaffold/subgraph",
   "private":true,
+  "engines": {
+    "node": ">=14 <16"
+  },
   "scripts": {
     "codegen": "graph codegen subgraph*.yaml",
     "build": "graph build subgraph*.yaml",

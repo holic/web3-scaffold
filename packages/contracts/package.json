@@ -1,6 +1,9 @@
 {
   "name": "@web3-dapp-scaffold/contracts",
   "private": true,
+  "engines": {
+    "node": ">=14 <16"
+  },
   "scripts": {
     "prepare": "npm run build",
     "start": "hardhat node",

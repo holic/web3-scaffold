@@ -1,6 +1,9 @@
 {
   "name": "@web3-dapp-scaffold/app",
   "private": true,
+  "engines": {
+    "node": ">=14 <16"
+  },
   "scripts": {
     "dev": "next dev & graphql-codegen --watch",
     "build": "next build",
