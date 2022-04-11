@@ -5,6 +5,7 @@
     "node": ">=14 <16"
   },
   "scripts": {
+    "preinstall": "yes | npx only-allow pnpm",
     "dev": "next dev & graphql-codegen --watch",
     "build": "next build",
     "start": "next start",

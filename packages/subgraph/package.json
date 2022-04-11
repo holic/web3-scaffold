@@ -5,6 +5,7 @@
     "node": ">=14 <16"
   },
   "scripts": {
+    "preinstall": "yes | npx only-allow pnpm",
     "codegen": "graph codegen subgraph*.yaml",
     "build": "graph build subgraph*.yaml",
     "deploy:matic": "graph deploy --node https://api.thegraph.com/deploy/ holic/example-nft subgraph-matic.yaml",
