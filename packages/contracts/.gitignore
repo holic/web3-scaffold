@@ -1,5 +1,6 @@
 cache
-.env
-artifacts
-typechain-types
+artifacts/build-info
+artifacts/**/*.dbg.json
 *.tsbuildinfo
+
+.env*
