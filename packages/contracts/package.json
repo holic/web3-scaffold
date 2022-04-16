@@ -1,12 +1,10 @@
 {
-  "name": "@web3-dapp-scaffold/contracts",
+  "name": "@web3-scaffold/contracts",
   "private": true,
   "engines": {
     "node": ">=14 <16"
   },
   "scripts": {
-    "preinstall": "yes | npx only-allow pnpm",
-    "prepare": "npm run build",
     "start": "hardhat node",
     "test": "hardhat test",
     "build": "hardhat compile && tsc --build",

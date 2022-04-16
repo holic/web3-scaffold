@@ -1,5 +1,5 @@
-import deploys from "@web3-dapp-scaffold/contracts/deploys.json";
-import { ExampleNFT__factory } from "@web3-dapp-scaffold/contracts/typechain-types";
+import deploys from "@web3-scaffold/contracts/deploys.json";
+import { ExampleNFT__factory } from "@web3-scaffold/contracts/typechain-types";
 
 import { polygonProvider } from "./providers";
 

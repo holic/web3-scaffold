@@ -1,11 +1,10 @@
 {
-  "name": "@web3-dapp-scaffold/app",
+  "name": "@web3-scaffold/app",
   "private": true,
   "engines": {
     "node": ">=14 <16"
   },
   "scripts": {
-    "preinstall": "yes | npx only-allow pnpm",
     "dev": "next dev & graphql-codegen --watch",
     "build": "next build",
     "start": "next start",
@@ -16,7 +15,7 @@
     "@ethersproject/address": "^5.5.0",
     "@ethersproject/contracts": "^5.5.0",
     "@ethersproject/providers": "^5.5.0",
-    "@web3-dapp-scaffold/contracts": "workspace:*",
+    "@web3-scaffold/contracts": "workspace:*",
     "classnames": "^2.3.1",
     "debug": "^4.3.3",
     "graphql": "^16.2.0",
