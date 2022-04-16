@@ -24,7 +24,4 @@ This is the read-only backend for your dApp and where you can offload a lot of t
 
 ### Vercel
 
-This monorepo assumes that the `app` will be deployed to Vercel. You'll need to set up your Vercel app with the following settings:
-- Build command: `pnpm run -r prepare && pnpm build`
-- Install command: `npm install -g pnpm && pnpm install`
-- Root directory: `packages/app`
+Vercel supports monorepos and pnpm out-of-the-box, but you'll need to set the "Root Directory" to `packages/app` either during the Vercel project setup or afterwards in the project settings.
