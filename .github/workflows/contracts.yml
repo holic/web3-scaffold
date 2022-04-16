@@ -1,11 +1,11 @@
 ---
 name: contracts
 on:
-  push:
+  - push
 env:
   NODE_ENV: ci
 jobs:
-  tests:
+  build:
     defaults:
       run:
         working-directory: ./packages/contracts
@@ -15,20 +15,68 @@ jobs:
         node-version: [14.x]
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
-      - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v2
+        uses: actions/checkout@v3
+        with:
+          submodules: true
+      - name: Cache pnpm modules
+        uses: actions/cache@v3
+        with:
+          path: ~/.pnpm-store
+          key: ${{ runner.os }}-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-
+      - name: Setup pnpm
+        uses: pnpm/action-setup@646cdf48217256a3d0b80361c5a50727664284f2
+        with:
+          version: 6.10.0
+      - name: Setup node
+        uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node-version }}
-      - name: Install pnpm and install dependencies 
-        uses: pnpm/action-setup@v2.1.0
+          cache: 'pnpm'
+      - name: Install node dependencies
+        run: pnpm install
+      - name: Run build step (compile contracts, generate types, etc.)
+        run: pnpm build
+      - name: Check for outdated files
+        id: outdated-files
+        uses: UnicornGlobal/has-changes-action@v1.0.11
+      - name: Outdated files detected, run `pnpm build` and commit them
+        if: steps.outdated-files.outputs.changed == 1
+        run: |
+          git status
+          git --no-pager diff
+          exit 1
+  test:
+    defaults:
+      run:
+        working-directory: ./packages/contracts
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [14.x]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
         with:
-          version: 6.0.2
-          run_install: true
+          submodules: true
+      - name: Cache pnpm modules
+        uses: actions/cache@v3
+        with:
+          path: ~/.pnpm-store
+          key: ${{ runner.os }}-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-
+      - name: Setup pnpm
+        uses: pnpm/action-setup@646cdf48217256a3d0b80361c5a50727664284f2
+        with:
+          version: 6.10.0
+      - name: Setup node
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'pnpm'
+      - name: Install node dependencies
+        run: pnpm install
       - name: Run tests
-        run: pnpm run test
-        env:
-          # FIXME hardhat currently pre-configured with many more vars than this
-          # it won't load at all unless they are all defined
-          RPC_ENDPOINT: ${{ secrets.RPC_ENDPOINT }}
-          PRIVATE_KEY: ${{ secrets.PRIVATE_KEY }}
+        run: pnpm test
