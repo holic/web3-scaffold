@@ -38,15 +38,13 @@ jobs:
         run: pnpm install
       - name: Run build step (compile contracts, generate types, etc.)
         run: pnpm build
-      - name: Check for outdated files
-        id: outdated-files
-        uses: UnicornGlobal/has-changes-action@v1.0.11
       - name: Outdated files detected, run `pnpm build` and commit them
-        if: steps.outdated-files.outputs.changed == 1
         run: |
-          git status
-          git --no-pager diff
-          exit 1
+          if [[ -n "$(git status --porcelain)" ]]; then
+            git status
+            git --no-pager diff
+            exit 1
+          fi
   test:
     defaults:
       run:
