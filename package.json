@@ -2,10 +2,11 @@
   "name": "web3-scaffold",
   "private": true,
   "engines": {
-    "node": ">=14 <16"
+    "node": "16",
+    "pnpm": "6"
   },
   "scripts": {
-    "preinstall": "yes | npx only-allow pnpm",
+    "preinstall": "npx -y only-allow pnpm",
     "dev": "pnpm -r dev --stream"
   },
   "devDependencies": {
