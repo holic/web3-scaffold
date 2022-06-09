@@ -13,7 +13,7 @@ This is the frontend of your project. It's built on [Next.js](https://nextjs.org
 
 ### contracts
 
-This is where your smart contracts live. They're written in [Solidity](https://docs.soliditylang.org/) using [Hardhat](https://hardhat.org/) to compile, test, and deploy. Types are generated with [TypeChain](https://github.com/dethcrypto/TypeChain).
+This is where your smart contracts live. They're written in [Solidity](https://docs.soliditylang.org/) using [Foundry (forge & cast)](https://book.getfoundry.sh/) to compile, test, and deploy. Types are generated with [TypeChain](https://github.com/dethcrypto/TypeChain).
 
 ### subgraph
 
