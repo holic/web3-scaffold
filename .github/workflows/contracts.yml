@@ -34,6 +34,10 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
           cache: 'pnpm'
+      - name: Install Foundry
+        uses: onbjerg/foundry-toolchain@v1
+        with:
+          version: nightly
       - name: Install node dependencies
         run: pnpm install
       - name: Run build step (compile contracts, generate types, etc.)
@@ -74,6 +78,10 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
           cache: 'pnpm'
+      - name: Install Foundry
+        uses: onbjerg/foundry-toolchain@v1
+        with:
+          version: nightly
       - name: Install node dependencies
         run: pnpm install
       - name: Run tests
