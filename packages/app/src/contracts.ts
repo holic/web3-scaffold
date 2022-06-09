@@ -1,11 +1,9 @@
-import deploys from "@web3-scaffold/contracts/deploys.json";
-import { ExampleNFT__factory } from "@web3-scaffold/contracts/typechain-types";
+import ExampleNFTGoerli from "@web3-scaffold/contracts/deploys/goerli/ExampleNFT.json";
+import { ExampleNFT__factory } from "@web3-scaffold/contracts/types";
 
-import { polygonProvider } from "./providers";
-
-const network = process.env.NODE_ENV === "production" ? "matic" : "mumbai";
+import { ethereumProvider } from "./providers";
 
 export const exampleNFTContract = ExampleNFT__factory.connect(
-  deploys[network].ExampleNFT.address,
-  polygonProvider
+  ExampleNFTGoerli.deployedTo,
+  ethereumProvider
 );

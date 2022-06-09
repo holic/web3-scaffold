@@ -1,6 +1,4 @@
 cache
-artifacts/build-info
-artifacts/**/*.dbg.json
-*.tsbuildinfo
+out
 
-.env*
+.env.*
