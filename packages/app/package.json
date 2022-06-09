@@ -2,7 +2,8 @@
   "name": "@web3-scaffold/app",
   "private": true,
   "engines": {
-    "node": ">=14 <16"
+    "node": "16",
+    "pnpm": "6"
   },
   "scripts": {
     "dev": "next dev & graphql-codegen --watch",
