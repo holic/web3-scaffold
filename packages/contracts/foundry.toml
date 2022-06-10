@@ -8,3 +8,4 @@ verbosity = 2
 force = false
 bytecode_hash = 'none'
 solc_version = '0.8.13'
+extra_output_files = ['abi']

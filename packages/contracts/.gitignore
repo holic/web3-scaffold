@@ -1,4 +1,11 @@
 cache
-out
+
+# Ignore build output
+out/**/*.json
+# But not the ABI files
+!out/**/*.abi.json
+# But exclude the test ones
+out/*.t.sol/**/*.abi.json
+# Why do these globs make this so hard?
 
 .env.*
