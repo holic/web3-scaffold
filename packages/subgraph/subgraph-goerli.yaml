@@ -1,23 +1,23 @@
-specVersion: 0.0.2
+specVersion: 0.0.4
 schema:
   file: ./schema.graphql
 dataSources:
   - kind: ethereum
     name: ExampleNFT
-    network: mumabi
+    network: goerli
     source:
       abi: ExampleNFT
-      address: "0x457cdbE2a4018e4482352d70C7CF5fE42C88B326"
-      startBlock: 23894082
+      address: "0xe584409f2ba1ade9895485d90587fd46baa3c0d8"
+      startBlock: 7034594
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.5
       language: wasm/assemblyscript
       entities:
-        - Transfer
+        - NFT
       abis:
         - name: ExampleNFT
-          file: ./abis/ExampleNFT.json
+          file: ../contracts/out/ExampleNFT.sol/ExampleNFT.abi.json
       eventHandlers:
         - event: Transfer(indexed address,indexed address,indexed uint256)
           handler: handleTransfer
