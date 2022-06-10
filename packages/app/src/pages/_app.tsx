@@ -1,7 +1,9 @@
 import "tailwindcss/tailwind.css";
-import "@rainbow-me/rainbowkit/styles.css";
+import "react-toastify/dist/ReactToastify.css";
 
 import type { AppProps } from "next/app";
+import Head from "next/head";
+import { ToastContainer } from "react-toastify";
 import {
   createClient as createGraphClient,
   Provider as GraphProvider,
@@ -15,11 +17,17 @@ export const graphClient = createGraphClient({
 
 const MyApp = ({ Component, pageProps }: AppProps) => {
   return (
-    <GraphProvider value={graphClient}>
-      <EthereumProviders>
-        <Component {...pageProps} />
-      </EthereumProviders>
-    </GraphProvider>
+    <>
+      <Head>
+        <title>Example NFT</title>
+      </Head>
+      <GraphProvider value={graphClient}>
+        <EthereumProviders>
+          <Component {...pageProps} />
+        </EthereumProviders>
+      </GraphProvider>
+      <ToastContainer position="bottom-right" draggable={false} />
+    </>
   );
 };
 
