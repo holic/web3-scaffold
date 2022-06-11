@@ -10,7 +10,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "codegen": "graphql-codegen"
+    "codegen": "graphql-codegen",
+    "prettier": "prettier --write src"
   },
   "dependencies": {
     "@ethersproject/address": "^5.5.0",

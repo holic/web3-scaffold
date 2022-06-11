@@ -7,7 +7,8 @@
   },
   "scripts": {
     "preinstall": "npx -y only-allow pnpm",
-    "dev": "pnpm -r dev --stream"
+    "dev": "pnpm -r dev --stream",
+    "prettier": "pnpm -r prettier --stream"
   },
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "^5.27.1",
