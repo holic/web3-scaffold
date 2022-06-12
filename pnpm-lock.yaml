@@ -34,13 +34,11 @@ importers:
       '@graphql-codegen/typescript-operations': ^2.2.2
       '@graphql-codegen/typescript-urql': ^3.4.2
       '@rainbow-me/rainbowkit': ^0.2.4
-      '@types/debug': ^4.1.7
       '@types/node': 17.0.0
       '@types/react': 17.0.37
       '@web3-scaffold/contracts': workspace:*
       autoprefixer: ^10.4.0
       classnames: ^2.3.1
-      debug: ^4.3.3
       eslint-config-next: ^12.1.6
       ethers: ^5.5.2
       graphql: ^16.2.0
@@ -62,7 +60,6 @@ importers:
       '@rainbow-me/rainbowkit': 0.2.4_a9eac6539f9bbe06477ed71aa3d24861
       '@web3-scaffold/contracts': link:../contracts
       classnames: 2.3.1
-      debug: 4.3.3
       ethers: 5.5.3
       graphql: 16.2.0
       next: 12.1.0_react-dom@17.0.2+react@17.0.2
@@ -71,18 +68,17 @@ importers:
       react-toastify: 9.0.4_react-dom@17.0.2+react@17.0.2
       react-use: 17.4.0_react-dom@17.0.2+react@17.0.2
       urql: 2.0.6_graphql@16.2.0+react@17.0.2
-      wagmi: 0.4.10_01de019c2cf3166f2fa29301a8475c3b
+      wagmi: 0.4.10_a97fe83bd71061f745f7de6a26ea7406
       zustand: 3.6.9_react@17.0.2
     devDependencies:
       '@graphql-codegen/cli': 2.4.0_90b3b0c4576de0f58ba7c0c929411fe4
       '@graphql-codegen/typescript': 2.4.2_graphql@16.2.0
       '@graphql-codegen/typescript-operations': 2.2.2_graphql@16.2.0
       '@graphql-codegen/typescript-urql': 3.4.2_graphql@16.2.0
-      '@types/debug': 4.1.7
       '@types/node': 17.0.0
       '@types/react': 17.0.37
       autoprefixer: 10.4.2_postcss@8.4.5
-      eslint-config-next: 12.1.6_02362ac6fa080446e49b2f4887e5275c
+      eslint-config-next: 12.1.6_next@12.1.0+typescript@4.5.5
       postcss: 8.4.5
       tailwindcss: 3.0.15_ef48b3b8837f8a23677bffe8f9cd866d
       typescript: 4.5.5
@@ -1583,11 +1579,11 @@ packages:
     resolution: {integrity: sha512-trnsAYxU3xnS1gPHPyU961coFyLkh4gAD/0zQ5mymY4yOZ+CYvsPqUbOFSw0aDM4y0tV7tiFxL/1XfXPNC6IPg==}
     dev: true
 
-  /@json-rpc-tools/provider/1.7.6_debug@4.3.3:
+  /@json-rpc-tools/provider/1.7.6:
     resolution: {integrity: sha512-z7D3xvJ33UfCGv77n40lbzOYjZKVM3k2+5cV7xS8G6SCvKTzMkhkUYuD/qzQUNT4cG/lv0e9mRToweEEVLVVmA==}
     dependencies:
       '@json-rpc-tools/utils': 1.7.6
-      axios: 0.21.4_debug@4.3.3
+      axios: 0.21.4
       safe-json-utils: 1.1.1
       ws: 7.5.6
     transitivePeerDependencies:
@@ -1773,7 +1769,7 @@ packages:
       react: 17.0.2
       react-dom: 17.0.2_react@17.0.2
       react-remove-scroll: 2.5.3_cfedea9b3ed0faf0dded75c187406c5e
-      wagmi: 0.4.10_01de019c2cf3166f2fa29301a8475c3b
+      wagmi: 0.4.10_a97fe83bd71061f745f7de6a26ea7406
     transitivePeerDependencies:
       - '@types/react'
     dev: false
@@ -1859,12 +1855,6 @@ packages:
       '@types/node': 17.0.0
     dev: false
 
-  /@types/debug/4.1.7:
-    resolution: {integrity: sha512-9AonUzyTjXXhEOa0DnqpzZi6VHlqKMswga9EXjpXnnqxwLtdvPPtlO8evrI5D9S6asFRCQ6v+wpiUKbw+vKqyg==}
-    dependencies:
-      '@types/ms': 0.7.31
-    dev: true
-
   /@types/express-serve-static-core/4.17.28:
     resolution: {integrity: sha512-P1BJAEAW3E2DJUlkgq4tOL3RyMunoWXqbSCygWo5ZIWTjUgN1YnaXWW4VWl/oc8vs/XoYibEGBKP0uZyF4AHig==}
     dependencies:
@@ -1908,10 +1898,6 @@ packages:
   /@types/lodash/4.14.182:
     resolution: {integrity: sha512-/THyiqyQAP9AfARo4pF+aCGcyiQ94tX/Is2I7HofNRqoYLgN1PBoOWu2/zTA5zMxzP5EFutMtWtGAFRKUe961Q==}
     dev: false
-
-  /@types/ms/0.7.31:
-    resolution: {integrity: sha512-iiUgKzV9AuaEkZqkOLDIvlQiL6ltuZd9tGcW3gwpnX8JbuiuhFlEGmmFXEXkN50Cvq7Os88IY2v0dkDqXYWVgA==}
-    dev: true
 
   /@types/node/10.17.60:
     resolution: {integrity: sha512-F0KIgDJfy2nA3zMLmWGKxcH2ZVEtCZXHHdOQs2gSaQ27+lNeEfGxzkIw90aXswATX7AZ33tahPbzy6KAfUreVw==}
@@ -2014,26 +2000,6 @@ packages:
       - supports-color
     dev: true
 
-  /@typescript-eslint/parser/5.27.1_eslint@8.17.0+typescript@4.5.5:
-    resolution: {integrity: sha512-7Va2ZOkHi5NP+AZwb5ReLgNF6nWLGTeUJfxdkVUAPPSaAdbWNnFZzLZ4EGGmmiCTg+AwlbE1KyUYTBglosSLHQ==}
-    engines: {node: ^12.22.0 || ^14.17.0 || >=16.0.0}
-    peerDependencies:
-      eslint: ^6.0.0 || ^7.0.0 || ^8.0.0
-      typescript: '*'
-    peerDependenciesMeta:
-      typescript:
-        optional: true
-    dependencies:
-      '@typescript-eslint/scope-manager': 5.27.1
-      '@typescript-eslint/types': 5.27.1
-      '@typescript-eslint/typescript-estree': 5.27.1_typescript@4.5.5
-      debug: 4.3.4
-      eslint: 8.17.0
-      typescript: 4.5.5
-    transitivePeerDependencies:
-      - supports-color
-    dev: true
-
   /@typescript-eslint/parser/5.27.1_eslint@8.17.0+typescript@4.7.3:
     resolution: {integrity: sha512-7Va2ZOkHi5NP+AZwb5ReLgNF6nWLGTeUJfxdkVUAPPSaAdbWNnFZzLZ4EGGmmiCTg+AwlbE1KyUYTBglosSLHQ==}
     engines: {node: ^12.22.0 || ^14.17.0 || >=16.0.0}
@@ -2050,6 +2016,25 @@ packages:
       debug: 4.3.4
       eslint: 8.17.0
       typescript: 4.7.3
+    transitivePeerDependencies:
+      - supports-color
+    dev: true
+
+  /@typescript-eslint/parser/5.27.1_typescript@4.5.5:
+    resolution: {integrity: sha512-7Va2ZOkHi5NP+AZwb5ReLgNF6nWLGTeUJfxdkVUAPPSaAdbWNnFZzLZ4EGGmmiCTg+AwlbE1KyUYTBglosSLHQ==}
+    engines: {node: ^12.22.0 || ^14.17.0 || >=16.0.0}
+    peerDependencies:
+      eslint: ^6.0.0 || ^7.0.0 || ^8.0.0
+      typescript: '*'
+    peerDependenciesMeta:
+      typescript:
+        optional: true
+    dependencies:
+      '@typescript-eslint/scope-manager': 5.27.1
+      '@typescript-eslint/types': 5.27.1
+      '@typescript-eslint/typescript-estree': 5.27.1_typescript@4.5.5
+      debug: 4.3.4
+      typescript: 4.5.5
     transitivePeerDependencies:
       - supports-color
     dev: true
@@ -2211,7 +2196,7 @@ packages:
         optional: true
     dependencies:
       '@coinbase/wallet-sdk': 3.2.0
-      '@walletconnect/ethereum-provider': 1.7.8_debug@4.3.3
+      '@walletconnect/ethereum-provider': 1.7.8
       ethers: 5.5.3
       eventemitter3: 4.0.7
       zustand: 4.0.0-rc.1_react@17.0.2
@@ -2274,7 +2259,7 @@ packages:
     resolution: {integrity: sha512-4BwqyWy6KpSvkocSaV7WR3BlZfrxLbJSLkg+j7Gl6pTDE+U55lLhJvQaMuDVazXYxcjBsG09k7UlH7cGiUI5vQ==}
     dev: false
 
-  /@walletconnect/ethereum-provider/1.7.8_debug@4.3.3:
+  /@walletconnect/ethereum-provider/1.7.8:
     resolution: {integrity: sha512-dnl560zFMdK/LD4MD2XwHbWj7RXOaeXWPc9jzDaosLQLAXfA5mKe4XbCFFUPbVMYuyBdRI9NZv3Ci/qDb5wncQ==}
     dependencies:
       '@walletconnect/client': 1.7.8
@@ -2283,7 +2268,7 @@ packages:
       '@walletconnect/signer-connection': 1.7.8
       '@walletconnect/types': 1.7.8
       '@walletconnect/utils': 1.7.8
-      eip1193-provider: 1.0.1_debug@4.3.3
+      eip1193-provider: 1.0.1
       eventemitter3: 4.0.7
     transitivePeerDependencies:
       - bufferutil
@@ -2734,18 +2719,18 @@ packages:
     engines: {node: '>=12'}
     dev: true
 
-  /axios/0.21.4_debug@4.1.1:
+  /axios/0.21.4:
     resolution: {integrity: sha512-ut5vewkiu8jjGBdqpM44XxjuCjq9LAKeHVmoVfHVzy8eHgxxq8SbAVQNovDA8mVi05kP0Ea/n/UzcSHcTJQfNg==}
     dependencies:
-      follow-redirects: 1.14.7_debug@4.1.1
+      follow-redirects: 1.14.7
     transitivePeerDependencies:
       - debug
     dev: false
 
-  /axios/0.21.4_debug@4.3.3:
+  /axios/0.21.4_debug@4.1.1:
     resolution: {integrity: sha512-ut5vewkiu8jjGBdqpM44XxjuCjq9LAKeHVmoVfHVzy8eHgxxq8SbAVQNovDA8mVi05kP0Ea/n/UzcSHcTJQfNg==}
     dependencies:
-      follow-redirects: 1.14.7_debug@4.3.3
+      follow-redirects: 1.14.7_debug@4.1.1
     transitivePeerDependencies:
       - debug
     dev: false
@@ -3885,10 +3870,10 @@ packages:
       safe-buffer: 5.2.1
     dev: true
 
-  /eip1193-provider/1.0.1_debug@4.3.3:
+  /eip1193-provider/1.0.1:
     resolution: {integrity: sha512-kSuqwQ26d7CzuS/t3yRXo2Su2cVH0QfvyKbr2H7Be7O5YDyIq4hQGCNTo5wRdP07bt+E2R/8nPCzey4ojBHf7g==}
     dependencies:
-      '@json-rpc-tools/provider': 1.7.6_debug@4.3.3
+      '@json-rpc-tools/provider': 1.7.6
     transitivePeerDependencies:
       - bufferutil
       - debug
@@ -4036,7 +4021,7 @@ packages:
     resolution: {integrity: sha512-TtpcNJ3XAzx3Gq8sWRzJaVajRs0uVxA2YAkdb1jm2YkPz4G6egUFAyA3n5vtEIZefPk5Wa4UXbKuS5fKkJWdgA==}
     engines: {node: '>=10'}
 
-  /eslint-config-next/12.1.6_02362ac6fa080446e49b2f4887e5275c:
+  /eslint-config-next/12.1.6_next@12.1.0+typescript@4.5.5:
     resolution: {integrity: sha512-qoiS3g/EPzfCTkGkaPBSX9W0NGE/B1wNO3oWrd76QszVGrdpLggNqcO8+LR6MB0CNqtp9Q8NoeVrxNVbzM9hqA==}
     peerDependencies:
       eslint: ^7.23.0 || ^8.0.0
@@ -4048,14 +4033,13 @@ packages:
     dependencies:
       '@next/eslint-plugin-next': 12.1.6
       '@rushstack/eslint-patch': 1.1.3
-      '@typescript-eslint/parser': 5.27.1_eslint@8.17.0+typescript@4.5.5
-      eslint: 8.17.0
+      '@typescript-eslint/parser': 5.27.1_typescript@4.5.5
       eslint-import-resolver-node: 0.3.6
-      eslint-import-resolver-typescript: 2.7.1_de2e8b5f32821e366389b4575f54c566
-      eslint-plugin-import: 2.26.0_eslint@8.17.0
-      eslint-plugin-jsx-a11y: 6.5.1_eslint@8.17.0
-      eslint-plugin-react: 7.30.0_eslint@8.17.0
-      eslint-plugin-react-hooks: 4.5.0_eslint@8.17.0
+      eslint-import-resolver-typescript: 2.7.1_eslint-plugin-import@2.26.0
+      eslint-plugin-import: 2.26.0
+      eslint-plugin-jsx-a11y: 6.5.1
+      eslint-plugin-react: 7.30.0
+      eslint-plugin-react-hooks: 4.5.0
       next: 12.1.0_react-dom@17.0.2+react@17.0.2
       typescript: 4.5.5
     transitivePeerDependencies:
@@ -4078,7 +4062,7 @@ packages:
       resolve: 1.22.0
     dev: true
 
-  /eslint-import-resolver-typescript/2.7.1_de2e8b5f32821e366389b4575f54c566:
+  /eslint-import-resolver-typescript/2.7.1_eslint-plugin-import@2.26.0:
     resolution: {integrity: sha512-00UbgGwV8bSgUv34igBDbTOtKhqoRMy9bFjNehT40bXg6585PNIct8HhXZ0SybqB9rWtXj9crcku8ndDn/gIqQ==}
     engines: {node: '>=4'}
     peerDependencies:
@@ -4086,8 +4070,7 @@ packages:
       eslint-plugin-import: '*'
     dependencies:
       debug: 4.3.4
-      eslint: 8.17.0
-      eslint-plugin-import: 2.26.0_eslint@8.17.0
+      eslint-plugin-import: 2.26.0
       glob: 7.2.3
       is-glob: 4.0.3
       resolve: 1.22.0
@@ -4102,6 +4085,27 @@ packages:
     dependencies:
       debug: 3.2.7
       find-up: 2.1.0
+    dev: true
+
+  /eslint-plugin-import/2.26.0:
+    resolution: {integrity: sha512-hYfi3FXaM8WPLf4S1cikh/r4IxnO6zrhZbEGz2b660EJRbuxgpDS5gkCuYgGWg2xxh2rBuIr4Pvhve/7c31koA==}
+    engines: {node: '>=4'}
+    peerDependencies:
+      eslint: ^2 || ^3 || ^4 || ^5 || ^6 || ^7.2.0 || ^8
+    dependencies:
+      array-includes: 3.1.5
+      array.prototype.flat: 1.3.0
+      debug: 2.6.9
+      doctrine: 2.1.0
+      eslint-import-resolver-node: 0.3.6
+      eslint-module-utils: 2.7.3
+      has: 1.0.3
+      is-core-module: 2.9.0
+      is-glob: 4.0.3
+      minimatch: 3.1.2
+      object.values: 1.1.5
+      resolve: 1.22.0
+      tsconfig-paths: 3.14.1
     dev: true
 
   /eslint-plugin-import/2.26.0_eslint@8.17.0:
@@ -4126,7 +4130,7 @@ packages:
       tsconfig-paths: 3.14.1
     dev: true
 
-  /eslint-plugin-jsx-a11y/6.5.1_eslint@8.17.0:
+  /eslint-plugin-jsx-a11y/6.5.1:
     resolution: {integrity: sha512-sVCFKX9fllURnXT2JwLN5Qgo24Ug5NF6dxhkmxsMEUZhXRcGg+X3e1JbJ84YePQKBl5E0ZjAH5Q4rkdcGY99+g==}
     engines: {node: '>=4.0'}
     peerDependencies:
@@ -4140,7 +4144,6 @@ packages:
       axobject-query: 2.2.0
       damerau-levenshtein: 1.0.8
       emoji-regex: 9.2.2
-      eslint: 8.17.0
       has: 1.0.3
       jsx-ast-utils: 3.3.0
       language-tags: 1.0.5
@@ -4164,16 +4167,14 @@ packages:
       prettier-linter-helpers: 1.0.0
     dev: true
 
-  /eslint-plugin-react-hooks/4.5.0_eslint@8.17.0:
+  /eslint-plugin-react-hooks/4.5.0:
     resolution: {integrity: sha512-8k1gRt7D7h03kd+SAAlzXkQwWK22BnK6GKZG+FJA6BAGy22CFvl8kCIXKpVux0cCxMWDQUPqSok0LKaZ0aOcCw==}
     engines: {node: '>=10'}
     peerDependencies:
       eslint: ^3.0.0 || ^4.0.0 || ^5.0.0 || ^6.0.0 || ^7.0.0 || ^8.0.0-0
-    dependencies:
-      eslint: 8.17.0
     dev: true
 
-  /eslint-plugin-react/7.30.0_eslint@8.17.0:
+  /eslint-plugin-react/7.30.0:
     resolution: {integrity: sha512-RgwH7hjW48BleKsYyHK5vUAvxtE9SMPDKmcPRQgtRCYaZA0XQPt5FSkrU3nhz5ifzMZcA8opwmRJ2cmOO8tr5A==}
     engines: {node: '>=4'}
     peerDependencies:
@@ -4182,7 +4183,6 @@ packages:
       array-includes: 3.1.5
       array.prototype.flatmap: 1.3.0
       doctrine: 2.1.0
-      eslint: 8.17.0
       estraverse: 5.3.0
       jsx-ast-utils: 3.3.0
       minimatch: 3.1.2
@@ -4741,6 +4741,16 @@ packages:
     resolution: {integrity: sha512-WIWGi2L3DyTUvUrwRKgGi9TwxQMUEqPOPQBVi71R96jZXJdFskXEmf54BoZaS1kknGODoIGASGEzBUYdyMCBJg==}
     dev: true
 
+  /follow-redirects/1.14.7:
+    resolution: {integrity: sha512-+hbxoLbFMbRKDwohX8GkTataGqO6Jb7jGwpAlwgy2bIz25XtRm7KEzJM76R1WiNT5SwZkX4Y75SwBolkpmE7iQ==}
+    engines: {node: '>=4.0'}
+    peerDependencies:
+      debug: '*'
+    peerDependenciesMeta:
+      debug:
+        optional: true
+    dev: false
+
   /follow-redirects/1.14.7_debug@4.1.1:
     resolution: {integrity: sha512-+hbxoLbFMbRKDwohX8GkTataGqO6Jb7jGwpAlwgy2bIz25XtRm7KEzJM76R1WiNT5SwZkX4Y75SwBolkpmE7iQ==}
     engines: {node: '>=4.0'}
@@ -4751,18 +4761,6 @@ packages:
         optional: true
     dependencies:
       debug: 4.1.1
-    dev: false
-
-  /follow-redirects/1.14.7_debug@4.3.3:
-    resolution: {integrity: sha512-+hbxoLbFMbRKDwohX8GkTataGqO6Jb7jGwpAlwgy2bIz25XtRm7KEzJM76R1WiNT5SwZkX4Y75SwBolkpmE7iQ==}
-    engines: {node: '>=4.0'}
-    peerDependencies:
-      debug: '*'
-    peerDependenciesMeta:
-      debug:
-        optional: true
-    dependencies:
-      debug: 4.3.3
     dev: false
 
   /forever-agent/0.6.1:
@@ -9020,7 +9018,7 @@ packages:
     dev: false
 
   /util-deprecate/1.0.2:
-    resolution: {integrity: sha1-RQ1Nyfpw3nMnYvvS1KKJgUGaDM8=}
+    resolution: {integrity: sha512-EPD5q1uXyFxJpCrLnCc1nHnq3gOa6DZBocAIiI2TaSCA7VCJ1UJDMagCzIkXNsUYfD1daK//LTEQ8xiIbrHtcw==}
 
   /uuid/3.4.0:
     resolution: {integrity: sha512-HjSDRw6gZE5JMggctHBcjVak08+KEVhSIiDzFnT9S9aegmp85S/bReBVTb4QTFaRNptJ9kuYaNhnbNEOkbKb/A==}
@@ -9054,7 +9052,7 @@ packages:
       extsprintf: 1.3.0
     dev: false
 
-  /wagmi/0.4.10_01de019c2cf3166f2fa29301a8475c3b:
+  /wagmi/0.4.10_a97fe83bd71061f745f7de6a26ea7406:
     resolution: {integrity: sha512-/RyAYvOdKc+AXni2VNwLqz83N4tw2hNU0pSY9TOgXmrr5uRtzdy2MSqCMGrmyoIjMPx4ilop1X7WJ4JdPu2jbw==}
     peerDependencies:
       ethers: '>=5.5.1'
@@ -9062,7 +9060,7 @@ packages:
     dependencies:
       '@coinbase/wallet-sdk': 3.2.0
       '@wagmi/core': 0.3.7_8d97cdf704f0fbebd4c670c6ec12820f
-      '@walletconnect/ethereum-provider': 1.7.8_debug@4.3.3
+      '@walletconnect/ethereum-provider': 1.7.8
       ethers: 5.5.3
       react: 17.0.2
       react-query: 4.0.0-beta.23_react-dom@17.0.2+react@17.0.2
