@@ -7,12 +7,12 @@ import { extractContractError } from "./extractContractError";
 import { pluralize } from "./pluralize";
 import { promiseNotify } from "./promiseNotify";
 import { switchChain } from "./switchChain";
-import { useAsyncFn } from "./useAsyncFn";
+import { usePromiseFn } from "./usePromiseFn";
 
 export const MintButton = () => {
   const { activeConnector } = useConnect();
 
-  const [mintResult, mint] = useAsyncFn(
+  const [mintResult, mint] = usePromiseFn(
     async (quantity: number, onProgress: (message: string) => void) => {
       if (!activeConnector) {
         throw new Error("Wallet not connected");
@@ -56,7 +56,7 @@ export const MintButton = () => {
 
   return (
     <Button
-      pending={mintResult.loading}
+      pending={mintResult.type === "pending"}
       onClick={(event) => {
         event.preventDefault();
         const toastId = toast.loading("Starting…");
