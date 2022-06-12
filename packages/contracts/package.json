@@ -16,6 +16,6 @@
     "@typechain/ethers-v5": "^10.0.0",
     "ethers": "^5.5.2",
     "typechain": "^8.0.0",
-    "typescript": "^4.6.3"
+    "typescript": "^4.5.5"
   }
 }
