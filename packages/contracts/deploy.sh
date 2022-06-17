@@ -8,7 +8,7 @@ if [ -z "$CHAIN_NAME" ]; then
   exit 1
 fi
 
-CONTRACT_NAME="ExampleNFT"
+CONTRACT_NAME="DailyCanvas"
 
 DEPLOY_OUTPUT="deploys/$CHAIN_NAME/$CONTRACT_NAME.json"
 mkdir -p $(dirname $DEPLOY_OUTPUT)

@@ -1,11 +1,12 @@
-import { ExampleNFT, Transfer } from "../generated/ExampleNFT/ExampleNFT";
-import { Token } from "../generated/schema";
+import { DailyCanvas, Transfer } from "../generated/DailyCanvas/DailyCanvas";
+import { Canvas } from "../generated/schema";
 
-export function handleTransfer(event: Transfer): void {
-  const contract = ExampleNFT.bind(event.address);
+export function handleCanvasDrawn(event: Transfer): void {
+  const contract = DailyCanvas.bind(event.address);
 
-  const token = new Token(event.params.tokenId.toString());
-  token.owner = event.params.to;
-  token.tokenURI = contract.tokenURI(event.params.tokenId);
-  token.save();
+  const canvas = new Canvas(event.params.tokenId.toString());
+  canvas.owner = event.params.to;
+  canvas.tokenURI = contract.tokenURI(event.params.tokenId);
+  // canvas.pixelFilled = event.params.pixelFilled;
+  canvas.save();
 }

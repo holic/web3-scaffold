@@ -1,5 +1,7 @@
-type Token @entity {
+type Canvas @entity {
   id: ID!
   owner: Bytes!
   tokenURI: String!
+  promptId: BigInt!
+  pixelFilled: Boolean!
 }

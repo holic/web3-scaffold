@@ -1,15 +1,18 @@
 import { ConnectButton } from "@rainbow-me/rainbowkit";
 import type { NextPage } from "next";
 
-import { useExampleNFTContractRead } from "../contracts";
+import {
+  // currentPrompt,
+  dailyCanvasContract,
+  usedailyCanvasContractRead,
+} from "../contracts";
+import { wagmiClient } from "../EthereumProviders";
 import { Inventory } from "../Inventory";
 import { MintButton } from "../MintButton";
 
 const HomePage: NextPage = () => {
-  const totalSupply = useExampleNFTContractRead("totalSupply", {
-    watch: true,
-  });
-  const maxSupply = useExampleNFTContractRead("MAX_SUPPLY");
+  const p = usedailyCanvasContractRead("getCurrentPrompt");
+  console.log(p.data);
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -17,11 +20,11 @@ const HomePage: NextPage = () => {
         <ConnectButton />
       </div>
       <div className="flex-grow flex flex-col gap-4 items-center justify-center p-8 pb-[50vh]">
-        <h1 className="text-4xl">Example NFT</h1>
+        <h1 className="text-4xl">Daily Canvas</h1>
 
         <p>
-          {totalSupply.data?.toNumber().toLocaleString() ?? "??"}/
-          {maxSupply.data?.toNumber().toLocaleString() ?? "??"} minted
+          <i>prompt: </i>
+          {p.data?.toString() ?? "??"}
         </p>
 
         <MintButton />
