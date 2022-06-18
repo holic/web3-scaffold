@@ -9,7 +9,7 @@ import { Counters } from "@openzeppelin/contracts/utils/Counters.sol";
 contract DailyCanvas is ERC721, ERC721Burnable, Ownable {
     using Counters for Counters.Counter;
     
-    event CanvasDrawn(uint256 canvasId, bool pixelFilled, address author);
+    event CanvasDrawn(uint256 canvasId, bool pixelFilled, address author, uint256 promptId);
     event NewPrompt(uint256 promptId, string promptText, address author);
 
     Counters.Counter private _canvasIdCounter;
@@ -54,7 +54,7 @@ contract DailyCanvas is ERC721, ERC721Burnable, Ownable {
         return _promptTexts[promptId];
     }
 
-    function drawCanvas(bool pixelFilled) public {
+    function drawCanvas(bool pixelFilled, uint256 promptId) public {
         // limit entries per address? 
         // require anything?
 
@@ -63,10 +63,10 @@ contract DailyCanvas is ERC721, ERC721Burnable, Ownable {
 
         // fill in the data
         _pixelFilled[canvasId] = pixelFilled;
-        _promptId[canvasId] = _promptIdCounter.current();
-        
+        _promptId[canvasId] = promptId;
+
         // emit events
-        emit CanvasDrawn(canvasId, pixelFilled, msg.sender);
+        emit CanvasDrawn(canvasId, pixelFilled, msg.sender, promptId);
     }
 
     // give user a token that can be filled with pixels
