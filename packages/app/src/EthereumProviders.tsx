@@ -7,8 +7,9 @@ import { publicProvider } from "wagmi/providers/public";
 
 export const targetChainId = 80001;
 
+// todo; clean this up
 export const { chains, provider, webSocketProvider } = configureChains(
-  targetChainId === 1 ? [chain.mainnet] : [chain.polygonMumbai],
+  [chain.polygonMumbai],
   [
     alchemyProvider({ alchemyId: process.env.NEXT_PUBLIC_ALCHEMY_API_KEY! }),
     publicProvider(),

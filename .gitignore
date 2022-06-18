@@ -3,3 +3,7 @@ node_modules
 
 .vercel
 .DS_Store
+packages/contracts/out
+packages/contracts/types
+packages/app/.env
+packages/contracts/.env

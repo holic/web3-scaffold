@@ -8,7 +8,7 @@ dataSources:
     source:
       abi: DailyCanvas
       address: "0x49633e50ed3435276b7f8e18cad61f19d3e5fa2f"
-      startBlock: 26781554
+      startBlock: 26804470
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.5
