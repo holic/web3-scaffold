@@ -1,6 +1,3 @@
-[submodule "packages/contracts/lib/ds-test"]
-	path = packages/contracts/lib/ds-test
-	url = https://github.com/dapphub/ds-test
 [submodule "packages/contracts/lib/openzeppelin-contracts"]
 	path = packages/contracts/lib/openzeppelin-contracts
 	url = https://github.com/OpenZeppelin/openzeppelin-contracts

@@ -1,17 +1,16 @@
 // SPDX-License-Identifier: CC0-1.0
 pragma solidity >=0.8.10 <0.9.0;
-
-import "ds-test/test.sol";
-import "./Cheats.t.sol";
 import "../src/ExampleNFT.sol";
 import "../src/IRenderer.sol";
 
-contract ExampleNFTTest is DSTest {
+contract ExampleNFTTest is Test {
     Cheats constant cheats = Cheats(HEVM_ADDRESS);
     ExampleNFT private nft;
 
-    address private owner = cheats.addr(uint256(keccak256(abi.encodePacked("owner"))));
-    address private minter = cheats.addr(uint256(keccak256(abi.encodePacked("minter"))));
+    address private owner =
+        cheats.addr(uint256(keccak256(abi.encodePacked("owner"))));
+    address private minter =
+        cheats.addr(uint256(keccak256(abi.encodePacked("minter"))));
 
     function setUp() public {
         nft = new ExampleNFT();
@@ -35,7 +34,9 @@ contract ExampleNFTTest is DSTest {
         assertEq(nft.balanceOf(minter), 4);
 
         cheats.prank(minter);
-        cheats.expectRevert(abi.encodeWithSelector(ERC721Base.MintLimitExceeded.selector, 4));
+        cheats.expectRevert(
+            abi.encodeWithSelector(ERC721Base.MintLimitExceeded.selector, 4)
+        );
         nft.mint{value: 0.1 ether}(1);
     }
 }
