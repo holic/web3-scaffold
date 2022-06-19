@@ -1,7 +1,10 @@
 ---
 name: app
 on:
-  - push
+  push:
+    branches:
+      - master
+  pull_request:
 env:
   NODE_ENV: ci
 
@@ -36,7 +39,7 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node-version }}
-          cache: 'pnpm'
+          cache: pnpm
       - run: pnpm install
       - run: pnpm build
 
@@ -66,6 +69,6 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node-version }}
-          cache: 'pnpm'
+          cache: "pnpm"
       - run: pnpm install
       - run: pnpm lint
