@@ -9,7 +9,7 @@ export function handleCanvasDrawn(event: CanvasDrawn): void {
   canvas.pixelFilled = event.params.pixelFilled;
   canvas.promptId = event.params.promptId;
 
-  // canvas.tokenURI = contract.tokenURI(event.params.tokenId);
+  canvas.tokenURI = contract.tokenURI(event.params.canvasId);
   // canvas.pixelFilled = event.params.pixelFilled;
   canvas.save();
 }

@@ -1,4 +1,4 @@
-type Canvas @entity {
+type Canvas @entity @queryFields(singular: "canvas", plural: "canvases") {
   id: ID!
   author: Bytes!
   tokenURI: String!
