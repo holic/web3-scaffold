@@ -12,14 +12,14 @@ import {
 import { EthereumProviders } from "../EthereumProviders";
 
 export const graphClient = createGraphClient({
-  url: "https://api.thegraph.com/subgraphs/name/holic/example-nft",
+  url: "https://api.thegraph.com/subgraphs/name/jborichevskiy/daily-canvas",
 });
 
 const MyApp = ({ Component, pageProps }: AppProps) => {
   return (
     <>
       <Head>
-        <title>Example NFT</title>
+        <title>Daily Canvas</title>
       </Head>
       <GraphProvider value={graphClient}>
         <EthereumProviders>

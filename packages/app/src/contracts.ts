@@ -1,10 +1,10 @@
 // import ExampleNFTGoerli from "@web3-scaffold/contracts/deploys/goerli/ExampleNFT.json";
 import DailyCanvas from "@web3-scaffold/contracts/deploys/mumbai/DailyCanvas.json";
-import { ExampleNFT__factory } from "@web3-scaffold/contracts/types";
+// import { ExampleNFT__factory } from "@web3-scaffold/contracts/types";
 import { useContractRead } from "wagmi";
 
 import { provider, targetChainId } from "./EthereumProviders";
-import { DailyCanvas__factory } from "./types/ethers-contracts";
+import { DailyCanvas__factory } from "./types/factories";
 
 // I would have used `ExampleNFT__factory.connect` to create this, but we may
 // not have a provider ready to go. Any interactions with this contract should
@@ -20,12 +20,10 @@ import { DailyCanvas__factory } from "./types/ethers-contracts";
 //   provider({ chainId: targetChainId })
 // );
 
-console.log({ targetChainId });
 export const dailyCanvasContract = DailyCanvas__factory.connect(
   DailyCanvas.deployedTo,
   provider({ chainId: targetChainId })
 );
-console.log({ dailyCanvasContract });
 
 // export const useExampleNFTContractRead = useContractRead.bind(null, {
 //   addressOrName: ExampleNFTGoerli.deployedTo,
