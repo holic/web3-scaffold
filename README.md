@@ -2,6 +2,11 @@
 
 _Quickly get up and running on web3_
 
+1. clone the repo
+2. `cd web3-scaffold`
+3. `pnpm install`
+4. `pnpm run dev`
+
 This scaffold is set up as a monorepo using the incredibly fast [pnpm](https://pnpm.io/), with packages for each part of the project. All of these packages use  a common [Typescript](https://www.typescriptlang.org/) foundation with [linting](https://eslint.org/) and [autoformatting](https://prettier.io/) and is best used with [VSCode](https://code.visualstudio.com/). It assumes you'll be deploying to an [EVM-compatible blockchain](https://chainlist.org/).
 
 
