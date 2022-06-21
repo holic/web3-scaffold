@@ -26,3 +26,5 @@ fi
 echo "Using $CHAIN_NAME contract address: $CONTRACT_ADDRESS"
 
 # cast send --rpc-url=$RPC_URL $CONTRACT_ADDRESS "setBaseTokenURI(string)" "ipfs://somehashgoeshere" --private-key=$DEPLOYER_PRIVATE_KEY
+
+forge verify-contract $CONTRACT_ADDRESS DailyCanvas $ETHERSCAN_API_KEY --chain 80001
