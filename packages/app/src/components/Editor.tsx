@@ -6,6 +6,8 @@ import Icon from "./Icon";
 import update from "immutability-helper";
 import { getSVGFromPixels } from "../features/TileUtils";
 import { usePixels } from "../components/usePixels";
+import { getBinarySVG_2DArr } from "@exquisite-graphics/js";
+import PALETTES from "../constants/Palettes";
 
 interface EditorProps {
   x: number;
@@ -34,7 +36,7 @@ for (let offsetY = -1; offsetY <= 1; offsetY++) {
   }
 }
 
-const EMPTY: Pixels = columns.map(() => rows.map(() => 13));
+const EMPTY: Pixels = columns.map(() => rows.map(() => PALETTES[0][13]));
 
 const Editor = ({
   x,
@@ -62,8 +64,8 @@ const Editor = ({
   } = useEditor();
 
   const paintNeighbors = (
-    color: number,
-    startColor: number,
+    color: string,
+    startColor: string,
     x: number,
     y: number,
     d: Pixels,
@@ -114,11 +116,11 @@ const Editor = ({
       .map((n) => parseInt(n));
 
     if (activeTool == Tool.BRUSH) {
-      elem.setAttribute("style", `background-color: ${palette[activeColor]}`);
+      elem.setAttribute("style", `background-color: ${activeColor}`);
       const newPixels = update(pixels, { [x]: { [y]: { $set: activeColor } } });
       setPixels(newPixels);
     } else if (activeTool == Tool.EYEDROPPER) {
-      setActiveColor(palette[pixels[x][y]]);
+      setActiveColor(pixels[x][y]);
       setActiveTool(prevTool);
     } else if (activeTool == Tool.BUCKET) {
       const newPixels = paintNeighbors(activeColor, pixels[x][y], x, y, pixels);

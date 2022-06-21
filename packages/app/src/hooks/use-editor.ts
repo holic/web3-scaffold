@@ -12,7 +12,7 @@
 import { useState } from "react";
 import PALETTES from "../constants/Palettes";
 
-export type Pixels = readonly (readonly number[])[];
+export type Pixels = readonly (readonly string[])[];
 
 export enum Tool {
   BRUSH = "BRUSH",
@@ -30,9 +30,7 @@ const useEditor = () => {
   const palette = PALETTES[0];
 
   const [activeBrushSizeNumber, setActiveBrushSizeNumber] = useState(1);
-  const [activeColorString, setActiveColorString] = useState(
-    palette.indexOf(palette[0])
-  );
+  const [activeColorString, setActiveColorString] = useState(palette[13]);
   const [activeToolValue, setActiveToolValue] = useState(Tool.BRUSH);
   const [prevToolValue, setPrevToolValue] = useState(Tool.BRUSH);
 
@@ -47,7 +45,7 @@ const useEditor = () => {
   };
 
   const setActiveColor = (hex: string) => {
-    setActiveColorString(palette.indexOf(hex));
+    setActiveColorString(hex);
   };
 
   const setActiveBrushSize = (size: number) => {
