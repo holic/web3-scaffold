@@ -522,6 +522,7 @@ const Editor = ({
 
         .tool-container {
           background: #201e1e;
+          margin-top: 64px;
         }
 
         .toolbar {
