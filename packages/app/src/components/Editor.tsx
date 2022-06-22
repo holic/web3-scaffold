@@ -177,6 +177,7 @@ const Editor = ({
                 key={`${x}_${y}`}
                 className="box"
                 style={{
+                  // @ts-ignore
                   backgroundColor: palette[pixels?.[x]?.[y]],
                 }}
                 onPointerEnter={(e) => onMouseEnter(e, x, y)}
@@ -269,7 +270,7 @@ const Editor = ({
             return (
               <div
                 key={`${color}`}
-                className={color == palette[activeColor] ? "active" : ""}
+                className={color == activeColor ? "active" : ""}
                 style={{
                   backgroundColor: color,
                 }}

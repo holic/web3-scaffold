@@ -42,7 +42,7 @@ const HomePage: NextPage = () => {
       <div className="self-end p-2">
         <ConnectButton />
       </div>
-      <div className="flex-grow flex flex-col gap-4 items-center justify-center">
+      <div className="flex-grow flex flex-col gap-4 items-center justify-center p-8">
         <div className="flex flex-row">
           <h1 className="text-4xl">Daily Canvas</h1>
         </div>
@@ -57,7 +57,7 @@ const HomePage: NextPage = () => {
           <Editor x={-100} y={-100} hideMinimap closeModal={() => null} />
         </div>
 
-        <MintButton />
+        {/* <MintButton /> */}
       </div>
       <style jsx>{`
         .gallery {

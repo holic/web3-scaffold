@@ -48,6 +48,7 @@ export const getSVGFromPixels = (pixels: Pixels) => {
   for (var y = 0; y < pixels.length; y++) {
     for (var x = 0; x < pixels[y].length; x++) {
       output += `<rect fill="${
+        // @ts-ignore
         PALETTES[0][pixels[x][y]]
       }" x="${x}" y="${y}" width="1.5" height="1.5" />`;
     }
