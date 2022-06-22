@@ -42,7 +42,7 @@ for (let offsetY = -1; offsetY <= 1; offsetY++) {
   }
 }
 
-const EMPTY: Pixels = columns.map(() => rows.map(() => PALETTES[0][13]));
+const EMPTY: Pixels = columns.map(() => rows.map(() => PALETTES[0][0]));
 
 const Editor = ({
   x,
@@ -266,7 +266,7 @@ const Editor = ({
         </div>
 
         <div className="color-palette">
-          {palette.slice(8).map((color) => {
+          {palette.map((color) => {
             return (
               <div
                 key={`${color}`}

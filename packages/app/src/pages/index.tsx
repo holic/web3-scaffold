@@ -17,7 +17,7 @@ const CanvasQuery = `
     dailies(first: 100) {
       id
       author
-      pixelFilled
+      svg
       tokenURI
       promptId
     }

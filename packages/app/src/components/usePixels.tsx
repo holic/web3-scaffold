@@ -13,7 +13,7 @@ const tileSize = 16;
 const tileColumns = Array.from(Array(tileSize).keys());
 const tileRows = Array.from(Array(tileSize).keys());
 const emptyTile: Pixels = tileColumns.map(() =>
-  tileRows.map(() => PALETTES[0][13])
+  tileRows.map(() => PALETTES[0][0])
 );
 
 const serializer = <T,>(value: T): string =>
