@@ -5,45 +5,30 @@ import { Ownable } from "openzeppelin-contracts/contracts/access/Ownable.sol";
 import { ERC721 } from "openzeppelin-contracts/contracts/token/ERC721/ERC721.sol";
 import { ERC721Burnable } from "openzeppelin-contracts/contracts/token/ERC721/extensions/ERC721Burnable.sol";
 import { Counters } from "@openzeppelin/contracts/utils/Counters.sol";
+import { IExquisiteGraphics } from "./interfaces/IExquisiteGraphics.sol";
 
-import "@0xsequence/sstore2/contracts/SSTORE2.sol";
+import "@sstore2/contracts/SSTORE2.sol";
+import "./Base64.sol";
 
 contract DailyCanvas is ERC721, ERC721Burnable, Ownable {
     using Counters for Counters.Counter;
     
-    event CanvasDrawn(uint256 canvasId, bool pixelFilled, address author, uint256 promptId);
+    event CanvasDrawn(uint256 canvasId, bytes pixels, address author, uint256 promptId);
     event NewPrompt(uint256 promptId, string promptText, address author);
 
     Counters.Counter private _canvasIdCounter;
     Counters.Counter private _promptIdCounter;
 
-    constructor() ERC721("Canvas", "CAN") {}
-    // * SVG Presets * //
-    string[16] PALETTE = [
-        '#e4a672',
-        '#b86f50',
-        '#743f39',
-        '#3f2832',
-        '#9e2835',
-        '#e53b44',
-        '#fb922b',
-        '#ffe762',
-        '#63c64d',
-        '#327345',
-        '#193d3f',
-        '#4f6781',
-        '#afbfd2',
-        '#ffffff',
-        '#2ce8f4',
-        '#0484d1'   
-    ];
+    IExquisiteGraphics gfx = IExquisiteGraphics(payable(0xDf01A4040493B514605392620B3a0a05Eb8Cd295));
+
+    constructor() ERC721("Canvas", "CAN") {
+        // setRenderer(0xDf01A4040493B514605392620B3a0a05Eb8Cd295);
+    }
 
     mapping(uint256 => bool) private _pixelFilled;
     mapping(uint256 => string) private _promptTexts;
     mapping(uint256 => uint256) private _promptId;
     mapping(uint256 => address) private _svgData;
-
-    // canvas width ??
 
     // DAY = 43200
     // testnet?
@@ -90,34 +75,24 @@ contract DailyCanvas is ERC721, ERC721Burnable, Ownable {
         uint256 canvasId = _canvasIdCounter.current();
 
         // fill in the data
-        // _svgData[canvasId] = pixels;
-
+        _svgData[canvasId] = SSTORE2.write(pixels);
 
         // _pixelFilled[canvasId] = pixelFilled;
         _promptId[canvasId] = promptId;
 
         // emit events
-        emit CanvasDrawn(canvasId, pixelFilled, msg.sender, promptId);
+        emit CanvasDrawn(canvasId, pixels, msg.sender, promptId);
     }
 
     function getTileSVG(uint256 canvasId) public view returns (string memory) {
-        string[] memory palette = new string[](16);
-
-        for (uint8 i; i < PALETTE.length; i++) palette[i] = PALETTE[i];
-
-        return
-        _renderer.renderSVG(
-            _svgData[uint256(canvasId)],
-            palette,
-            32,
-            32
+        return gfx.draw(
+            SSTORE2.read(_svgData[canvasId])
         );
     }
 
     function setRenderer(address addr) public onlyOwner {
-        _renderer = IRender(addr);
+        gfx = IExquisiteGraphics(payable(addr));
     }
-
 
     function tokenURI(uint256 canvasId)
         public
@@ -132,20 +107,18 @@ contract DailyCanvas is ERC721, ERC721Burnable, Ownable {
         output = string(
             abi.encodePacked(
             output,
-            _b64.encode(abi.encodePacked(getTileSVG(uint256(canvasId))))
+            Base64.encode(abi.encodePacked(getTileSVG(uint256(canvasId))))
             )
         );
         description = string(
-            abi.encodePacked('Daily Canvas #', canvasId)
+            abi.encodePacked('Daily Canvas')
         );
 
-        string memory json = _b64.encode(
+        string memory json = Base64.encode(
         bytes(
             string(
             abi.encodePacked(
-                '{"name": "Daily Canvas", "description": ',
-                description,
-                ', "image": "',
+                '{"name": "Daily Canvas", "description": a daily canvas", "image": "',
                 output,
                 '"}'
             )
@@ -163,17 +136,6 @@ contract DailyCanvas is ERC721, ERC721Burnable, Ownable {
     // function _baseURI() internal pure override returns (string memory) {
     //     return abi.encodePacked("<pixel ", _pixelFilled[]);
     // }
-
-    function tokenURI(uint256 canvasId) public view override returns (string memory) {
-        string memory pixel = "pixel filled";
-        if (_pixelFilled[canvasId]) {
-            pixel = "no pixel";
-        }
-
-        // todo: replace with xqstgfx
-
-        return string(abi.encodePacked("<pixel=", pixel,  " /pixel>"));
-    }
 
     function safeMint(address to) public onlyOwner {
         uint256 canvasId = _canvasIdCounter.current();

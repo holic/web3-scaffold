@@ -3,7 +3,7 @@
   "private": true,
   "scripts": {
     "test": "forge test --no-match-contract Forked",
-    "test:fork": "source .env && forge test --fork-url $RPC_URL --match-contract Forked",
+    "test:fork": "source .env && source .env.local && forge test --fork-url $RPC_URL",
     "clean": "rm -rf types",
     "build": "pnpm clean && pnpm compile && pnpm types",
     "compile": "forge build --force",
