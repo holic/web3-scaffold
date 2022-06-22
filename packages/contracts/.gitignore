@@ -6,6 +6,11 @@ out/**/*.json
 !out/**/*.abi.json
 # But exclude the test ones
 out/*.t.sol/**/*.abi.json
+out/test.sol/**/*.abi.json
+out/Script.sol/**/*.abi.json
+out/Vm.sol/**/*.abi.json
+out/console.sol/**/*.abi.json
+out/console2.sol/**/*.abi.json
 # Why do these globs make this so hard?
 
 .env.*
