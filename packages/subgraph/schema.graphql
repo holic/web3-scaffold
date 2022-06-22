@@ -1,7 +1,6 @@
-type Canvas @entity @queryFields(singular: "canvas", plural: "canvases") {
+type Daily @entity {
   id: ID!
   author: Bytes!
   tokenURI: String!
   promptId: BigInt!
-  pixelFilled: Boolean!
 }

@@ -36,7 +36,7 @@ export const usePixels = (x: number, y: number) => {
     //this is what we send to contract
 
     // @ts-ignore
-    const data = getBinarySVG_2DArr(pixels);
+    const data = getBinarySVG_2DArr(pixels).getPixelBuffer();
     return data;
   };
 
@@ -45,6 +45,7 @@ export const usePixels = (x: number, y: number) => {
   }, 500);
 
   const setPixels = (newPixels: Pixels) => {
+    console.log("setting pixels", newPixels);
     setPixelsState(newPixels);
     addPixelsToHistory(newPixels);
   };

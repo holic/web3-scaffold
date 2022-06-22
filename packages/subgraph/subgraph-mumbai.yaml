@@ -7,8 +7,8 @@ dataSources:
     network: mumbai
     source:
       abi: DailyCanvas
-      address: "0x65438df4172a9f6ac18a2821283d7cdc4b80b389"
-      startBlock: 26806620
+      address: "0x921c91d758f540483a4e3ff490f97bb7e1218783"
+      startBlock: 26848646
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.5
@@ -19,6 +19,6 @@ dataSources:
         - name: DailyCanvas
           file: ../contracts/out/DailyCanvas.sol/DailyCanvas.abi.json
       eventHandlers:
-        - event: CanvasDrawn(uint256,bool,address,uint256)
+        - event: CanvasDrawn(uint256,bytes,address,uint256)
           handler: handleCanvasDrawn
       file: ./src/mapping.ts

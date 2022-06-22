@@ -13,13 +13,7 @@ import { useConnect } from "wagmi";
 
 import { Button } from "../Button";
 import { dailyCanvasContract, usedailyCanvasContractRead } from "../contracts";
-// import { extractContractError } from "./extractContractError";
-import { pluralize } from "../pluralize";
-import { promiseNotify } from "../promiseNotify";
 import { switchChain } from "../switchChain";
-import { usePromiseFn } from "../usePromiseFn";
-
-import { PixelBuffer } from "@exquisite-graphics/js/dist/ll_api";
 
 interface EditorProps {
   x: number;
@@ -58,7 +52,8 @@ const Editor = ({
   hideMinimap,
   refreshCanvas,
 }: EditorProps) => {
-  usePixels(x, y);
+  // usePixels(x, y);
+  console.log("usePixels", "x", x, "y", y);
   const [drawing, setDrawing] = useState(false);
 
   const { pixels, setPixels, undo, canUndo, getExquisiteData } = usePixels(
@@ -72,8 +67,6 @@ const Editor = ({
     palette,
     activeColor,
     setActiveColor,
-    submitTile,
-    signToSubmitTile,
     activeTool,
     prevTool,
     setActiveTool,
@@ -164,119 +157,6 @@ const Editor = ({
     paintPixels(e.clientX, e.clientY);
   };
 
-  // * PUBLISHING FLOW * //
-  const [isConfirming, setConfirming] = useState(false);
-  const [isSigning, setSigning] = useState(false);
-  const [isSubmitting, setSubmitting] = useState(false);
-  const [txHash, setTxHash] = useState<string>();
-  const [isFinishedSubmitting, setFinishedSubmitting] = useState(false);
-  const onPublishClick = async () => {
-    setConfirming(true);
-  };
-  // const onConfirmPublish = async () => {
-  //   setSigning(true);
-  //   try {
-  //     const { dataToSign, signature } = await signToSubmitTile({
-  //       x,
-  //       y,
-  //       pixels,
-  //     });
-  //     setSubmitting(true);
-  //     const tx = await submitTile({ x, y, pixels, dataToSign, signature });
-  //     setTxHash(tx.hash);
-  //     await tx.wait(2);
-  //     setFinishedSubmitting(true);
-  //     setTimeout(async () => {
-  //       closeModal();
-  //       setTimeout(() => {
-  //         if (refreshCanvas) refreshCanvas();
-  //       }, 3000);
-  //     }, 3000);
-  //   } catch (err) {
-  //     setSigning(false);
-  //   }
-  // };
-  const onCancelPublish = async () => {
-    setConfirming(false);
-  };
-
-  // if (isConfirming)
-  //   return (
-  //     <div className="modal">
-  //       {isFinishedSubmitting ? (
-  //         <div className="message">Done!</div>
-  //       ) : isSubmitting ? (
-  //         <>
-  //           <div className="message">Submitting...</div>
-  //           {txHash && (
-  //             <div className="message">
-  //               <a
-  //                 target="_blank"
-  //                 href={`https://polygonscan.com/tx/${txHash}`}
-  //               >
-  //                 View on PolygonScan ↗
-  //               </a>
-  //             </div>
-  //           )}
-  //         </>
-  //       ) : isSigning ? (
-  //         <div className="message">Sign the message in your wallet...</div>
-  //       ) : (
-  //         <>
-  //           <svg
-  //             width="100"
-  //             height="100"
-  //             dangerouslySetInnerHTML={{ __html: getSVGFromPixels(pixels) }}
-  //             className="preview"
-  //           />
-  //           <div className="message">Pixels are permanent.</div>
-  //           <div className="message">Are you sure?</div>
-
-  //           <div className="buttons">
-  //             <button onClick={onCancelPublish}>Cancel</button>
-  //             {/* <ButtonSuccess onClick={onConfirmPublish}>
-  //               <img src="/graphics/icon-mint.svg" className="mint" /> Mint
-  //             </ButtonSuccess> */}
-  //           </div>
-  //         </>
-  //       )}
-  //       <style jsx>{`
-  //         .modal {
-  //           background-color: #201e1e;
-  //           width: 90vw;
-  //           max-width: 600px;
-  //           height: 90vh;
-  //           max-height: 600px;
-  //           display: flex;
-  //           flex-direction: column;
-  //           gap: 30px;
-  //           align-items: center;
-  //           justify-content: center;
-  //           color: white;
-  //           font-size: 28px;
-  //           padding: 20px;
-  //         }
-  //         .buttons {
-  //           display: flex;
-  //           align-items: center;
-  //           gap: 1rem;
-  //         }
-  //         .mint {
-  //           width: 16px;
-  //           margin-top: 3px;
-  //           margin-right: 8px;
-  //         }
-  //         .preview {
-  //           width: 45%;
-  //           height: auto;
-  //         }
-  //         a {
-  //           color: inherit;
-  //         }
-  //       `}</style>
-  //     </div>
-  //   );
-
   return (
     <div className="editor">
       <div
@@ -296,7 +176,9 @@ const Editor = ({
                 id={`${x}_${y}`}
                 key={`${x}_${y}`}
                 className="box"
-                style={{ backgroundColor: palette[pixels?.[x]?.[y]] }}
+                style={{
+                  backgroundColor: palette[pixels?.[x]?.[y]],
+                }}
                 onPointerEnter={(e) => onMouseEnter(e, x, y)}
                 onMouseDown={(e) => onMouseEnter(e, x, y)}
                 onMouseOver={(e) => onMouseEnter(e, x, y)}
