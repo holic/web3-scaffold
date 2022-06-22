@@ -1,15 +1,17 @@
 import { CanvasDrawn, DailyCanvas } from "../generated/DailyCanvas/DailyCanvas";
-import { Canvas } from "../generated/schema";
+import { Daily } from "../generated/schema";
 
 export function handleCanvasDrawn(event: CanvasDrawn): void {
   const contract = DailyCanvas.bind(event.address);
 
-  const canvas = new Canvas(event.params.canvasId.toString());
+  // temporary rename to avoid Canvas/plural collision
+  const canvas = new Daily(event.params.canvasId.toString());
+  canvas.id = event.params.canvasId.toString();
   canvas.author = event.params.author;
-  canvas.pixelFilled = event.params.pixelFilled;
   canvas.promptId = event.params.promptId;
 
   canvas.tokenURI = contract.tokenURI(event.params.canvasId);
+  canvas.svg = contract.getTileSVG(event.params.canvasId);
   // canvas.pixelFilled = event.params.pixelFilled;
   canvas.save();
 }

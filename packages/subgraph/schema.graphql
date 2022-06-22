@@ -3,4 +3,5 @@ type Daily @entity {
   author: Bytes!
   tokenURI: String!
   promptId: BigInt!
+  svg: String!
 }

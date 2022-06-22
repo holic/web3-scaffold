@@ -29,6 +29,7 @@
     "next": "12.1.0",
     "react": "17.0.2",
     "react-dom": "17.0.2",
+    "react-inlinesvg": "^3.0.0",
     "react-toastify": "^9.0.4",
     "react-use": "^17.4.0",
     "urql": "^2.0.6",

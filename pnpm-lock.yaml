@@ -50,6 +50,7 @@ importers:
       postcss: ^8.4.5
       react: 17.0.2
       react-dom: 17.0.2
+      react-inlinesvg: ^3.0.0
       react-toastify: ^9.0.4
       react-use: ^17.4.0
       tailwindcss: ^3.0.5
@@ -74,6 +75,7 @@ importers:
       next: 12.1.0_react-dom@17.0.2+react@17.0.2
       react: 17.0.2
       react-dom: 17.0.2_react@17.0.2
+      react-inlinesvg: 3.0.0_react@17.0.2
       react-toastify: 9.0.4_react-dom@17.0.2+react@17.0.2
       react-use: 17.4.0_react-dom@17.0.2+react@17.0.2
       urql: 2.0.6_graphql@16.2.0+react@17.0.2
@@ -4712,6 +4714,10 @@ packages:
       strip-final-newline: 2.0.0
     dev: false
 
+  /exenv/1.2.2:
+    resolution: {integrity: sha512-Z+ktTxTwv9ILfgKCk32OX3n/doe+OcLTRtqK9pcL+JsP3J1/VW8Uvl4ZjLlKqeW4rzK4oesDOGMEMRIZqtP4Iw==}
+    dev: false
+
   /explain-error/1.0.4:
     resolution: {integrity: sha512-/wSgNMxFusiYRy1rd19LT2SQlIXDppHpumpWo06wxjflD1OYxDLbl6rMVw+U3bxD5Nuhex4TKqv9Aem4D0lVzQ==}
     dev: false
@@ -7772,6 +7778,24 @@ packages:
       object-assign: 4.1.1
       react: 17.0.2
       scheduler: 0.20.2
+    dev: false
+
+  /react-from-dom/0.6.2_react@17.0.2:
+    resolution: {integrity: sha512-qvWWTL/4xw4k/Dywd41RBpLQUSq97csuv15qrxN+izNeLYlD9wn5W8LspbfYe5CWbaSdkZ72BsaYBPQf2x4VbQ==}
+    peerDependencies:
+      react: ^16.8.0 || ^17.0.0 || ^18.0.0
+    dependencies:
+      react: 17.0.2
+    dev: false
+
+  /react-inlinesvg/3.0.0_react@17.0.2:
+    resolution: {integrity: sha512-zUt0DW3cKBk+vYZJJCzJqA9STRb+ZFmKLQFWurTvM4UR6vyHT8kHZSzyZZseX9BUNbTFJAfirtwpt97BWDJoSg==}
+    peerDependencies:
+      react: ^16.8.0 || ^17.0.0 || ^18.0.0
+    dependencies:
+      exenv: 1.2.2
+      react: 17.0.2
+      react-from-dom: 0.6.2_react@17.0.2
     dev: false
 
   /react-is/16.13.1:
