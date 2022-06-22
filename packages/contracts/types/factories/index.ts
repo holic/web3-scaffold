@@ -12,5 +12,3 @@ export { IERC2981__factory } from "./IERC2981__factory";
 export { IERC721A__factory } from "./IERC721A__factory";
 export { IRenderer__factory } from "./IRenderer__factory";
 export { Ownable__factory } from "./Ownable__factory";
-export { Script__factory } from "./Script__factory";
-export { Vm__factory } from "./Vm__factory";
