@@ -7,7 +7,7 @@
     "clean": "rm -rf types",
     "build": "pnpm clean && pnpm compile && pnpm types",
     "compile": "forge build --force",
-    "types": "typechain --target ethers-v5 \"out/**/!(*.t|test).sol/!(*.abi).json\" --out-dir types && tsc"
+    "types": "typechain --target ethers-v5 \"out/**/!(*.t|test|Test|Script|Vm|console|console2).sol/!(*.abi).json\" --out-dir types && tsc"
   },
   "devDependencies": {
     "@ethersproject/abi": "^5.0.0",

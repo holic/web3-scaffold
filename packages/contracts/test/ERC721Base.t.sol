@@ -1,13 +1,11 @@
 // SPDX-License-Identifier: CC0-1.0
 pragma solidity >=0.8.10 <0.9.0;
 
-import "ds-test/test.sol";
+import "forge-std/Test.sol";
 import "@openzeppelin/contracts/utils/cryptography/ECDSA.sol";
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import "../src/ERC721Base.sol";
 import "../src/IRenderer.sol";
-import "./Cheats.t.sol";
-
 
 contract CustomNFT is ERC721Base {
     constructor() ERC721Base("Custom NFT", "NFT", 0.1 ether, 100) {}
@@ -52,62 +50,61 @@ contract CustomCoin is ERC20 {
     }
 }
 
-contract ERC721BaseTest is DSTest {
-    Cheats constant cheats = Cheats(HEVM_ADDRESS);
+contract ERC721BaseTest is Test {
     CustomNFT private nft;
 
-    address private owner = cheats.addr(uint256(keccak256(abi.encodePacked("owner"))));
-    address private minter = cheats.addr(uint256(keccak256(abi.encodePacked("minter"))));
+    address private owner = vm.addr(uint256(keccak256(abi.encodePacked("owner"))));
+    address private minter = vm.addr(uint256(keccak256(abi.encodePacked("minter"))));
 
 
     function setUp() public {
         nft = new CustomNFT();
         nft.transferOwnership(owner);
-        cheats.deal(owner, 100 ether);
-        cheats.deal(minter, 100 ether);
+        vm.deal(owner, 100 ether);
+        vm.deal(minter, 100 ether);
     }
 
     function testMintPayment() public {
-        cheats.startPrank(minter);
-        cheats.expectRevert(abi.encodeWithSelector(ERC721Base.WrongPayment.selector));
+        vm.startPrank(minter);
+        vm.expectRevert(abi.encodeWithSelector(ERC721Base.WrongPayment.selector));
         nft.mint(2);
         nft.mint{value: 0.2 ether}(2);
     }
 
     function testMintLimit() public {
-        cheats.startPrank(minter);
+        vm.startPrank(minter);
         nft.mint{value: 0.2 ether}(2);
         nft.mint{value: 0.1 ether}(1);
-        cheats.expectRevert(abi.encodeWithSelector(ERC721Base.MintLimitExceeded.selector, 4));
+        vm.expectRevert(abi.encodeWithSelector(ERC721Base.MintLimitExceeded.selector, 4));
         nft.mint{value: 0.2 ether}(2);
         nft.mint{value: 0.1 ether}(1);
-        cheats.expectRevert(abi.encodeWithSelector(ERC721Base.MintLimitExceeded.selector, 4));
+        vm.expectRevert(abi.encodeWithSelector(ERC721Base.MintLimitExceeded.selector, 4));
         nft.mint{value: 0.1 ether}(1);
     }
 
     function testMaxSupply() public {
-        cheats.startPrank(minter);
+        vm.startPrank(minter);
         nft.uncappedMint{value: 6 ether}(60);
-        cheats.expectRevert(abi.encodeWithSelector(ERC721Base.MintSupplyExceeded.selector, 100));
+        vm.expectRevert(abi.encodeWithSelector(ERC721Base.MintSupplyExceeded.selector, 100));
         nft.uncappedMint{value: 6 ether}(60);
         nft.uncappedMint{value: 4 ether}(40);
-        cheats.expectRevert(abi.encodeWithSelector(ERC721Base.MintSupplyExceeded.selector, 100));
+        vm.expectRevert(abi.encodeWithSelector(ERC721Base.MintSupplyExceeded.selector, 100));
         nft.uncappedMint{value: 0.1 ether}(1);
     }
 
     function testBaseTokenURI() public {
-        cheats.prank(owner);
+        vm.prank(owner);
         nft.setBaseTokenURI("ipfs://example/");
-        cheats.prank(minter);
+        vm.prank(minter);
         nft.mint{value: 0.1 ether}(1);
         assertEq(nft.tokenURI(1), "ipfs://example/1");
     }
 
     function testRenderer() public {
         CustomRenderer renderer = new CustomRenderer();
-        cheats.prank(owner);
+        vm.prank(owner);
         nft.setRenderer(renderer);
-        cheats.prank(minter);
+        vm.prank(minter);
         nft.mint{value: 0.1 ether}(1);
         assertEq(nft.tokenURI(1), "{\"tokenId\":1}");
     }
@@ -115,9 +112,9 @@ contract ERC721BaseTest is DSTest {
     function testWithdrawAll() public {
         assertEq(address(nft).balance, 0);
         assertEq(owner.balance, 100 ether);
-        cheats.expectRevert("Zero balance");
+        vm.expectRevert("Zero balance");
         nft.withdrawAll();
-        cheats.prank(minter);
+        vm.prank(minter);
         nft.mint{value: 0.2 ether}(2);
         assertEq(address(nft).balance, 0.2 ether);
         nft.withdrawAll();
@@ -126,9 +123,9 @@ contract ERC721BaseTest is DSTest {
 
     function testWithdrawAllERC20() public {
         CustomCoin coin = new CustomCoin();
-        cheats.prank(minter);
+        vm.prank(minter);
         coin.mint();
-        cheats.prank(minter);
+        vm.prank(minter);
         coin.transfer(address(nft), 50);
         assertEq(coin.balanceOf(address(nft)), 50);
         assertEq(coin.balanceOf(address(owner)), 0);
@@ -138,7 +135,7 @@ contract ERC721BaseTest is DSTest {
     }
 
     function testOwnershipGas() public {
-        cheats.prank(minter);
+        vm.prank(minter);
         nft.uncappedMint{value: 10 ether}(100);
 
         uint256 startGas = gasleft();
@@ -160,8 +157,8 @@ contract ERC721BaseTest is DSTest {
 
     // Test to make sure ERC721A returns normalized startTimestamp
     function testStartTimestamp() public {
-        cheats.warp(3600);
-        cheats.prank(minter);
+        vm.warp(3600);
+        vm.prank(minter);
         nft.uncappedMint{value: 10 ether}(100);
 
         assertEq(nft.startTimestamp(1), 3600);
