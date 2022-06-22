@@ -4,10 +4,22 @@ import useEditor, { Pixels, Tool } from "../hooks/use-editor";
 import Icon from "./Icon";
 // import EditorPreview from "./EditorPreview";
 import update from "immutability-helper";
-import { getSVGFromPixels } from "../features/TileUtils";
 import { usePixels } from "../components/usePixels";
-import { getBinarySVG_2DArr } from "@exquisite-graphics/js";
+// import { getBinarySVG_2DArr } from "@exquisite-graphics/js";
 import PALETTES from "../constants/Palettes";
+
+import { toast } from "react-toastify";
+import { useConnect } from "wagmi";
+
+import { Button } from "../Button";
+import { dailyCanvasContract, usedailyCanvasContractRead } from "../contracts";
+// import { extractContractError } from "./extractContractError";
+import { pluralize } from "../pluralize";
+import { promiseNotify } from "../promiseNotify";
+import { switchChain } from "../switchChain";
+import { usePromiseFn } from "../usePromiseFn";
+
+import { PixelBuffer } from "@exquisite-graphics/js/dist/ll_api";
 
 interface EditorProps {
   x: number;
@@ -18,7 +30,7 @@ interface EditorProps {
   refreshCanvas?: () => void;
 }
 
-const MAX = 32;
+const MAX = 16;
 const PIXEL_SIZE = 16;
 
 const columns = Array.from(Array(MAX).keys());
@@ -49,7 +61,12 @@ const Editor = ({
   usePixels(x, y);
   const [drawing, setDrawing] = useState(false);
 
-  const { pixels, setPixels, undo, canUndo } = usePixels(x, y);
+  const { pixels, setPixels, undo, canUndo, getExquisiteData } = usePixels(
+    x,
+    y
+  );
+
+  const { activeConnector } = useConnect();
 
   const {
     palette,
@@ -262,73 +279,50 @@ const Editor = ({
 
   return (
     <div className="editor">
-      <div className="canvas-peek">
-        <div className="canvas-neighbors">
-          <div
-            className="canvas"
-            draggable={false}
-            onPointerDown={(e) => {
-              setDrawing(true);
-            }}
-            onPointerUp={() => setDrawing(false)}
-            onMouseLeave={() => setDrawing(false)}
-            onPointerLeave={() => setDrawing(false)}
-          >
-            {columns.map((y) => {
-              return rows.map((x) => {
-                return (
-                  <div
-                    id={`${x}_${y}`}
-                    key={`${x}_${y}`}
-                    className="box"
-                    style={{ backgroundColor: palette[pixels?.[x]?.[y]] }}
-                    onPointerEnter={(e) => onMouseEnter(e, x, y)}
-                    onMouseDown={(e) => onMouseEnter(e, x, y)}
-                    onMouseOver={(e) => onMouseEnter(e, x, y)}
-                    onTouchMove={(e) => {
-                      touchEnter(e);
-                    }}
-                    onTouchStart={(e) => {
-                      touchEnter(e);
-                    }}
-                  ></div>
-                );
-              });
-            })}
-          </div>
-
-          {!hideMinimap ? (
-            <>
-              {peek.map(({ offsetX, offsetY }) => (
-                <img
-                  key={`${offsetX},${offsetY}`}
-                  src={`/api/tiles/terramasu/${x + offsetX}/${y + offsetY}/svg`}
-                  style={{
-                    left: `${100 * offsetX}%`,
-                    top: `${100 * offsetY}%`,
-                  }}
-                  onError={(event) => {
-                    event.currentTarget.style.display = "none";
-                  }}
-                />
-              ))}
-            </>
-          ) : null}
-        </div>
+      <div
+        className="canvas"
+        draggable={false}
+        onPointerDown={(e) => {
+          setDrawing(true);
+        }}
+        onPointerUp={() => setDrawing(false)}
+        onMouseLeave={() => setDrawing(false)}
+        onPointerLeave={() => setDrawing(false)}
+      >
+        {columns.map((y) => {
+          return rows.map((x) => {
+            return (
+              <div
+                id={`${x}_${y}`}
+                key={`${x}_${y}`}
+                className="box"
+                style={{ backgroundColor: palette[pixels?.[x]?.[y]] }}
+                onPointerEnter={(e) => onMouseEnter(e, x, y)}
+                onMouseDown={(e) => onMouseEnter(e, x, y)}
+                onMouseOver={(e) => onMouseEnter(e, x, y)}
+                onTouchMove={(e) => {
+                  touchEnter(e);
+                }}
+                onTouchStart={(e) => {
+                  touchEnter(e);
+                }}
+              ></div>
+            );
+          });
+        })}
       </div>
 
-      <div className="canvas-aside-left">
-        <div className="tool-container">
-          <div className="toolbar">
-            <button
-              type="button"
-              onClick={(e) => setActiveTool(Tool.BRUSH)}
-              className={
-                activeTool == Tool.BRUSH ? `active brush` : `` + " brush"
-              }
-            >
-              brush
-              {/* <Icon
+      <div className="tool-container">
+        <div className="toolbar">
+          <button
+            type="button"
+            onClick={(e) => setActiveTool(Tool.BRUSH)}
+            className={
+              activeTool == Tool.BRUSH ? `active brush` : `` + " brush"
+            }
+          >
+            brush
+            {/* <Icon
                 name="brush"
                 style={{
                   width: "30px",
@@ -336,110 +330,100 @@ const Editor = ({
                   fill: "#fff",
                 }}
               /> */}
-            </button>
-            <button
-              type="button"
-              onClick={(e) => setActiveTool(Tool.BUCKET)}
-              className={
-                activeTool == Tool.BUCKET ? `active bucket` : `` + " bucket"
-              }
-            >
-              bucket
-              {/* <Icon
+          </button>
+          <button
+            type="button"
+            onClick={(e) => setActiveTool(Tool.BUCKET)}
+            className={
+              activeTool == Tool.BUCKET ? `active bucket` : `` + " bucket"
+            }
+          >
+            bucket
+            {/* <Icon
                 name="bucket"
                 style={{
                   width: "34px",
                   height: "auto",
                 }}
               /> */}
-            </button>
-            <button
-              type="button"
-              onClick={(e) => setActiveTool(Tool.EYEDROPPER)}
-              className={
-                activeTool == Tool.EYEDROPPER
-                  ? `active eyedropper`
-                  : `` + " eyedropper"
-              }
-            >
-              eyedropper
-              {/* <Icon
+          </button>
+          <button
+            type="button"
+            onClick={(e) => setActiveTool(Tool.EYEDROPPER)}
+            className={
+              activeTool == Tool.EYEDROPPER
+                ? `active eyedropper`
+                : `` + " eyedropper"
+            }
+          >
+            eyedropper
+            {/* <Icon
                 name="eyedropper"
                 style={{
                   width: "22px",
                   height: "auto",
                 }}
               /> */}
-            </button>
-            <button
-              type="button"
-              className="undo"
-              disabled={!canUndo}
-              onClick={undo}
-            >
-              undo
-              {/* <Icon
+          </button>
+          <button
+            type="button"
+            className="undo"
+            disabled={!canUndo}
+            onClick={undo}
+          >
+            undo
+            {/* <Icon
                 name="undo"
                 style={{
                   width: "32px",
                   height: "auto",
                 }}
               /> */}
-            </button>
-          </div>
+          </button>
+        </div>
 
-          <div className="color-palette">
-            {palette.map((color) => {
-              return (
-                <div
-                  key={`${color}`}
-                  className={color == palette[activeColor] ? "active" : ""}
-                  style={{
-                    backgroundColor: color,
-                  }}
-                  onClick={(e) => setActiveColor(color)}
-                ></div>
-              );
-            })}
-          </div>
+        <div className="color-palette">
+          {palette.slice(8).map((color) => {
+            return (
+              <div
+                key={`${color}`}
+                className={color == palette[activeColor] ? "active" : ""}
+                style={{
+                  backgroundColor: color,
+                }}
+                onClick={(e) => setActiveColor(color)}
+              ></div>
+            );
+          })}
         </div>
       </div>
-
-      {!hideMinimap && (
-        <div className="canvas-aside-right">
-          {/* <div className="preview-minimap">
-            <EditorPreview
-              pixels={pixels}
-              y={y}
-              x={x}
-              columns={columns}
-              rows={rows}
-            ></EditorPreview> */}
-          {/* </div> */}
-
-          <div className="canvas-instructions">
-            <p>exquisite tips for success:</p>
-            <ol>
-              <li>extend what your neighbors have drawn</li>
-              <li>give new neighbors things to play with</li>
-              <li>
-                if you get stuck,{" "}
-                <a href="https://discord.gg/pma4YtD6xW" target="_blank">
-                  ask the Discord
-                </a>
-                !
-              </li>
-            </ol>
-            <img src="/graphics/graphic-playitforward.svg" />
-          </div>
-        </div>
-      )}
 
       {!hideControls && (
         <div className="canvas-footer">
           <button onClick={handleClear}>Clear</button>
           <div className="canvas-footer-right">
-            <button onClick={closeModal}>Cancel</button>
+            <button
+              onClick={async () => {
+                if (!activeConnector) {
+                  throw new Error("Wallet not connected");
+                }
+
+                switchChain(activeConnector);
+                const signer = await activeConnector.getSigner();
+                const contract = dailyCanvasContract.connect(signer);
+                const currentPromptId =
+                  dailyCanvasContract.getCurrentPromptId();
+
+                console.log("data", getExquisiteData());
+
+                const data = getExquisiteData();
+                console.log("sending data");
+                // @ts-ignore
+                contract.drawCanvas(data, currentPromptId);
+              }}
+            >
+              mint
+            </button>
             {/* <buttonSuccess onClick={onPublishClick}>
               <img src="/graphics/icon-mint.svg" className="mint" /> Mint
             </buttonSuccess> */}
@@ -450,7 +434,7 @@ const Editor = ({
       <style jsx>{`
         .canvas {
           display: grid;
-          grid-template-columns: repeat(32, 1fr);
+          grid-template-columns: repeat(16, 1fr);
           width: ${rows.length * PIXEL_SIZE}px;
           height: ${columns.length * PIXEL_SIZE}px;
           user-select: none;
@@ -459,8 +443,8 @@ const Editor = ({
         }
 
         .box {
-          width: ${PIXEL_SIZE}px;
-          height: ${PIXEL_SIZE}px;
+          width: ${PIXEL_SIZE + 4}px;
+          height: ${PIXEL_SIZE + 4}px;
           border: 1px solid rgba(0, 0, 0, 0.15);
           border-width: 0 1px 1px 0;
         }
@@ -473,7 +457,8 @@ const Editor = ({
         }
 
         .editor {
-          display: grid;
+          display: flex;
+          flex-direction: column;
           grid-template-columns: auto auto auto;
           grid-template-rows: auto;
           grid-template-areas:
@@ -483,25 +468,7 @@ const Editor = ({
           left: 0;
           right: 0;
           bottom: 0;
-          overflow: hidden;
-          margin: 2rem;
           flex: 1 1 auto;
-        }
-
-        .canvas-aside-left {
-          display: flex;
-          flex-direction: column;
-          gap: 0;
-          align-items: center;
-          grid-area: aside-left;
-          margin-left: 3rem;
-        }
-        .canvas-aside-right {
-          display: flex;
-          flex-direction: column;
-          grid-area: aside-right;
-          align-items: flex-start;
-          width: 60%;
         }
 
         .canvas-footer {
@@ -518,7 +485,6 @@ const Editor = ({
           display: grid;
           grid-template-columns: 1fr 1fr;
           justify-content: stretch;
-          width: 200px;
           gap: 8px;
         }
 
@@ -554,53 +520,13 @@ const Editor = ({
           background: #fff;
         }
 
-        .canvas-instructions {
-          position: relative;
-          width: 288px;
-          margin-top: 1.1rem;
-          margin-left: calc(1rem + 4px);
-          border: 1px solid #444;
-          color: #ddd;
-          padding: 0.5rem 0;
-          font-size: 0.9rem;
-          border-radius: 2px;
-        }
-        .canvas-instructions p {
-          color: #ffe131;
-          text-align: center;
-          font-size: 1rem;
-        }
-        .canvas-instructions ol {
-          margin-bottom: 2.5rem;
-        }
-        .canvas-instructions ol li {
-          margin-bottom: 0.5rem;
-        }
-        .canvas-instructions a {
-          color: #ddd;
-          border-bottom: 1px dotted #ddd;
-          text-decoration: none;
-        }
-        .canvas-instructions img {
-          position: absolute;
-          bottom: -73px;
-          left: 0;
-          right: 0;
-          height: 90px;
-          margin: 0 auto;
-        }
-
         .tool-container {
-          margin-right: 1rem;
-          padding: 0.7rem;
           background: #201e1e;
-          border-radius: ;
         }
 
         .toolbar {
           display: flex;
-          flex-direction: column;
-          margin-bottom: 2rem;
+          flex-direction: row;
         }
 
         .toolbar button {
@@ -636,7 +562,8 @@ const Editor = ({
         }
 
         .color-palette {
-          display: grid;
+          display: flex;
+          flex-direction: row;
           grid-template-columns: 50% 50%;
           grid-gap: 1px;
           column-gap: 0px;

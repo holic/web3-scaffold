@@ -5,13 +5,16 @@ import { useDebouncedCallback } from "use-debounce";
 import { useLocalStorage } from "react-use";
 
 import { getBinarySVG_2DArr } from "@exquisite-graphics/js";
+import PALETTES from "../constants/Palettes";
 
 //TODO: .env
 const CONTRACT_ADDRESS = "0x65438df4172a9f6ac18a2821283d7cdc4b80b389";
-const tileSize = 32;
+const tileSize = 16;
 const tileColumns = Array.from(Array(tileSize).keys());
 const tileRows = Array.from(Array(tileSize).keys());
-const emptyTile: Pixels = tileColumns.map(() => tileRows.map(() => 13));
+const emptyTile: Pixels = tileColumns.map(() =>
+  tileRows.map(() => PALETTES[0][13])
+);
 
 const serializer = <T,>(value: T): string =>
   gzipSync(JSON.stringify(value)).toString("base64");
@@ -33,7 +36,8 @@ export const usePixels = (x: number, y: number) => {
     //this is what we send to contract
 
     // @ts-ignore
-    return getBinarySVG_2DArr(pixels);
+    const data = getBinarySVG_2DArr(pixels);
+    return data;
   };
 
   const addPixelsToHistory = useDebouncedCallback((newPixels: Pixels) => {
@@ -53,5 +57,5 @@ export const usePixels = (x: number, y: number) => {
 
   const canUndo = pixelsHistory && pixelsHistory.length > 0;
 
-  return { pixels, setPixels, undo, canUndo };
+  return { pixels, setPixels, undo, canUndo, getExquisiteData };
 };
