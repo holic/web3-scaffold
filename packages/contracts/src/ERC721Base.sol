@@ -1,18 +1,17 @@
 // SPDX-License-Identifier: Unlicense
 pragma solidity ^0.8.9;
 
-import { ERC721A } from "erc721a/contracts/ERC721A.sol";
-import { Ownable } from "@openzeppelin/contracts/access/Ownable.sol";
-import { IERC20 } from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
-import { IERC2981, IERC165 } from "@openzeppelin/contracts/interfaces/IERC2981.sol";
-import { IRenderer } from "./IRenderer.sol";
+import {ERC721A} from "erc721a/contracts/ERC721A.sol";
+import {Ownable} from "@openzeppelin/contracts/access/Ownable.sol";
+import {IERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+import {IERC2981, IERC165} from "@openzeppelin/contracts/interfaces/IERC2981.sol";
+import {IRenderer} from "./IRenderer.sol";
 
 /// @author frolic.eth
 /// @title  ERC721 base contract
 /// @notice ERC721-specific functionality to keep the actual NFT contract more
 ///         readable and focused on the mint/project mechanics.
 abstract contract ERC721Base is ERC721A, Ownable, IERC2981 {
-
     uint256 public immutable PRICE;
     uint256 public immutable MAX_SUPPLY;
     uint256 public immutable ROYALTY = 500;
@@ -22,14 +21,21 @@ abstract contract ERC721Base is ERC721A, Ownable, IERC2981 {
 
     event Initialized();
     event RendererUpdated(IRenderer previousRenderer, IRenderer newRenderer);
-    event BaseTokenURIUpdated(string previousBaseTokenURI, string newBaseTokenURI);
-
+    event BaseTokenURIUpdated(
+        string previousBaseTokenURI,
+        string newBaseTokenURI
+    );
 
     // ****************** //
     // *** INITIALIZE *** //
     // ****************** //
 
-    constructor(string memory name, string memory symbol, uint256 price, uint256 maxSupply) ERC721A(name, symbol) {
+    constructor(
+        string memory name,
+        string memory symbol,
+        uint256 price,
+        uint256 maxSupply
+    ) ERC721A(name, symbol) {
         PRICE = price;
         MAX_SUPPLY = maxSupply;
         emit Initialized();
@@ -42,7 +48,6 @@ abstract contract ERC721Base is ERC721A, Ownable, IERC2981 {
     function totalMinted() public view returns (uint256) {
         return _totalMinted();
     }
-
 
     // ****************** //
     // *** CONDITIONS *** //
@@ -59,7 +64,11 @@ abstract contract ERC721Base is ERC721A, Ownable, IERC2981 {
         _;
     }
 
-    modifier withinSupply(uint256 supply, uint256 numMinted, uint256 numToBeMinted) {
+    modifier withinSupply(
+        uint256 supply,
+        uint256 numMinted,
+        uint256 numToBeMinted
+    ) {
         if (numMinted + numToBeMinted > supply) {
             revert MintSupplyExceeded(supply);
         }
@@ -80,7 +89,6 @@ abstract contract ERC721Base is ERC721A, Ownable, IERC2981 {
         _;
     }
 
-
     // ************ //
     // *** MINT *** //
     // ************ //
@@ -89,21 +97,23 @@ abstract contract ERC721Base is ERC721A, Ownable, IERC2981 {
         _mintMany(to, numToBeMinted, "");
     }
 
-    function _mintMany(address to, uint256 numToBeMinted, bytes memory data)
-        internal
-        withinMaxSupply(numToBeMinted)
-    {
+    function _mintMany(
+        address to,
+        uint256 numToBeMinted,
+        bytes memory data
+    ) internal withinMaxSupply(numToBeMinted) {
         uint256 batchSize = 10;
         uint256 length = numToBeMinted / batchSize;
-        for (uint256 i = 0; i < length;) {
+        for (uint256 i = 0; i < length; ) {
             _safeMint(to, batchSize, data);
-            unchecked { ++i; }
+            unchecked {
+                ++i;
+            }
         }
         if (numToBeMinted % batchSize > 0) {
             _safeMint(to, numToBeMinted % batchSize, data);
         }
     }
-
 
     // ****************** //
     // *** AFTER MINT *** //
@@ -113,26 +123,40 @@ abstract contract ERC721Base is ERC721A, Ownable, IERC2981 {
         return baseTokenURI;
     }
 
-    function tokenURI(uint256 tokenId) public view override returns (string memory) {
+    function tokenURI(uint256 tokenId)
+        public
+        view
+        override
+        returns (string memory)
+    {
         if (address(renderer) != address(0)) {
             return renderer.tokenURI(tokenId);
         }
         return super.tokenURI(tokenId);
     }
 
-
     // ***************** //
     // *** ROYALTIES *** //
     // ***************** //
 
-    function supportsInterface(bytes4 _interfaceId) public view override(ERC721A, IERC165) returns (bool) {
-        return _interfaceId == type(IERC2981).interfaceId || super.supportsInterface(_interfaceId);
+    function supportsInterface(bytes4 _interfaceId)
+        public
+        view
+        override(ERC721A, IERC165)
+        returns (bool)
+    {
+        return
+            _interfaceId == type(IERC2981).interfaceId ||
+            super.supportsInterface(_interfaceId);
     }
 
-    function royaltyInfo(uint256, uint256 salePrice) external view returns (address, uint256) {
+    function royaltyInfo(uint256, uint256 salePrice)
+        external
+        view
+        returns (address, uint256)
+    {
         return (address(this), (salePrice * ROYALTY) / 10000);
     }
-
 
     // ************* //
     // *** ADMIN *** //
@@ -150,7 +174,7 @@ abstract contract ERC721Base is ERC721A, Ownable, IERC2981 {
 
     function withdrawAll() external {
         require(address(this).balance > 0, "Zero balance");
-        (bool sent,) = owner().call{value: address(this).balance}("");
+        (bool sent, ) = owner().call{value: address(this).balance}("");
         require(sent, "Failed to withdraw");
     }
 
@@ -159,7 +183,9 @@ abstract contract ERC721Base is ERC721A, Ownable, IERC2981 {
     }
 
     // Can be run any time after mint to optimize gas for future transfers
-    function normalizeOwnership(uint256 startTokenId, uint256 quantity) external {
+    function normalizeOwnership(uint256 startTokenId, uint256 quantity)
+        external
+    {
         for (uint256 i = 0; i < quantity; i++) {
             _initializeOwnershipAt(startTokenId + i);
         }
