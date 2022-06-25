@@ -1,8 +1,9 @@
 [default]
-src = 'src'
-test = 'test'
-out = 'out'
-libs = ['lib']
+src = 'packages/contracts/src'
+test = 'packages/contracts/test'
+out = 'packages/contracts/out'
+cache_path = 'packages/contracts/cache'
+libs = ['packages/contracts/lib']
 verbosity = 2
 # Foundry is fast enough that we can ignore the cache for now
 force = false
