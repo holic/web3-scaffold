@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import { gql } from "urql";
 import { useAccount, useNetwork } from "wagmi";
 
@@ -25,7 +26,12 @@ export const Inventory = () => {
     },
   });
 
-  if (!address) {
+  const [hasLoaded, setHasLoaded] = useState(false);
+  useEffect(() => {
+    setHasLoaded(true);
+  }, []);
+
+  if (!address || !hasLoaded) {
     return null;
   }
 
