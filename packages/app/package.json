@@ -27,7 +27,7 @@
     "react-dom": "17.0.2",
     "react-toastify": "^9.0.4",
     "urql": "^2.0.6",
-    "wagmi": "^0.4.10",
+    "wagmi": "^0.4.12",
     "zustand": "^3.6.7"
   },
   "devDependencies": {
