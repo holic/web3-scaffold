@@ -1,10 +1,10 @@
 import { ConnectButton } from "@rainbow-me/rainbowkit";
 import type { NextPage } from "next";
-import { useEffect, useState } from "react";
 
 import { useExampleNFTContractRead } from "../contracts";
 import { Inventory } from "../Inventory";
 import { MintButton } from "../MintButton";
+import { useIsMounted } from "../useIsMounted";
 
 const HomePage: NextPage = () => {
   const totalSupply = useExampleNFTContractRead("totalSupply", {
@@ -12,10 +12,7 @@ const HomePage: NextPage = () => {
   });
   const maxSupply = useExampleNFTContractRead("MAX_SUPPLY");
 
-  const [hasLoaded, setHasLoaded] = useState(false);
-  useEffect(() => {
-    setHasLoaded(true);
-  }, []);
+  const isMounted = useIsMounted();
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -25,7 +22,7 @@ const HomePage: NextPage = () => {
       <div className="flex-grow flex flex-col gap-4 items-center justify-center p-8 pb-[50vh]">
         <h1 className="text-4xl">Example NFT</h1>
 
-        {hasLoaded && (
+        {isMounted && (
           <p>
             {totalSupply.data?.toNumber().toLocaleString() ?? "??"}/
             {maxSupply.data?.toNumber().toLocaleString() ?? "??"} minted

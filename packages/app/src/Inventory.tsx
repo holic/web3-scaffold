@@ -1,10 +1,10 @@
-import { useEffect, useState } from "react";
 import { gql } from "urql";
 import { useAccount, useNetwork } from "wagmi";
 
 import { useInventoryQuery } from "./codegen/subgraph";
 import { exampleNFTContract } from "./contracts";
 import { PendingIcon } from "./PendingIcon";
+import { useIsMounted } from "./useIsMounted";
 
 gql`
   query Inventory($owner: Bytes!) {
@@ -26,12 +26,9 @@ export const Inventory = () => {
     },
   });
 
-  const [hasLoaded, setHasLoaded] = useState(false);
-  useEffect(() => {
-    setHasLoaded(true);
-  }, []);
+  const isMounted = useIsMounted();
 
-  if (!address || !hasLoaded) {
+  if (!address || !isMounted) {
     return null;
   }
 
