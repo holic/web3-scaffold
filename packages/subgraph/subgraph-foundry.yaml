@@ -1,0 +1,24 @@
+specVersion: 0.0.4
+schema:
+  file: ./schema.graphql
+dataSources:
+  - kind: ethereum
+    name: ExampleNFT
+    network: foundry
+    source:
+      abi: ExampleNFT
+      address: "0x5fbdb2315678afecb367f032d93f642f64180aa3"
+      startBlock: 0
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.5
+      language: wasm/assemblyscript
+      entities:
+        - NFT
+      abis:
+        - name: ExampleNFT
+          file: ../contracts/out/ExampleNFT.sol/ExampleNFT.abi.json
+      eventHandlers:
+        - event: Transfer(indexed address,indexed address,indexed uint256)
+          handler: handleTransfer
+      file: ./src/mapping.ts

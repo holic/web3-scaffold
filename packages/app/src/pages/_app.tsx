@@ -11,8 +11,9 @@ import {
 
 import { EthereumProviders } from "../EthereumProviders";
 
+// @TODO Set the Graph Node hostname via environment variable?
 export const graphClient = createGraphClient({
-  url: "https://api.thegraph.com/subgraphs/name/holic/example-nft",
+  url: "http://127.0.0.1:8000/subgraphs/name/holic/example-nft",
 });
 
 const MyApp = ({ Component, pageProps }: AppProps) => {
