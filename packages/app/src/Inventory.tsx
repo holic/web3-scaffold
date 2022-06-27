@@ -28,11 +28,11 @@ export const Inventory = () => {
 
   const isMounted = useIsMounted();
 
-  if (!address || !isMounted) {
+  if (!address) {
     return null;
   }
 
-  if (!query.data) {
+  if (!isMounted || !query.data) {
     return <PendingIcon />;
   }
 
