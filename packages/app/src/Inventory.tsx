@@ -26,13 +26,19 @@ export const Inventory = () => {
     },
   });
 
+  // Temporarily workaround hydration issues where server-rendered markup
+  // doesn't match the client due to localStorage caching in wagmi
+  // See https://github.com/holic/web3-scaffold/pull/26
   const isMounted = useIsMounted();
+  if (!isMounted) {
+    return null;
+  }
 
   if (!address) {
     return null;
   }
 
-  if (!isMounted || !query.data) {
+  if (!query.data) {
     return <PendingIcon />;
   }
 

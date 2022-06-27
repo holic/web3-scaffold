@@ -22,12 +22,17 @@ const HomePage: NextPage = () => {
       <div className="flex-grow flex flex-col gap-4 items-center justify-center p-8 pb-[50vh]">
         <h1 className="text-4xl">Example NFT</h1>
 
-        {isMounted ? (
-          <p>
-            {totalSupply.data?.toNumber().toLocaleString() ?? "??"}/
-            {maxSupply.data?.toNumber().toLocaleString() ?? "??"} minted
-          </p>
-        ) : null}
+        {/* Use isMounted to temporarily workaround hydration issues where
+        server-rendered markup doesn't match the client due to localStorage
+        caching in wagmi. See https://github.com/holic/web3-scaffold/pull/26 */}
+        <p>
+          {(isMounted ? totalSupply.data?.toNumber().toLocaleString() : null) ??
+            "??"}
+          /
+          {(isMounted ? maxSupply.data?.toNumber().toLocaleString() : null) ??
+            "??"}{" "}
+          minted
+        </p>
 
         <MintButton />
         <Inventory />
