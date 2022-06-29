@@ -3,7 +3,7 @@
   "private": true,
   "engines": {
     "node": "16",
-    "pnpm": "6"
+    "pnpm": "7"
   },
   "scripts": {
     "codegen": "graph codegen subgraph*.yaml",
