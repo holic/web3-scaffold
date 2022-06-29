@@ -7,8 +7,10 @@
   },
   "scripts": {
     "preinstall": "npx -y only-allow pnpm",
-    "dev": "pnpm -r dev --stream",
-    "prettier": "pnpm -r prettier --stream"
+    "dev": "pnpm dev --parallel",
+    "prettier": "pnpm prettier --parallel --no-bail",
+    "lint": "pnpm lint --parallel --no-bail",
+    "test": "pnpm test --parallel --no-bail"
   },
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "^5.27.1",
@@ -19,6 +21,7 @@
     "eslint-plugin-prettier": "^4.0.0",
     "eslint-plugin-simple-import-sort": "^7.0.0",
     "prettier": "^2.6.2",
-    "typescript": "^4.5.5"
+    "typescript": "^4.5.5",
+    "husky": "^8.0.0"
   }
 }

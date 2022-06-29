@@ -11,6 +11,7 @@ importers:
       eslint-plugin-import: ^2.26.0
       eslint-plugin-prettier: ^4.0.0
       eslint-plugin-simple-import-sort: ^7.0.0
+      husky: ^8.0.0
       prettier: ^2.6.2
       typescript: ^4.5.5
     devDependencies:
@@ -21,6 +22,7 @@ importers:
       eslint-plugin-import: 2.26.0_eslint@8.17.0
       eslint-plugin-prettier: 4.0.0_a088652d234d3f0e6595b5f3073e25de
       eslint-plugin-simple-import-sort: 7.0.0_eslint@8.17.0
+      husky: 8.0.1
       prettier: 2.6.2
       typescript: 4.7.3
 
@@ -5159,6 +5161,12 @@ packages:
     resolution: {integrity: sha512-SEQu7vl8KjNL2eoGBLF3+wAjpsNfA9XMlXAYj/3EdaNfAlxKthD1xjEQfGOUhllCGGJVNY34bRr6lPINhNjyZw==}
     engines: {node: '>=8.12.0'}
     dev: false
+
+  /husky/8.0.1:
+    resolution: {integrity: sha512-xs7/chUH/CKdOCs7Zy0Aev9e/dKOMZf3K1Az1nar3tzlv0jfqnYtu235bstsWTmXOR0EfINrPa97yy4Lz6RiKw==}
+    engines: {node: '>=14'}
+    hasBin: true
+    dev: true
 
   /iconv-lite/0.4.24:
     resolution: {integrity: sha512-v3MXnZAcvnywkTUEZomIActle7RXXeedOR31wwl7VlyoXO4Qi9arvSenNQWne1TcRwhCL1HwLI21bEqdpj8/rA==}
