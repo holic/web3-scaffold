@@ -5,19 +5,19 @@ import { targetChainId } from "./EthereumProviders";
 // TODO: custom errors?
 
 export const switchChain = async (
-  activeConnector: Connector,
+  connector: Connector,
   chainId: number = targetChainId
 ) => {
-  if (!activeConnector) {
+  if (!connector) {
     throw new Error("No wallet connected");
   }
 
-  const provider = await activeConnector.getProvider();
+  const provider = await connector.getProvider();
 
   const clientName = provider.connector?.peerMeta?.name ?? "";
   const isRainbow = /rainbow/i.test(clientName);
 
-  const currentChainId = await activeConnector.getChainId();
+  const currentChainId = await connector.getChainId();
   if (currentChainId === chainId) {
     return;
   }
@@ -26,8 +26,8 @@ export const switchChain = async (
   // Rainbow app to open, but does nothing except invisibly throw an error, which you
   // won't see unless you tab back to the page/browser. So we'll skip it for now.
   // TODO: file an issue/repro case about this
-  if (activeConnector.switchChain && (!isRainbow || chainId === 1)) {
-    await activeConnector.switchChain(chainId);
+  if (connector.switchChain && (!isRainbow || chainId === 1)) {
+    await connector.switchChain(chainId);
     return;
   }
 

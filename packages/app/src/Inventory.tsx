@@ -16,8 +16,7 @@ gql`
 `;
 
 export const Inventory = () => {
-  const { data: account } = useAccount();
-  const address = account?.address;
+  const { address } = useAccount();
 
   const [query, refetchQuery] = useInventoryQuery({
     pause: !address,
