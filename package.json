@@ -7,10 +7,10 @@
   },
   "scripts": {
     "preinstall": "npx -y only-allow pnpm",
-    "dev": "pnpm dev --parallel",
-    "prettier": "pnpm prettier --parallel --no-bail",
-    "lint": "pnpm lint --parallel --no-bail",
-    "test": "pnpm test --parallel --no-bail"
+    "dev": "pnpm --parallel dev",
+    "prettier": "pnpm --parallel --no-bail prettier",
+    "lint": "pnpm --parallel --no-bail lint",
+    "test": "pnpm --parallel --no-bail test"
   },
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "^5.27.1",
