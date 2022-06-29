@@ -7,9 +7,9 @@
   },
   "scripts": {
     "preinstall": "npx -y only-allow pnpm",
-    "prepare": "[[ -z $CI ]] && husky install",
     "dev": "pnpm -r dev --stream",
     "prettier": "pnpm -r prettier --stream",
+    "prepare": "husky install",
     "test": "pnpm -r test --stream"
   },
   "devDependencies": {
