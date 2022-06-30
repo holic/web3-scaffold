@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 // import Button, { ButtonSuccess } from '@app/components/Button';
 import useEditor, { Pixels, Tool } from "../hooks/use-editor";
 import Icon from "./Icon";
@@ -7,13 +7,16 @@ import update from "immutability-helper";
 import { usePixels } from "../components/usePixels";
 // import { getBinarySVG_2DArr } from "@exquisite-graphics/js";
 import PALETTES from "../constants/Palettes";
+import { useRouter } from "next/router";
 
+import SVG from "react-inlinesvg";
 import { toast } from "react-toastify";
 import { useConnect } from "wagmi";
 
 import { Button } from "../Button";
 import { dailyCanvasContract, usedailyCanvasContractRead } from "../contracts";
 import { switchChain } from "../switchChain";
+import { OperationContext } from "urql";
 
 interface EditorProps {
   x: number;
@@ -22,6 +25,8 @@ interface EditorProps {
   hideControls?: boolean;
   hideMinimap?: boolean;
   refreshCanvas?: () => void;
+  refetchCanvases?: (opts?: Partial<OperationContext> | undefined) => void;
+  result: any;
 }
 
 const MAX = 16;
@@ -51,15 +56,36 @@ const Editor = ({
   hideControls,
   hideMinimap,
   refreshCanvas,
+  refetchCanvases,
+  result,
 }: EditorProps) => {
   // usePixels(x, y);
   console.log("usePixels", "x", x, "y", y);
   const [drawing, setDrawing] = useState(false);
 
-  const { pixels, setPixels, undo, canUndo, getExquisiteData } = usePixels(
-    x,
-    y
-  );
+  const latestId = useRef<number | undefined>(undefined);
+  const router = useRouter();
+
+  const { pixels, setPixels, undo, canUndo, getExquisiteData, resetPixels } =
+    usePixels(x, y);
+
+  console.log({ result });
+
+  // find max id from results
+  useEffect(() => {
+    let maxInt = 0;
+    result.data.dailies.forEach((daily: any) => {
+      const idInt = Number(daily.id);
+      if (idInt > maxInt) {
+        maxInt = idInt;
+      }
+    });
+    if (latestId.current == undefined) {
+      latestId.current = maxInt;
+    } else {
+      console.log({ maxInt });
+    }
+  }, [result]);
 
   const { activeConnector } = useConnect();
 
@@ -157,6 +183,38 @@ const Editor = ({
     paintPixels(e.clientX, e.clientY);
   };
 
+  const onMintPress = async () => {
+    if (!activeConnector) {
+      throw new Error("Wallet not connected");
+    }
+
+    switchChain(activeConnector);
+    const signer = await activeConnector.getSigner();
+    const contract = dailyCanvasContract.connect(signer);
+    const currentPromptId = dailyCanvasContract.getCurrentPromptId();
+
+    console.log("data", getExquisiteData());
+
+    const data = getExquisiteData();
+    console.log("sending data");
+    // @ts-ignore
+    const tx = await contract.drawCanvas(data, currentPromptId);
+
+    console.log(tx);
+
+    if (latestId.current) {
+      console.log("maxInt+1", latestId.current + 1);
+
+      setTimeout(() => {
+        resetPixels();
+        setPixels(EMPTY);
+        router.push(`/canvas/${(latestId.current || 0) + 1}/view`);
+      }, 10000);
+    }
+
+    // console.log({ response });
+  };
+
   return (
     <div className="editor">
       <div
@@ -195,128 +253,31 @@ const Editor = ({
         })}
       </div>
 
-      <div className="tool-container">
-        <div className="toolbar">
-          <button
-            type="button"
-            onClick={(e) => setActiveTool(Tool.BRUSH)}
-            className={
-              activeTool == Tool.BRUSH ? `active brush` : `` + " brush"
-            }
-          >
-            brush
-            {/* <Icon
-                name="brush"
-                style={{
-                  width: "30px",
-                  height: "auto",
-                  fill: "#fff",
-                }}
-              /> */}
-          </button>
-          <button
-            type="button"
-            onClick={(e) => setActiveTool(Tool.BUCKET)}
-            className={
-              activeTool == Tool.BUCKET ? `active bucket` : `` + " bucket"
-            }
-          >
-            bucket
-            {/* <Icon
-                name="bucket"
-                style={{
-                  width: "34px",
-                  height: "auto",
-                }}
-              /> */}
-          </button>
-          <button
-            type="button"
-            onClick={(e) => setActiveTool(Tool.EYEDROPPER)}
-            className={
-              activeTool == Tool.EYEDROPPER
-                ? `active eyedropper`
-                : `` + " eyedropper"
-            }
-          >
-            eyedropper
-            {/* <Icon
-                name="eyedropper"
-                style={{
-                  width: "22px",
-                  height: "auto",
-                }}
-              /> */}
-          </button>
-          <button
-            type="button"
-            className="undo"
-            disabled={!canUndo}
-            onClick={undo}
-          >
-            undo
-            {/* <Icon
-                name="undo"
-                style={{
-                  width: "32px",
-                  height: "auto",
-                }}
-              /> */}
-          </button>
-        </div>
-
-        <div className="color-palette">
-          {palette.map((color) => {
-            return (
-              <div
-                key={`${color}`}
-                className={color == activeColor ? "active" : ""}
-                style={{
-                  backgroundColor: color,
-                }}
-                onClick={(e) => setActiveColor(color)}
-              ></div>
-            );
-          })}
-        </div>
+      <div className="color-palette ">
+        {palette.map((color) => {
+          return (
+            <div
+              key={`${color}`}
+              className={color == activeColor ? "active" : ""}
+              style={{
+                backgroundColor: color,
+              }}
+              onClick={(e) => setActiveColor(color)}
+            ></div>
+          );
+        })}
       </div>
 
-      {!hideControls && (
-        <div className="canvas-footer">
-          <button onClick={handleClear}>Clear</button>
-          <div className="canvas-footer-right">
-            <button
-              onClick={async () => {
-                if (!activeConnector) {
-                  throw new Error("Wallet not connected");
-                }
-
-                switchChain(activeConnector);
-                const signer = await activeConnector.getSigner();
-                const contract = dailyCanvasContract.connect(signer);
-                const currentPromptId =
-                  dailyCanvasContract.getCurrentPromptId();
-
-                console.log("data", getExquisiteData());
-
-                const data = getExquisiteData();
-                console.log("sending data");
-                // @ts-ignore
-                contract.drawCanvas(data, currentPromptId);
-              }}
-            >
-              mint
-            </button>
-            {/* <buttonSuccess onClick={onPublishClick}>
-              <img src="/graphics/icon-mint.svg" className="mint" /> Mint
-            </buttonSuccess> */}
-          </div>
-        </div>
-      )}
+      <div className="flex flex-col mt-4">
+        <button className="mint py-2 rounded" onClick={onMintPress}>
+          mint
+        </button>
+      </div>
 
       <style jsx>{`
         .canvas {
           display: grid;
+          z-index: 100;
           grid-template-columns: repeat(16, 1fr);
           width: ${rows.length * PIXEL_SIZE}px;
           height: ${columns.length * PIXEL_SIZE}px;
@@ -329,7 +290,7 @@ const Editor = ({
           width: ${PIXEL_SIZE + 4}px;
           height: ${PIXEL_SIZE + 4}px;
           border: 1px solid rgba(0, 0, 0, 0.15);
-          border-width: 0 1px 1px 0;
+          border-width: 1px 1px 1px 1px;
         }
         .box:hover {
           background-color: #777;
@@ -447,6 +408,7 @@ const Editor = ({
 
         .color-palette {
           display: flex;
+          border: '2px solid gray'
           flex-direction: row;
           grid-template-columns: 50% 50%;
           grid-gap: 1px;
@@ -454,28 +416,26 @@ const Editor = ({
         }
 
         .color-palette div {
+          top: 80px;
+          left: 10px;
           position: relative;
           width: 28px;
           height: 28px;
           cursor: pointer;
         }
 
-        .color-palette .active::after {
-          content: '';
-          position: absolute;
-          top: 0;
-          bottom: 0;
-          left: 0;
-          right: 0;
-          margin: auto;
-          width: 8px;
-          height: 8px;
-          background: #000;
-        }
         .mint {
           width: 16px;
-          margin-top: 3px;
           margin-right: 6px;
+
+          /* identical to box height */
+          background-color: black;
+          color: white;
+
+          width: 126%;
+          margin-top:80px;
+
+
         }
 
         @media (max-width: 768px) {

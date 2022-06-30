@@ -22,8 +22,10 @@ const deserializer = <T,>(value: string): T =>
   JSON.parse(gunzipSync(Buffer.from(value, "base64")).toString());
 
 export const usePixels = (x: number, y: number) => {
+  // pixels:v1:0x65438df4172a9f6ac18a2821283d7cdc4b80b389:-100,-100
+  const key = `pixels:v1:${CONTRACT_ADDRESS}:${x},${y}`;
   const [pixelsHistory, setPixelsHistory] = useLocalStorage<Pixels[]>(
-    `pixels:v1:${CONTRACT_ADDRESS}:${x},${y}`,
+    key,
     [emptyTile],
     { raw: false, serializer, deserializer }
   );
@@ -44,8 +46,11 @@ export const usePixels = (x: number, y: number) => {
     setPixelsHistory([newPixels, ...(pixelsHistory || [emptyTile])]);
   }, 500);
 
+  const resetPixels = () => {
+    global?.localStorage?.removeItem(key);
+  };
+
   const setPixels = (newPixels: Pixels) => {
-    console.log("setting pixels", newPixels);
     setPixelsState(newPixels);
     addPixelsToHistory(newPixels);
   };
@@ -58,5 +63,5 @@ export const usePixels = (x: number, y: number) => {
 
   const canUndo = pixelsHistory && pixelsHistory.length > 0;
 
-  return { pixels, setPixels, undo, canUndo, getExquisiteData };
+  return { pixels, setPixels, undo, canUndo, getExquisiteData, resetPixels };
 };

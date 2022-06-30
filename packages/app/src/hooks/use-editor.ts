@@ -30,7 +30,7 @@ const useEditor = () => {
   const palette = PALETTES[0];
 
   const [activeBrushSizeNumber, setActiveBrushSizeNumber] = useState(1);
-  const [activeColorString, setActiveColorString] = useState(palette[0]);
+  const [activeColorString, setActiveColorString] = useState(palette[1]);
   const [activeToolValue, setActiveToolValue] = useState(Tool.BRUSH);
   const [prevToolValue, setPrevToolValue] = useState(Tool.BRUSH);
 

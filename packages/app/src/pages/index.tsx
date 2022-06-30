@@ -43,18 +43,24 @@ const HomePage: NextPage = () => {
         <ConnectButton />
       </div>
       <div className="flex-grow flex flex-col gap-4 items-center justify-center p-8">
-        <div className="flex flex-row">
-          <h1 className="text-4xl">Daily Canvas</h1>
-        </div>
-        <div className="flex flex-row">
+        <img className="logo" src="/static/IMG_6784.png"></img>
+
+        {/* <div className="flex flex-row">
           <p>
             <i>prompt: </i>
             {p.data?.toString() ?? "??"}
           </p>
-        </div>
+        </div> */}
 
         <div className="draw">
-          <Editor x={-100} y={-100} hideMinimap closeModal={() => null} />
+          <Editor
+            x={-100}
+            y={-100}
+            hideMinimap
+            refetchCanvases={reexecuteQuery}
+            result={result}
+            closeModal={() => null}
+          />
         </div>
 
         {/* <MintButton /> */}
@@ -62,20 +68,19 @@ const HomePage: NextPage = () => {
       <style jsx>{`
         .gallery {
         }
+        .logo {
+          width: 230px;
+        }
         .galleryItem {
           width: 150px;
           height: 150px;
           background-color: red;
         }
         .draw {
-          position: relative;
-          top: 0;
-          left: 0;
-          right: 0;
-          bottom: 0;
-          display: flex;
           justify-content: center;
           align-items: center;
+
+          margin-left: -50px;
         }
       `}</style>
       ;
