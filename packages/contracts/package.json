@@ -13,7 +13,7 @@
     "compile": "forge build --force",
     "types": "typechain --target ethers-v5 \"out/**/!(*.t|test|Test|Script|Vm|console|console2).sol/!(*.abi).json\" --out-dir types && tsc",
     "prettier": "prettier --write \"src/**/*.sol\" --plugin=prettier-plugin-solidity",
-    "solhint:check": "solhint --config ./.solhint.json \"src/**/*.sol\"",
+    "solhint:check": "solhint --config ../../.solhint.json \"src/**/*.sol\"",
     "solhint": "pnpm solhint:check --fix"
   },
   "devDependencies": {
