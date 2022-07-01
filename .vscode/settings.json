@@ -10,11 +10,8 @@
       "mode": "auto"
     }
   ],
-  "[jsonc]": {
-    "editor.defaultFormatter": "rvest.vs-code-prettier-eslint"
-  },
-  "[typescript]": {
-    "editor.defaultFormatter": "rvest.vs-code-prettier-eslint"
+  "[solidity]": {
+    "editor.defaultFormatter": "JuanBlanco.solidity"
   },
   "solidity.packageDefaultDependenciesContractsDirectory": "packages/contracts/src",
   "solidity.packageDefaultDependenciesDirectory": "packages/contracts/lib",
