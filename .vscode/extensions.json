@@ -8,9 +8,7 @@
     "dbaeumer.vscode-eslint",
     "JuanBlanco.solidity",
     "redhat.vscode-yaml",
-    "rvest.vs-code-prettier-eslint",
-    "tintinweb.solidity-visual-auditor",
-    "tintinweb.vscode-solidity-language"
+    "rvest.vs-code-prettier-eslint"
   ],
   // List of extensions recommended by VS Code that should not be recommended for users of this workspace.
   "unwantedRecommendations": []
