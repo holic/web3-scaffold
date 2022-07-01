@@ -7,6 +7,7 @@
   },
   "scripts": {
     "preinstall": "npx -y only-allow pnpm",
+    "postinstall": "forge install",
     "dev": "pnpm --parallel dev",
     "prettier": "pnpm --parallel --no-bail prettier",
     "lint": "pnpm --parallel --no-bail lint",
