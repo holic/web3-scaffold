@@ -11,6 +11,7 @@ import {
 // @ts-ignore
 // import { monkeypatch } from "monkeypatch";
 // const monkeypatch = require("monkeypatch");
+import "./global.css";
 
 import { EthereumProviders } from "../EthereumProviders";
 
@@ -28,6 +29,10 @@ const MyApp = ({ Component, pageProps }: AppProps) => {
     <>
       <Head>
         <title>Daily Canvas</title>
+        <meta
+          name="viewport"
+          content="width=device-width, initial-scale=1.0"
+        ></meta>
       </Head>
       <GraphProvider value={graphClient}>
         <EthereumProviders>

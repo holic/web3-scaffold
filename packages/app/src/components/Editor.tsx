@@ -13,9 +13,10 @@ import SVG from "react-inlinesvg";
 import { toast } from "react-toastify";
 import { useConnect } from "wagmi";
 
-import { Button } from "../Button";
+import Button from "../components/Button";
 import { dailyCanvasContract, usedailyCanvasContractRead } from "../contracts";
 import { switchChain } from "../switchChain";
+import { ConnectButton } from "@rainbow-me/rainbowkit";
 import { OperationContext } from "urql";
 
 interface EditorProps {
@@ -188,7 +189,7 @@ const Editor = ({
       throw new Error("Wallet not connected");
     }
 
-    switchChain(activeConnector);
+    // switchChain(activeConnector);
     const signer = await activeConnector.getSigner();
     const contract = dailyCanvasContract.connect(signer);
     const currentPromptId = dailyCanvasContract.getCurrentPromptId();
@@ -203,8 +204,6 @@ const Editor = ({
     console.log(tx);
 
     if (latestId.current) {
-      console.log("maxInt+1", latestId.current + 1);
-
       setTimeout(() => {
         resetPixels();
         setPixels(EMPTY);
@@ -218,7 +217,7 @@ const Editor = ({
   return (
     <div className="editor">
       <div
-        className="canvas"
+        className="canvas bg-white"
         draggable={false}
         onPointerDown={(e) => {
           setDrawing(true);
@@ -253,7 +252,7 @@ const Editor = ({
         })}
       </div>
 
-      <div className="color-palette ">
+      <div className="color-palette">
         {palette.map((color) => {
           return (
             <div
@@ -268,19 +267,24 @@ const Editor = ({
         })}
       </div>
 
-      <div className="flex flex-col mt-4">
-        <button className="mint py-2 rounded" onClick={onMintPress}>
-          mint
-        </button>
-      </div>
+      <div className="flex flex-1"></div>
+
+      <ConnectButton.Custom>
+        {({ openConnectModal }) => (
+          <Button
+            className="bg-white text-black"
+            onClick={activeConnector ? onMintPress : openConnectModal}
+          >
+            {activeConnector ? "Publish" : "Connect to Publish"}
+          </Button>
+        )}
+      </ConnectButton.Custom>
 
       <style jsx>{`
         .canvas {
           display: grid;
           z-index: 100;
           grid-template-columns: repeat(16, 1fr);
-          width: ${rows.length * PIXEL_SIZE}px;
-          height: ${columns.length * PIXEL_SIZE}px;
           user-select: none;
           touch-action: none;
           cursor: ${getActiveCursor()};
@@ -301,17 +305,9 @@ const Editor = ({
         }
 
         .editor {
+          padding-bottom: 40px;
           display: flex;
           flex-direction: column;
-          grid-template-columns: auto auto auto;
-          grid-template-rows: auto;
-          grid-template-areas:
-            'aside-left canvas aside-right'
-            'aside-left canvas-footer aside-right';
-          top: 0;
-          left: 0;
-          right: 0;
-          bottom: 0;
           flex: 1 1 auto;
         }
 
@@ -408,34 +404,21 @@ const Editor = ({
 
         .color-palette {
           display: flex;
-          border: '2px solid gray'
           flex-direction: row;
-          grid-template-columns: 50% 50%;
-          grid-gap: 1px;
           column-gap: 0px;
         }
 
         .color-palette div {
-          top: 80px;
-          left: 10px;
           position: relative;
-          width: 28px;
-          height: 28px;
+          width: 32px;
+          height: 32px;
           cursor: pointer;
         }
 
         .mint {
-          width: 16px;
-          margin-right: 6px;
-
           /* identical to box height */
           background-color: black;
           color: white;
-
-          width: 126%;
-          margin-top:80px;
-
-
         }
 
         @media (max-width: 768px) {

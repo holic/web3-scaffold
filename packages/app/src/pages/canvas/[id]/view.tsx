@@ -1,9 +1,13 @@
 import { ConnectButton } from "@rainbow-me/rainbowkit";
 import type { NextPage } from "next";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { useQuery } from "urql";
 import { useRouter } from "next/router";
 import SVG from "react-inlinesvg";
+import useDailies from "../../../hooks/use-daily-canvas";
+import Link from "next/link";
+import Button from "../../../components/Button";
+import { getSVGPixels } from "@exquisite-graphics/js";
 
 import {
   usedailyCanvasContractRead,
@@ -11,6 +15,7 @@ import {
 } from "../../../contracts";
 import { wagmiClient } from "../../../EthereumProviders";
 import { json } from "node:stream/consumers";
+import Header from "../../../components/Header";
 
 const CanvasQuery = `
   query {
@@ -92,45 +97,75 @@ const HomePage: NextPage = () => {
   //   // console.log(JSON.parse(outer));
   // }
 
+  const [result, reexecuteQuery] = useDailies();
+
+  // @ts-ignore
+  const { data, fetching, error } = result;
+
+  const nextCanvas = useMemo(
+    () =>
+      data?.find((x: any) => {
+        return Number(x.id) === Number(id) + 1;
+      }) || NaN,
+    [data, id]
+  );
+  const previousCanvas = useMemo(
+    () =>
+      data?.find((x: any) => {
+        return Number(x.id) === Number(id) - 1;
+      }) || NaN,
+    [data, id]
+  );
+  console.log({
+    previousCanvas,
+    nextCanvas,
+  });
+
   return (
-    <div className="min-h-screen flex flex-col">
-      <div className="self-end p-2">
-        <ConnectButton />
-      </div>
-      <div className="flex-grow flex flex-col gap-4 items-center justify-center">
-        <div className="flex flex-col items-center">
-          <img className="logo" src="/static/IMG_6784.png"></img>
-          {/* <img src="public/static/IMG_6784.png"></img> */}
-          <h2>Canvas #{id}</h2>
-          {/* <img src={data?.dailies[0].svg}></img> */}
-          {/* <SVG src={data?.dailies[0].svg} /> */}
-          {svgData && <SVG className="" src={svgData} />}
-          {/* <SVG src={"../public/static/px-icon-pencil.svg"} /> */}
+    <div className="flex flex-col bg-black h-screen w-full items-center">
+      <Header title="Daily Canvas"></Header>
+      <div className="h-96 p-6 w-96">
+        <SVG
+          src={data?.[Number(id) - 1].svg}
+          width={"auto"}
+          height={"auto"}
+          className={"svgFix"}
+        ></SVG>
+        <div className="flex flex-col h-full">
+          <div className="w-full flex flex-row justify-between my-2 font-mono text-white">
+            <Link href={`/canvas/${previousCanvas.id}/view`}>
+              <button
+                disabled={!previousCanvas}
+                className="disabled:opacity-30"
+              >
+                ⬅️ prev
+              </button>
+            </Link>
+
+            <div>
+              <span>..{data?.[Number(id) - 1].author.slice(-8)}</span>
+            </div>
+
+            <Link href={`/canvas/${nextCanvas.id}/view`}>
+              <button disabled={!nextCanvas} className="disabled:opacity-30">
+                next ➡️{" "}
+              </button>
+            </Link>
+          </div>
+          <div className="flex flex-1 "></div>
+          <div className="flex justify-center mx-auto py-3 w-48 border-1 border-black bg-white text-black">
+            <Link href="/editor">
+              <Button
+                onClick={() => {
+                  console.log("hi");
+                }}
+              >
+                <span>Riff</span>
+              </Button>
+            </Link>
+          </div>
         </div>
       </div>
-      <style jsx>{`
-        .gallery {
-        }
-        .galleryItem {
-          width: 150px;
-          height: 150px;
-          background-color: red;
-        }
-        .draw {
-          position: relative;
-          top: 0;
-          left: 0;
-          right: 0;
-          bottom: 0;
-          display: flex;
-          justify-content: center;
-          align-items: center;
-        }
-        .logo {
-          width: 230px;
-        }
-      `}</style>
-      ;
     </div>
   );
 };

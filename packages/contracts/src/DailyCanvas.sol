@@ -90,6 +90,10 @@ contract DailyCanvas is ERC721, ERC721Burnable, Ownable {
         );
     }
 
+    function getCanvasPixels(uint256 canvasId) public view returns (bytes memory) {
+        return SSTORE2.read(_svgData[canvasId]);
+    }
+
     function setRenderer(address addr) public onlyOwner {
         gfx = IExquisiteGraphics(payable(addr));
     }
@@ -137,7 +141,9 @@ contract DailyCanvas is ERC721, ERC721Burnable, Ownable {
     //     return abi.encodePacked("<pixel ", _pixelFilled[]);
     // }
 
-    function safeMint(address to) public onlyOwner {
+    function safeMint(address to) public {
+        // TODO: check if author has already minted for this prompt
+        
         uint256 canvasId = _canvasIdCounter.current();
         _canvasIdCounter.increment();
         _safeMint(to, canvasId);

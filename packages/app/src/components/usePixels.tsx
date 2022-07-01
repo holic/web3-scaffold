@@ -4,11 +4,11 @@ import { Pixels } from "../hooks/use-editor";
 import { useDebouncedCallback } from "use-debounce";
 import { useLocalStorage } from "react-use";
 
-import { getBinarySVG_2DArr } from "@exquisite-graphics/js";
+import { getBinarySVG_2DArr, getRects } from "@exquisite-graphics/js";
 import PALETTES from "../constants/Palettes";
 
 //TODO: .env
-const CONTRACT_ADDRESS = "0x65438df4172a9f6ac18a2821283d7cdc4b80b389";
+const CONTRACT_ADDRESS = "0x0084cf625a36b586270d4e820ad19b96901ced24";
 const tileSize = 16;
 const tileColumns = Array.from(Array(tileSize).keys());
 const tileRows = Array.from(Array(tileSize).keys());
@@ -39,6 +39,7 @@ export const usePixels = (x: number, y: number) => {
 
     // @ts-ignore
     const data = getBinarySVG_2DArr(pixels).getPixelBuffer();
+
     return data;
   };
 

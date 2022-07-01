@@ -1,17 +1,18 @@
-import { ConnectButton } from "@rainbow-me/rainbowkit";
 import type { NextPage } from "next";
 import React from "react";
 import { useQuery } from "urql";
 import Editor from "../components/Editor";
+import SVG from "react-inlinesvg";
+import Link from "next/link";
 
-import {
-  // currentPrompt,
-  dailyCanvasContract,
-  usedailyCanvasContractRead,
-} from "../contracts";
+import { usedailyCanvasContractRead } from "../contracts";
 import { wagmiClient } from "../EthereumProviders";
 import { MintButton } from "../MintButton";
+import useDailies from "../hooks/use-daily-canvas";
 
+import Header from "../components/Header";
+
+// todo: order?
 const CanvasQuery = `
   query {
     dailies(first: 100) {
@@ -25,12 +26,9 @@ const CanvasQuery = `
 `;
 
 const HomePage: NextPage = () => {
-  const p = usedailyCanvasContractRead("getCurrentPrompt");
+  const [result, reexecuteQuery] = useDailies();
 
-  const [result, reexecuteQuery] = useQuery({
-    query: CanvasQuery,
-  });
-
+  // @ts-ignore
   const { data, fetching, error } = result;
 
   if (fetching) return <p>Loading...</p>;
@@ -38,52 +36,32 @@ const HomePage: NextPage = () => {
   console.log("data", data);
 
   return (
-    <div className="min-h-screen flex flex-col">
-      <div className="self-end p-2">
-        <ConnectButton />
-      </div>
-      <div className="flex-grow flex flex-col gap-4 items-center justify-center p-8">
-        <img className="logo" src="/static/IMG_6784.png"></img>
-
-        {/* <div className="flex flex-row">
-          <p>
-            <i>prompt: </i>
-            {p.data?.toString() ?? "??"}
-          </p>
-        </div> */}
-
-        <div className="draw">
-          <Editor
-            x={-100}
-            y={-100}
-            hideMinimap
-            refetchCanvases={reexecuteQuery}
-            result={result}
-            closeModal={() => null}
-          />
+    <div className="flex flex-col bg-black h-screen w-full font-mono text-white">
+      <Header title="Daily Canvas"></Header>
+      <div className="h-96 p-6">
+        {data.length ? (
+          <SVG
+            src={data[data.length - 1].svg}
+            width={"auto"}
+            height={"auto"}
+            className={"svgFix"}
+          ></SVG>
+        ) : null}
+        <div className="flex flex-col">
+          <div className="flex justify-center pb-2 pt-4 z-50">
+            <Link href="/editor">
+              <button>Edit Canvas</button>
+            </Link>
+          </div>
+          <div className="flex justify-center z-50">
+            {data.length ? (
+              <Link href={`/canvas/${data?.[data.length - 1].id}/view`}>
+                <button>View Feed</button>
+              </Link>
+            ) : null}
+          </div>
         </div>
-
-        {/* <MintButton /> */}
       </div>
-      <style jsx>{`
-        .gallery {
-        }
-        .logo {
-          width: 230px;
-        }
-        .galleryItem {
-          width: 150px;
-          height: 150px;
-          background-color: red;
-        }
-        .draw {
-          justify-content: center;
-          align-items: center;
-
-          margin-left: -50px;
-        }
-      `}</style>
-      ;
     </div>
   );
 };

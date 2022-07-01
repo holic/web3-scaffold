@@ -9,7 +9,7 @@
     "codegen": "graph codegen subgraph*.yaml",
     "build": "pnpm codegen && graph build subgraph*.yaml",
     "deploy:mumbai": "graph deploy --node https://api.thegraph.com/deploy/ jborichevskiy/daily-canvas subgraph-mumbai.yaml",
-    "deploy:rinkeby": "graph deploy --node https://api.thegraph.com/deploy/ jborichevskiy/web3-scaffold subgraph-rinkeby.yaml",
+    "deploy:rinkeby": "graph deploy --node https://api.thegraph.com/deploy/ jborichevskiy/daily-canvas subgraph-rinkeby.yaml",
     "deploy:goerli": "graph deploy --node https://api.thegraph.com/deploy/ jborichevskiy/daily-canvas subgraph-goerli.yaml",
     "prettier": "prettier --write src"
   },
