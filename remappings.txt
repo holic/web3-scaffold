@@ -1,3 +1,5 @@
 forge-std/=packages/contracts/lib/forge-std/src/
 @openzeppelin/=packages/contracts/lib/openzeppelin-contracts/
+@uniswap/=packages/contracts/lib/
+@chainlink/=packages/contracts/lib/chainlink
 erc721a/=packages/contracts/lib/ERC721A/
