@@ -7,10 +7,11 @@ import { MintButton } from "../MintButton";
 import { useIsMounted } from "../useIsMounted";
 
 const HomePage: NextPage = () => {
-  const totalSupply = useExampleNFTContractRead("totalSupply", {
+  const totalSupply = useExampleNFTContractRead({
+    functionName: "totalSupply",
     watch: true,
   });
-  const maxSupply = useExampleNFTContractRead("MAX_SUPPLY");
+  const maxSupply = useExampleNFTContractRead({ functionName: "MAX_SUPPLY" });
 
   const isMounted = useIsMounted();
 

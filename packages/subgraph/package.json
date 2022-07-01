@@ -3,13 +3,14 @@
   "private": true,
   "engines": {
     "node": "16",
-    "pnpm": "6"
+    "pnpm": "7"
   },
   "scripts": {
     "codegen": "graph codegen subgraph*.yaml",
     "build": "pnpm codegen && graph build subgraph*.yaml",
     "deploy:goerli": "graph deploy --node https://api.thegraph.com/deploy/ holic/example-nft subgraph-goerli.yaml",
-    "prettier": "prettier --write src"
+    "prettier": "prettier --write src",
+    "lint": "eslint src"
   },
   "dependencies": {
     "@graphprotocol/graph-cli": "0.30.4",

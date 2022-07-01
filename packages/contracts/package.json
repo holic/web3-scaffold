@@ -1,6 +1,10 @@
 {
   "name": "@web3-scaffold/contracts",
   "private": true,
+  "engines": {
+    "node": "16",
+    "pnpm": "7"
+  },
   "scripts": {
     "test": "forge test --no-match-contract Forked",
     "test:fork": "source .env && forge test --fork-url $RPC_URL --match-contract Forked",

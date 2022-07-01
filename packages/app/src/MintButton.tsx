@@ -1,5 +1,5 @@
 import { toast } from "react-toastify";
-import { useConnect } from "wagmi";
+import { useAccount } from "wagmi";
 
 import { Button } from "./Button";
 import { exampleNFTContract } from "./contracts";
@@ -10,17 +10,17 @@ import { switchChain } from "./switchChain";
 import { usePromiseFn } from "./usePromiseFn";
 
 export const MintButton = () => {
-  const { activeConnector } = useConnect();
+  const { connector } = useAccount();
 
   const [mintResult, mint] = usePromiseFn(
     async (quantity: number, onProgress: (message: string) => void) => {
-      if (!activeConnector) {
+      if (!connector) {
         throw new Error("Wallet not connected");
       }
 
       onProgress("Preparing wallet…");
-      await switchChain(activeConnector);
-      const signer = await activeConnector.getSigner();
+      await switchChain(connector);
+      const signer = await connector.getSigner();
       const contract = exampleNFTContract.connect(signer);
       const price = await contract.PRICE();
 
@@ -51,7 +51,7 @@ export const MintButton = () => {
         throw new Error(`Transaction error: ${contractError}`);
       }
     },
-    [activeConnector]
+    [connector]
   );
 
   return (
