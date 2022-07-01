@@ -10,3 +10,6 @@
 [submodule "packages/contracts/lib/chainlink"]
 	path = packages/contracts/lib/chainlink
 	url = https://github.com/smartcontractkit/chainlink
+[submodule "packages/contracts/lib/v2-core"]
+	path = packages/contracts/lib/v2-core
+	url = https://github.com/uniswap/v2-core
