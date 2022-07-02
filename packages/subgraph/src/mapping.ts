@@ -12,6 +12,6 @@ export function handleCanvasDrawn(event: CanvasDrawn): void {
 
   canvas.tokenURI = contract.tokenURI(event.params.canvasId);
   canvas.svg = contract.getTileSVG(event.params.canvasId);
-  // canvas.pixelFilled = event.params.pixelFilled;
+  canvas.riffCanvasId = event.params.riffCanvasId.toString();
   canvas.save();
 }

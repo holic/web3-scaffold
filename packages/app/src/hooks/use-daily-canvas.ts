@@ -1,23 +1,27 @@
-import React from "react";
-import { useQuery, UseQueryResponse } from "urql";
+import { useQuery } from "urql";
 import { Daily } from "../types/Daily";
 
 // todo: order?
-const CanvasQuery = `
-  query {
-    dailies(first: 100) {
+const IndividualCanvasQuery = `query IndividualCanvasQuery($canvasId: ID) {
+    dailies(where: {id: $canvasId}) {
       id
       author
       svg
       tokenURI
       promptId
+      riffCanvasId
     }
   }
 `;
 
-const useDailies = () => {
+interface UseDailyCanvasOptions {
+  id: string;
+}
+
+export const useDailyCanvas = ({ id }: UseDailyCanvasOptions) => {
   const [result, reexecuteQuery] = useQuery({
-    query: CanvasQuery,
+    query: IndividualCanvasQuery,
+    variables: { canvasId: id },
   });
 
   const parsedData = result.data?.dailies
@@ -31,7 +35,9 @@ const useDailies = () => {
       return Number(a.id) - Number(b.id);
     });
 
-  return [{ ...result, data: parsedData }, reexecuteQuery];
+  const singleton = parsedData?.length <= 1 ? parsedData[0] : undefined;
+
+  return [{ ...result, data: singleton }, reexecuteQuery];
 };
 
-export default useDailies;
+export default useDailyCanvas;

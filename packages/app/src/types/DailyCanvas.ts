@@ -32,8 +32,10 @@ export interface DailyCanvasInterface extends utils.Interface {
     "approve(address,uint256)": FunctionFragment;
     "balanceOf(address)": FunctionFragment;
     "burn(uint256)": FunctionFragment;
-    "drawCanvas(bytes,uint256)": FunctionFragment;
+    "drawCanvas(bytes,uint256,uint256)": FunctionFragment;
     "getApproved(uint256)": FunctionFragment;
+    "getCanvasPixels(uint256)": FunctionFragment;
+    "getCanvasRiffId(uint256)": FunctionFragment;
     "getCurrentPrompt()": FunctionFragment;
     "getCurrentPromptId()": FunctionFragment;
     "getPrompt(uint256)": FunctionFragment;
@@ -64,6 +66,8 @@ export interface DailyCanvasInterface extends utils.Interface {
       | "burn"
       | "drawCanvas"
       | "getApproved"
+      | "getCanvasPixels"
+      | "getCanvasRiffId"
       | "getCurrentPrompt"
       | "getCurrentPromptId"
       | "getPrompt"
@@ -101,10 +105,22 @@ export interface DailyCanvasInterface extends utils.Interface {
   ): string;
   encodeFunctionData(
     functionFragment: "drawCanvas",
-    values: [PromiseOrValue<BytesLike>, PromiseOrValue<BigNumberish>]
+    values: [
+      PromiseOrValue<BytesLike>,
+      PromiseOrValue<BigNumberish>,
+      PromiseOrValue<BigNumberish>
+    ]
   ): string;
   encodeFunctionData(
     functionFragment: "getApproved",
+    values: [PromiseOrValue<BigNumberish>]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "getCanvasPixels",
+    values: [PromiseOrValue<BigNumberish>]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "getCanvasRiffId",
     values: [PromiseOrValue<BigNumberish>]
   ): string;
   encodeFunctionData(
@@ -205,6 +221,14 @@ export interface DailyCanvasInterface extends utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(
+    functionFragment: "getCanvasPixels",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "getCanvasRiffId",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
     functionFragment: "getCurrentPrompt",
     data: BytesLike
   ): Result;
@@ -265,7 +289,7 @@ export interface DailyCanvasInterface extends utils.Interface {
   events: {
     "Approval(address,address,uint256)": EventFragment;
     "ApprovalForAll(address,address,bool)": EventFragment;
-    "CanvasDrawn(uint256,bytes,address,uint256)": EventFragment;
+    "CanvasDrawn(uint256,bytes,address,uint256,uint256)": EventFragment;
     "NewPrompt(uint256,string,address)": EventFragment;
     "OwnershipTransferred(address,address)": EventFragment;
     "Transfer(address,address,uint256)": EventFragment;
@@ -308,9 +332,10 @@ export interface CanvasDrawnEventObject {
   pixels: string;
   author: string;
   promptId: BigNumber;
+  riffCanvasId: BigNumber;
 }
 export type CanvasDrawnEvent = TypedEvent<
-  [BigNumber, string, string, BigNumber],
+  [BigNumber, string, string, BigNumber, BigNumber],
   CanvasDrawnEventObject
 >;
 
@@ -398,6 +423,7 @@ export interface DailyCanvas extends BaseContract {
     drawCanvas(
       pixels: PromiseOrValue<BytesLike>,
       promptId: PromiseOrValue<BigNumberish>,
+      riffCanvasId: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
@@ -405,6 +431,16 @@ export interface DailyCanvas extends BaseContract {
       tokenId: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<[string]>;
+
+    getCanvasPixels(
+      canvasId: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<[string]>;
+
+    getCanvasRiffId(
+      canvasId: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<[BigNumber]>;
 
     getCurrentPrompt(overrides?: CallOverrides): Promise<[string]>;
 
@@ -524,6 +560,7 @@ export interface DailyCanvas extends BaseContract {
   drawCanvas(
     pixels: PromiseOrValue<BytesLike>,
     promptId: PromiseOrValue<BigNumberish>,
+    riffCanvasId: PromiseOrValue<BigNumberish>,
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
@@ -531,6 +568,16 @@ export interface DailyCanvas extends BaseContract {
     tokenId: PromiseOrValue<BigNumberish>,
     overrides?: CallOverrides
   ): Promise<string>;
+
+  getCanvasPixels(
+    canvasId: PromiseOrValue<BigNumberish>,
+    overrides?: CallOverrides
+  ): Promise<string>;
+
+  getCanvasRiffId(
+    canvasId: PromiseOrValue<BigNumberish>,
+    overrides?: CallOverrides
+  ): Promise<BigNumber>;
 
   getCurrentPrompt(overrides?: CallOverrides): Promise<string>;
 
@@ -650,13 +697,24 @@ export interface DailyCanvas extends BaseContract {
     drawCanvas(
       pixels: PromiseOrValue<BytesLike>,
       promptId: PromiseOrValue<BigNumberish>,
+      riffCanvasId: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
-    ): Promise<void>;
+    ): Promise<BigNumber>;
 
     getApproved(
       tokenId: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<string>;
+
+    getCanvasPixels(
+      canvasId: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<string>;
+
+    getCanvasRiffId(
+      canvasId: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
 
     getCurrentPrompt(overrides?: CallOverrides): Promise<string>;
 
@@ -778,17 +836,19 @@ export interface DailyCanvas extends BaseContract {
       approved?: null
     ): ApprovalForAllEventFilter;
 
-    "CanvasDrawn(uint256,bytes,address,uint256)"(
+    "CanvasDrawn(uint256,bytes,address,uint256,uint256)"(
       canvasId?: null,
       pixels?: null,
       author?: null,
-      promptId?: null
+      promptId?: null,
+      riffCanvasId?: null
     ): CanvasDrawnEventFilter;
     CanvasDrawn(
       canvasId?: null,
       pixels?: null,
       author?: null,
-      promptId?: null
+      promptId?: null,
+      riffCanvasId?: null
     ): CanvasDrawnEventFilter;
 
     "NewPrompt(uint256,string,address)"(
@@ -843,11 +903,22 @@ export interface DailyCanvas extends BaseContract {
     drawCanvas(
       pixels: PromiseOrValue<BytesLike>,
       promptId: PromiseOrValue<BigNumberish>,
+      riffCanvasId: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
     getApproved(
       tokenId: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    getCanvasPixels(
+      canvasId: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    getCanvasRiffId(
+      canvasId: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
@@ -970,11 +1041,22 @@ export interface DailyCanvas extends BaseContract {
     drawCanvas(
       pixels: PromiseOrValue<BytesLike>,
       promptId: PromiseOrValue<BigNumberish>,
+      riffCanvasId: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
     getApproved(
       tokenId: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    getCanvasPixels(
+      canvasId: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    getCanvasRiffId(
+      canvasId: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 

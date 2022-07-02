@@ -3,15 +3,30 @@ import React from "react";
 
 interface HeaderProps {
   title: string;
+  onClick?: (e: React.MouseEvent<HTMLDivElement>) => void;
 }
 
-const Header = ({ title = "Daily Canvas" }: HeaderProps) => {
+const Header = ({ title = "Daily Canvas", onClick }: HeaderProps) => {
   return (
-    <Link href="/">
-      <div className="flex text-white font-mono text-2xl pt-7 pb-6 justify-center items-center cursor-pointer z-50">
-        {title}
-      </div>
-    </Link>
+    <div
+      onClick={onClick}
+      className="flex text-white background font-mono text-2xl pt-6 justify-center items-center cursor-pointer w-full"
+    >
+      <Link href="/">
+        <span className="z-50">{title}</span>
+      </Link>
+      <style jsx>
+        {`
+          .background {
+            background: linear-gradient(
+              0deg,
+              rgba(0, 0, 0, 0) 0%,
+              #000000 100%
+            );
+          }
+        `}
+      </style>
+    </div>
   );
 };
 

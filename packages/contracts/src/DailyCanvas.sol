@@ -13,7 +13,7 @@ import "./Base64.sol";
 contract DailyCanvas is ERC721, ERC721Burnable, Ownable {
     using Counters for Counters.Counter;
     
-    event CanvasDrawn(uint256 canvasId, bytes pixels, address author, uint256 promptId);
+    event CanvasDrawn(uint256 canvasId, bytes pixels, address author, uint256 promptId, uint256 riffCanvasId);
     event NewPrompt(uint256 promptId, string promptText, address author);
 
     Counters.Counter private _canvasIdCounter;
@@ -29,6 +29,7 @@ contract DailyCanvas is ERC721, ERC721Burnable, Ownable {
     mapping(uint256 => string) private _promptTexts;
     mapping(uint256 => uint256) private _promptId;
     mapping(uint256 => address) private _svgData;
+    mapping(uint256 => uint256) private _canvasRiffId;
 
     // DAY = 43200
     // testnet?
@@ -66,7 +67,7 @@ contract DailyCanvas is ERC721, ERC721Burnable, Ownable {
         return _promptTexts[promptId];
     }
 
-    function drawCanvas(bytes calldata pixels, uint256 promptId) public {
+    function drawCanvas(bytes calldata pixels, uint256 promptId, uint256 riffCanvasId) public returns (uint256) {
         // todo: limit entries per address? 
         // require anything?
         // require(pixels.length == 1024, 'Data is not 1024 bytes');
@@ -79,15 +80,22 @@ contract DailyCanvas is ERC721, ERC721Burnable, Ownable {
 
         // _pixelFilled[canvasId] = pixelFilled;
         _promptId[canvasId] = promptId;
+        _canvasRiffId[canvasId] = riffCanvasId;
 
         // emit events
-        emit CanvasDrawn(canvasId, pixels, msg.sender, promptId);
+        emit CanvasDrawn(canvasId, pixels, msg.sender, promptId, riffCanvasId);
+
+        return canvasId;
     }
 
     function getTileSVG(uint256 canvasId) public view returns (string memory) {
         return gfx.draw(
             SSTORE2.read(_svgData[canvasId])
         );
+    }
+
+    function getCanvasRiffId(uint256 canvasId) public view returns (uint256) {
+        return _canvasRiffId[canvasId];
     }
 
     function getCanvasPixels(uint256 canvasId) public view returns (bytes memory) {
@@ -99,10 +107,10 @@ contract DailyCanvas is ERC721, ERC721Burnable, Ownable {
     }
 
     function tokenURI(uint256 canvasId)
-        public
-        view
-        override
-        returns (string memory)
+    public
+    view
+    override
+    returns (string memory)
     {
         string memory output;
         string memory description;
@@ -122,9 +130,7 @@ contract DailyCanvas is ERC721, ERC721Burnable, Ownable {
         bytes(
             string(
             abi.encodePacked(
-                '{"name": "Daily Canvas", "description": a daily canvas", "image": "',
-                output,
-                '"}'
+                '{"name": "Daily Canvas", "description": "a daily canvas", "image": "', output, '", "riffId": "', _canvasRiffId[canvasId], '"}'
             )
             )
         )
@@ -141,9 +147,9 @@ contract DailyCanvas is ERC721, ERC721Burnable, Ownable {
     //     return abi.encodePacked("<pixel ", _pixelFilled[]);
     // }
 
-    function safeMint(address to) public {
+    function safeMint(address to) public{
         // TODO: check if author has already minted for this prompt
-        
+
         uint256 canvasId = _canvasIdCounter.current();
         _canvasIdCounter.increment();
         _safeMint(to, canvasId);

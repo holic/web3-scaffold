@@ -8,8 +8,8 @@ import { getBinarySVG_2DArr, getRects } from "@exquisite-graphics/js";
 import PALETTES from "../constants/Palettes";
 
 //TODO: .env
-const CONTRACT_ADDRESS = "0x0084cf625a36b586270d4e820ad19b96901ced24";
-const tileSize = 16;
+const CONTRACT_ADDRESS = "0x48f4abc62a8ff0b438ac60ea72a4e305356d19dc";
+const tileSize = 20;
 const tileColumns = Array.from(Array(tileSize).keys());
 const tileRows = Array.from(Array(tileSize).keys());
 const emptyTile: Pixels = tileColumns.map(() =>
@@ -21,9 +21,9 @@ const serializer = <T,>(value: T): string =>
 const deserializer = <T,>(value: string): T =>
   JSON.parse(gunzipSync(Buffer.from(value, "base64")).toString());
 
-export const usePixels = (x: number, y: number) => {
+export const usePixels = () => {
   // pixels:v1:0x65438df4172a9f6ac18a2821283d7cdc4b80b389:-100,-100
-  const key = `pixels:v1:${CONTRACT_ADDRESS}:${x},${y}`;
+  const key = `pixels:v1:${CONTRACT_ADDRESS}`;
   const [pixelsHistory, setPixelsHistory] = useLocalStorage<Pixels[]>(
     key,
     [emptyTile],
@@ -58,6 +58,7 @@ export const usePixels = (x: number, y: number) => {
 
   const undo = () => {
     const [_pixels, ...prevPixelsHistory] = pixelsHistory || [emptyTile];
+    console.log({ pixelsHistory });
     setPixelsHistory(prevPixelsHistory);
     setPixelsState(prevPixelsHistory[0] || emptyTile);
   };

@@ -4,6 +4,7 @@ import React, { ButtonHTMLAttributes, DetailedHTMLProps } from "react";
 interface Props {
   href?: string;
   children: React.ReactNode;
+  loading?: boolean;
 }
 
 type ButtonProps = Props &
@@ -17,14 +18,15 @@ const Button = ({
   disabled,
 }: ButtonProps) => {
   const btn = (
-    <div
-      className={`flex justify-center w-auto border-1 border-black bg-white text-black font-mono px-6 py-3 z-150 ${className}`}
+    <button
+      className={`flex font-mono justify-center w-auto border-1 border-black bg-white font-mono px-6 py-3 z-150 ${className} ${
+        disabled && "opacity-60"
+      }`}
+      onClick={onClick}
+      disabled={disabled}
     >
-      {/* @ts-ignore */}
-      <button className="font-mono" onClick={onClick} disabled={disabled}>
-        {children}
-      </button>
-    </div>
+      {children}
+    </button>
   );
 
   if (href) {

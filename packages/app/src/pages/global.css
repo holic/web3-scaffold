@@ -3,11 +3,18 @@ body,
 #__next {
   width: 100%;
   height: 100%;
+  background-color: #131313;
 }
 
 button,
 p {
   font-family: pixeloid;
+}
+
+@media (min-width: 900px) {
+  html {
+    font-size: 18px;
+  }
 }
 
 /* .svgFixScale:hover {
@@ -21,6 +28,10 @@ p {
 
 .svgFix {
   transform: scaleX(-1) rotate(90deg);
+}
+
+.Toastify__toast-body div {
+  font-family: pixeloid;
 }
 
 @font-face {
