@@ -12,9 +12,9 @@
     "build": "pnpm clean && pnpm compile && pnpm types",
     "compile": "forge build --force",
     "types": "typechain --target ethers-v5 \"out/**/!(*.t|test|Test|Script|Vm|console|console2).sol/!(*.abi).json\" --out-dir types && tsc",
-    "prettier": "prettier --write \"src/**/*.sol\" --plugin=prettier-plugin-solidity",
-    "solhint:check": "solhint --config ../../.solhint.json \"src/**/*.sol\"",
-    "solhint": "pnpm solhint:check --fix"
+    "prettier": "pnpm lint:fix && prettier --write \"src/**/*.sol\" --plugin=prettier-plugin-solidity",
+    "lint": "solhint --config ../../.solhint.json \"src/**/*.sol\"",
+    "lint:fix": "pnpm lint --fix"
   },
   "devDependencies": {
     "@ethersproject/abi": "^5.0.0",
