@@ -35,7 +35,7 @@ importers:
       '@graphql-codegen/typescript': ^2.4.2
       '@graphql-codegen/typescript-operations': ^2.2.2
       '@graphql-codegen/typescript-urql': ^3.4.2
-      '@rainbow-me/rainbowkit': ^0.4.0
+      '@rainbow-me/rainbowkit': ^0.4.1
       '@types/node': 17.0.0
       '@types/react': 17.0.37
       '@web3-scaffold/contracts': workspace:*
@@ -59,7 +59,7 @@ importers:
       '@ethersproject/address': 5.5.0
       '@ethersproject/contracts': 5.5.0
       '@ethersproject/providers': 5.5.2
-      '@rainbow-me/rainbowkit': 0.4.0_d6gtvicq6w7tiz3gubl2caxqoi
+      '@rainbow-me/rainbowkit': 0.4.1_d6gtvicq6w7tiz3gubl2caxqoi
       '@web3-scaffold/contracts': link:../contracts
       classnames: 2.3.1
       ethers: 5.5.3
@@ -1746,8 +1746,8 @@ packages:
     resolution: {integrity: sha512-HaW78NszGzRZd9SeoI3JD11JqY+lubnaOx7Pewj5pfjqWXOEATpeKIFb9Z4t2WBUK2iryiXX3lzWwmYWgUL0Ug==}
     dev: false
 
-  /@rainbow-me/rainbowkit/0.4.0_d6gtvicq6w7tiz3gubl2caxqoi:
-    resolution: {integrity: sha512-oJzC84zoq6Q1fbU9dt79coMskVTheGmAvSJx48ILKpPE53MEBVDyd6isvYqYX+UBZruwe6Vd1m4HYexTgWAgjw==}
+  /@rainbow-me/rainbowkit/0.4.1_d6gtvicq6w7tiz3gubl2caxqoi:
+    resolution: {integrity: sha512-T85DCoaljyhAO3i1zXoWih8KAMC0fMKXzlHTtulNcl3DwSEm6QSLxmGuZYrLx/XXkIdUAC7dDA6uIrLPtPWqNA==}
     engines: {node: '>=12.4'}
     peerDependencies:
       ethers: '>=5.5.1'
@@ -5602,7 +5602,7 @@ packages:
     engines: {node: '>=0.10.0'}
 
   /is-fullwidth-code-point/1.0.0:
-    resolution: {integrity: sha1-754xOG8DGn8NZDr4L95QxFfvAMs=}
+    resolution: {integrity: sha512-1pqUqRjkhPJ9miNq9SwMfdvi6lBJcd6eFxvfaivQhaH3SgisfiuudvFntdKOmxuee/77l+FPjKrQjWvmPjWrRw==}
     engines: {node: '>=0.10.0'}
     dependencies:
       number-is-nan: 1.0.1
