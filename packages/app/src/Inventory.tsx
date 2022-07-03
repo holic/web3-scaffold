@@ -1,9 +1,10 @@
 import { gql } from "urql";
 import { useAccount, useNetwork } from "wagmi";
 
-import { useInventoryQuery } from "./codegen/subgraph";
+import { useInventoryQuery } from "../codegen/subgraph";
 import { exampleNFTContract } from "./contracts";
 import { PendingIcon } from "./PendingIcon";
+import { useIsMounted } from "./useIsMounted";
 
 gql`
   query Inventory($owner: Bytes!) {
@@ -15,8 +16,7 @@ gql`
 `;
 
 export const Inventory = () => {
-  const { data: account } = useAccount();
-  const address = account?.address;
+  const { address } = useAccount();
 
   const [query, refetchQuery] = useInventoryQuery({
     pause: !address,
@@ -24,6 +24,14 @@ export const Inventory = () => {
       owner: address?.toLowerCase(),
     },
   });
+
+  // Temporarily workaround hydration issues where server-rendered markup
+  // doesn't match the client due to localStorage caching in wagmi
+  // See https://github.com/holic/web3-scaffold/pull/26
+  const isMounted = useIsMounted();
+  if (!isMounted) {
+    return null;
+  }
 
   if (!address) {
     return null;

@@ -1,11 +1,11 @@
 schema: https://api.thegraph.com/subgraphs/name/holic/example-nft
-documents: 'src/**/*.{ts,tsx,graphql}'
+documents: "src/**/*.{ts,tsx,graphql}"
 generates:
-  ./src/codegen/subgraph.ts:
+  ./codegen/subgraph.ts:
     plugins:
-      - '@graphql-codegen/typescript'
-      - '@graphql-codegen/typescript-operations'
-      - '@graphql-codegen/typescript-urql'
+      - "@graphql-codegen/typescript"
+      - "@graphql-codegen/typescript-operations"
+      - "@graphql-codegen/typescript-urql"
     config:
       gqlImport: urql#gql
       immutableTypes: true

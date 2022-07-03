@@ -3,7 +3,7 @@
   "private": true,
   "engines": {
     "node": "16",
-    "pnpm": "6"
+    "pnpm": "7"
   },
   "scripts": {
     "dev": "next dev & graphql-codegen --watch",
@@ -17,7 +17,7 @@
     "@ethersproject/address": "^5.5.0",
     "@ethersproject/contracts": "^5.5.0",
     "@ethersproject/providers": "^5.5.0",
-    "@rainbow-me/rainbowkit": "^0.2.4",
+    "@rainbow-me/rainbowkit": "^0.4.1",
     "@web3-scaffold/contracts": "workspace:*",
     "classnames": "^2.3.1",
     "ethers": "^5.5.2",
@@ -27,7 +27,7 @@
     "react-dom": "17.0.2",
     "react-toastify": "^9.0.4",
     "urql": "^2.0.6",
-    "wagmi": "^0.4.12",
+    "wagmi": "^0.5.5",
     "zustand": "^3.6.7"
   },
   "devDependencies": {

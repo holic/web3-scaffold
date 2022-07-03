@@ -19,7 +19,14 @@ export const exampleNFTContract = ExampleNFT__factory.connect(
   provider({ chainId: targetChainId })
 );
 
-export const useExampleNFTContractRead = useContractRead.bind(null, {
-  addressOrName: ExampleNFTFoundry.deployedTo,
-  contractInterface: ExampleNFT__factory.abi,
-});
+export const useExampleNFTContractRead = (
+  readConfig: Omit<
+    Parameters<typeof useContractRead>[0],
+    "addressOrName" | "contractInterface"
+  >
+) =>
+  useContractRead({
+    ...readConfig,
+    addressOrName: ExampleNFTFoundry.deployedTo,
+    contractInterface: ExampleNFT__factory.abi,
+  });

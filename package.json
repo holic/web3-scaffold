@@ -3,12 +3,15 @@
   "private": true,
   "engines": {
     "node": "16",
-    "pnpm": "6"
+    "pnpm": "7"
   },
   "scripts": {
     "preinstall": "npx -y only-allow pnpm",
-    "dev": "pnpm -r dev --stream",
-    "prettier": "pnpm -r prettier --stream"
+    "postinstall": "[ -z $CI ] && forge install || echo \"Skipping forge install for CI\"",
+    "dev": "pnpm --parallel dev",
+    "prettier": "pnpm --parallel --no-bail prettier",
+    "lint": "pnpm --parallel --no-bail lint",
+    "test": "pnpm --parallel --no-bail test"
   },
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "^5.27.1",
@@ -19,6 +22,7 @@
     "eslint-plugin-prettier": "^4.0.0",
     "eslint-plugin-simple-import-sort": "^7.0.0",
     "prettier": "^2.6.2",
-    "typescript": "^4.5.5"
+    "typescript": "^4.5.5",
+    "husky": "^8.0.0"
   }
 }
