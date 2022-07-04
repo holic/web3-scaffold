@@ -63,8 +63,8 @@ export const usePromiseFn = <TFunc extends AsyncFunction>(
           setState({ type: "rejected", error })
       );
       return promise;
-      // eslint-disable-next-line react-hooks/exhaustive-deps
     },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [...deps, currentValue, promiseFn]
   );
 
