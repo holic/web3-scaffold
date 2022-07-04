@@ -11,21 +11,25 @@
     "start": "next start",
     "lint": "eslint .",
     "codegen": "graphql-codegen",
-    "prettier": "prettier --write src"
+    "prettier": "prettier --write src",
+    "test": "jest"
   },
   "dependencies": {
     "@ethersproject/address": "^5.5.0",
     "@ethersproject/contracts": "^5.5.0",
     "@ethersproject/providers": "^5.5.0",
     "@rainbow-me/rainbowkit": "^0.4.1",
+    "@types/jest": "^28.1.4",
     "@web3-scaffold/contracts": "workspace:*",
     "classnames": "^2.3.1",
     "ethers": "^5.5.2",
     "graphql": "^16.2.0",
+    "jest": "^28.1.2",
     "next": "12.1.0",
     "react": "17.0.2",
     "react-dom": "17.0.2",
     "react-toastify": "^9.0.4",
+    "ts-jest": "^28.0.5",
     "urql": "^2.0.6",
     "wagmi": "^0.5.5",
     "zustand": "^3.6.7"

@@ -1,23 +1,23 @@
 import "@rainbow-me/rainbowkit/styles.css";
 
 import { getDefaultWallets, RainbowKitProvider } from "@rainbow-me/rainbowkit";
-import { chain, configureChains, createClient, WagmiConfig } from "wagmi";
+import { configureChains, createClient, WagmiConfig } from "wagmi";
 import { alchemyProvider } from "wagmi/providers/alchemy";
 import { publicProvider } from "wagmi/providers/public";
 
-const targetChainSlug = process.env
-  .NEXT_PUBLIC_CHAIN_SLUG as keyof typeof chain;
+import { getChains } from "./utils/getChains";
 
-const targetChain = chain[targetChainSlug]
-  ? chain[targetChainSlug]
-  : chain.goerli;
+const targetChains = getChains();
 
-export const targetChainId = targetChain.id;
+// Use the first chain specified as target chain. Maybe in the future this can be configurable.
+export const targetChainId = targetChains[0].id;
 
 export const { chains, provider, webSocketProvider } = configureChains(
-  [targetChain],
+  targetChains,
   [
-    alchemyProvider({ alchemyId: process.env.NEXT_PUBLIC_ALCHEMY_API_KEY! }),
+    alchemyProvider({
+      alchemyId: process.env.NEXT_PUBLIC_ALCHEMY_API_KEY,
+    }),
     publicProvider(),
   ]
 );
