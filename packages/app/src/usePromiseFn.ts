@@ -65,7 +65,7 @@ export const usePromiseFn = <TFunc extends AsyncFunction>(
       return promise;
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [...deps, currentValue, promiseFn]
+    [...deps, currentValue]
   );
 
   return [state, mutate];
