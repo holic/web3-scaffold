@@ -58,6 +58,7 @@ importers:
       typescript: ^4.5.5
       urql: ^2.0.6
       use-debounce: ^8.0.1
+      use-keyboard-shortcut: ^1.1.4
       wagmi: ^0.4.10
       zustand: ^3.6.7
     dependencies:
@@ -82,6 +83,7 @@ importers:
       react-use: 17.4.0_react-dom@17.0.2+react@17.0.2
       urql: 2.0.6_graphql@16.2.0+react@17.0.2
       use-debounce: 8.0.1_react@17.0.2
+      use-keyboard-shortcut: 1.1.4_react-dom@17.0.2+react@17.0.2
       wagmi: 0.4.10_a97fe83bd71061f745f7de6a26ea7406
       zustand: 3.6.9_react@17.0.2
     devDependencies:
@@ -9249,6 +9251,16 @@ packages:
       react: '>=16.8.0'
     dependencies:
       react: 17.0.2
+    dev: false
+
+  /use-keyboard-shortcut/1.1.4_react-dom@17.0.2+react@17.0.2:
+    resolution: {integrity: sha512-diFzhVWYkoR9WdHGOxp1EWVr2YUaiQC3vdlT1FbdK25UfPcTb3wlVqgSzvEBdrXh0cg1FW3PCBKzNGMGpslMqg==}
+    peerDependencies:
+      react: '>=16.8'
+      react-dom: '>=16.8'
+    dependencies:
+      react: 17.0.2
+      react-dom: 17.0.2_react@17.0.2
     dev: false
 
   /use-sidecar/1.1.2_cfedea9b3ed0faf0dded75c187406c5e:

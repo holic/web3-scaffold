@@ -14,6 +14,7 @@ import getPixelsFrom from "../../../utils/getPixelsFrom";
 import { Pixels } from "../../../hooks/use-editor";
 import { CANVAS_SIZE, PIXEL_SIZE } from "../../../constants/Editor";
 import useDailyCanvas from "../../../hooks/use-daily-canvas";
+import useKeyboardShortcut from "use-keyboard-shortcut";
 
 const CanvasViewPage: NextPage = () => {
   const router = useRouter();
@@ -44,7 +45,6 @@ const CanvasViewPage: NextPage = () => {
   const { setPixels: setCanvasPixels } = usePixels();
 
   const [result] = useDailies();
-
   // @ts-ignore
   const { data: allDailyCanvases = [] } = result;
 
@@ -92,6 +92,16 @@ const CanvasViewPage: NextPage = () => {
     }
   }, [id]);
 
+  useKeyboardShortcut(["ArrowLeft"], () => {
+    if (previousCanvas) router.push(`/canvas/${previousCanvas.id}/view`);
+  });
+
+  useKeyboardShortcut(["ArrowRight"], () => {
+    if (nextCanvas) {
+      router.push(`/canvas/${nextCanvas.id}/view`);
+    }
+  });
+
   return (
     <div className="flex flex-col h-screen w-full items-center">
       <Header title="Daily Canvas"></Header>
@@ -117,13 +127,13 @@ const CanvasViewPage: NextPage = () => {
               <Link
                 href={`https://rinkeby.etherscan.io/address/${currentCanvas?.author}`}
               >
-                <span>by ..{currentCanvas?.author?.slice(-6)}</span>
+                <span>{currentCanvas?.author?.slice(-6)}</span>
               </Link>
-              {currentCanvas?.riffCanvasId > 0 && (
+              {/* {currentCanvas?.riffCanvasId > 0 && (
                 <Link href={`/canvas/${currentCanvas?.riffCanvasId}/view`}>
                   <span>with #{currentCanvas?.riffCanvasId}</span>
                 </Link>
-              )}
+              )} */}
             </div>
 
             <Link href={`/canvas/${nextCanvas.id}/view`}>

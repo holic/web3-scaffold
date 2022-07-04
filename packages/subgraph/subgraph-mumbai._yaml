@@ -7,7 +7,7 @@ dataSources:
     network: mumbai
     source:
       abi: DailyCanvas
-      address: "0x921c91d758f540483a4e3ff490f97bb7e1218783"
+      address: "0x58068ee0244ed2d7a05a9be77e70dfbc3849baaf"
       startBlock: 26848646
     mapping:
       kind: ethereum/events

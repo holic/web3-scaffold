@@ -1,12 +1,18 @@
 import type { NextPage } from "next";
-import React from "react";
+import React, { useState, useEffect } from "react";
 import SVG from "react-inlinesvg";
+import { getSVG } from "@exquisite-graphics/js";
 import Link from "next/link";
+import { useRouter } from "next/router";
+import { usePixels } from "../components/usePixels";
+import { dailyCanvasContract } from "../contracts";
+import getPixelsFrom from "../utils/getPixelsFrom";
 
 import useDailies from "../hooks/use-daily-canvases";
 
 import Header from "../components/Header";
 import { CANVAS_SIZE, PIXEL_SIZE } from "../constants/Editor";
+import { Pixels } from "../hooks/use-editor";
 
 // // todo: order?
 // const CanvasQuery = `
@@ -35,9 +41,41 @@ import { CANVAS_SIZE, PIXEL_SIZE } from "../constants/Editor";
 
 const HomePage: NextPage = () => {
   const [result, reexecuteQuery] = useDailies();
-
+  const [riffLoading, setRiffLoading] = useState<boolean>(false);
+  const [pixels, setPixels] = useState<Pixels | undefined>(undefined);
+  const { setPixels: setCanvasPixels } = usePixels();
+  const router = useRouter();
   // @ts-ignore
   const { data = [] } = result;
+  const latestCanvas = data?.[data.length - 1];
+
+  const handleRiffClick = () => {
+    setRiffLoading(true);
+    try {
+      setCanvasPixels(pixels || []);
+      setTimeout(() => {
+        router.push(`/canvas/${latestCanvas?.id}/riff`);
+      }, 600);
+    } catch (e) {
+      setRiffLoading(false);
+    }
+  };
+
+  // @ts-ignore
+  useEffect(() => {
+    const fetchSVG = async () => {
+      // const svgData = await dailyCanvasContract.getTileSVG(String(id));
+
+      const dataRaw = await dailyCanvasContract.getCanvasPixels(
+        String(latestCanvas?.id)
+      );
+      const svgData = getSVG(dataRaw);
+      setPixels(getPixelsFrom(svgData));
+    };
+    if (latestCanvas && latestCanvas.id) {
+      fetchSVG();
+    }
+  }, [latestCanvas?.id]);
 
   const handleHeaderClick = () => {
     // @ts-ignore
@@ -46,13 +84,13 @@ const HomePage: NextPage = () => {
     });
   };
 
-  return (
+  return latestCanvas ? (
     <div className="flex flex-col h-screen w-full items-center text-white">
       <Header onClick={handleHeaderClick} title="Daily Canvas"></Header>
       <div className="h-96 pt-4 p-6">
         {data.length ? (
           <SVG
-            src={data[data.length - 1].svg}
+            src={latestCanvas.svg}
             width={CANVAS_SIZE * PIXEL_SIZE}
             height={CANVAS_SIZE * PIXEL_SIZE}
             className={"svgFix"}
@@ -60,12 +98,9 @@ const HomePage: NextPage = () => {
         ) : null}
         <div className="flex flex-col">
           <div className="flex justify-center pb-2 pt-4 z-50">
-            {/* todo: pass riff id as current */}
             {data.length ? (
               <>
-                <Link href={`/canvas/${data[data.length - 1].id}/riff`}>
-                  <button>Edit Canvas</button>
-                </Link>
+                <button onClick={handleRiffClick}>Edit Canvas</button>
               </>
             ) : (
               <>
@@ -77,7 +112,7 @@ const HomePage: NextPage = () => {
           </div>
           <div className="flex justify-center z-50">
             {data.length ? (
-              <Link href={`/canvas/${data[data.length - 1].id}/view`}>
+              <Link href={`/canvas/${latestCanvas?.id}/view`}>
                 <button>View Feed ({data.length} edits)</button>
               </Link>
             ) : null}
@@ -85,6 +120,8 @@ const HomePage: NextPage = () => {
         </div>
       </div>
     </div>
+  ) : (
+    <div />
   );
 };
 

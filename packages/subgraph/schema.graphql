@@ -4,4 +4,5 @@ type Daily @entity {
   tokenURI: String!
   promptId: BigInt!
   svg: String!
+  riffCanvasId: ID!
 }

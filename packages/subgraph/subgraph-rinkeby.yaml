@@ -1,0 +1,24 @@
+specVersion: 0.0.4
+schema:
+  file: ./schema.graphql
+dataSources:
+  - kind: ethereum
+    name: DailyCanvas
+    network: rinkeby
+    source:
+      abi: DailyCanvas
+      address: "0xeacbfadbebb57119b6d76ee13b71b63e31f220e6"
+      startBlock: 10946744
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.5
+      language: wasm/assemblyscript
+      entities:
+        - NFT
+      abis:
+        - name: DailyCanvas
+          file: ../contracts/out/DailyCanvas.sol/DailyCanvas.abi.json
+      eventHandlers:
+        - event: CanvasDrawn(uint256,bytes,address,uint256,uint256)
+          handler: handleCanvasDrawn
+      file: ./src/mapping.ts

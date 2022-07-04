@@ -118,7 +118,6 @@ const Editor = ({ riffId }: EditorProps) => {
       setActiveColor(pixels[x][y]);
       setActiveTool(prevTool);
     } else if (activeTool == Tool.BUCKET) {
-      console.log("pixels[x][y]", pixels[x][y]);
       const newPixels = paintNeighbors(activeColor, pixels[x][y], x, y, pixels);
       setPixels(newPixels);
     }
@@ -224,7 +223,7 @@ const Editor = ({ riffId }: EditorProps) => {
         </div>
       </div>
 
-      {riffId && riffId > 0 && (
+      {/* {riffId && riffId > 0 && (
         <>
           <p className="text-white -mt-6 justify-center flex">
             riffing on canvas {riffId}
@@ -233,7 +232,7 @@ const Editor = ({ riffId }: EditorProps) => {
             press clear to reset
           </p>
         </>
-      )}
+      )} */}
       <div className={`toolbar ${isLoading && "opacity-60"}`}>
         <button
           disabled={isLoading}
