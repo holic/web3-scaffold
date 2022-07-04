@@ -9,20 +9,21 @@ import {
   Provider as GraphProvider,
 } from "urql";
 // @ts-ignore
-// import { monkeypatch } from "monkeypatch";
+import { monkeypatch } from "monkeypatch";
 // const monkeypatch = require("monkeypatch");
 import "./global.css";
 
 import { EthereumProviders } from "../EthereumProviders";
 
+import fs from "fs";
+
 export const graphClient = createGraphClient({
   url: "https://api.thegraph.com/subgraphs/name/jborichevskiy/daily-canvas",
 });
 
-// monkeypatch(Date, "readFileSync", function () {
-//   // Round to 15-minute interval.
-//   return {};
-// });
+monkeypatch(fs, "readFileSync", function () {
+  return {};
+});
 
 const MyApp = ({ Component, pageProps }: AppProps) => {
   return (
