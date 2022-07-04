@@ -1,7 +1,6 @@
 import { toast } from "react-toastify";
 import { useConnect } from "wagmi";
 
-import { Button } from "./Button";
 import { dailyCanvasContract, usedailyCanvasContractRead } from "./contracts";
 // import { extractContractError } from "./extractContractError";
 import { pluralize } from "./pluralize";
