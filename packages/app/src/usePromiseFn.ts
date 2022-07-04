@@ -12,6 +12,7 @@ type PromiseState<TValue> =
   | { type: "fulfilled"; value: TValue }
   | { type: "rejected"; error: unknown };
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 type AsyncFunction = (...args: any[]) => PromiseLike<any>;
 
 export const usePromiseFn = <TFunc extends AsyncFunction>(
@@ -64,7 +65,7 @@ export const usePromiseFn = <TFunc extends AsyncFunction>(
       return promise;
       // eslint-disable-next-line react-hooks/exhaustive-deps
     },
-    [...deps, currentValue]
+    [...deps, currentValue, promiseFn]
   );
 
   return [state, mutate];
