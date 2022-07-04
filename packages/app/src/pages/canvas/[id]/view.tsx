@@ -14,7 +14,7 @@ import getPixelsFrom from "../../../utils/getPixelsFrom";
 import { Pixels } from "../../../hooks/use-editor";
 import { CANVAS_SIZE, PIXEL_SIZE } from "../../../constants/Editor";
 import useDailyCanvas from "../../../hooks/use-daily-canvas";
-import useKeyboardShortcut from "use-keyboard-shortcut";
+// import useKeyboardShortcut from "use-keyboard-shortcut";
 
 const CanvasViewPage: NextPage = () => {
   const router = useRouter();
@@ -92,15 +92,15 @@ const CanvasViewPage: NextPage = () => {
     }
   }, [id]);
 
-  useKeyboardShortcut(["ArrowLeft"], () => {
-    if (previousCanvas) router.push(`/canvas/${previousCanvas.id}/view`);
-  });
+  // useKeyboardShortcut(["ArrowLeft"], () => {
+  //   if (previousCanvas) router.push(`/canvas/${previousCanvas.id}/view`);
+  // });
 
-  useKeyboardShortcut(["ArrowRight"], () => {
-    if (nextCanvas) {
-      router.push(`/canvas/${nextCanvas.id}/view`);
-    }
-  });
+  // useKeyboardShortcut(["ArrowRight"], () => {
+  //   if (nextCanvas) {
+  //     router.push(`/canvas/${nextCanvas.id}/view`);
+  //   }
+  // });
 
   return (
     <div className="flex flex-col h-screen w-full items-center">
