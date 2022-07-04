@@ -1,5 +1,5 @@
 import { gql } from "urql";
-import { useAccount, useNetwork } from "wagmi";
+import { useAccount } from "wagmi";
 
 import { useInventoryQuery } from "../codegen/subgraph";
 import { exampleNFTContract } from "./contracts";
@@ -18,7 +18,7 @@ gql`
 export const Inventory = () => {
   const { address } = useAccount();
 
-  const [query, refetchQuery] = useInventoryQuery({
+  const [query] = useInventoryQuery({
     pause: !address,
     variables: {
       owner: address?.toLowerCase(),
