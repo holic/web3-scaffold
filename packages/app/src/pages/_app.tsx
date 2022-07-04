@@ -10,10 +10,12 @@ import {
 } from "urql";
 
 import { EthereumProviders } from "../EthereumProviders";
+import { getGraphHost } from "../utils/getGraphHost";
 
-// @TODO Set the Graph Node hostname via environment variable?
+const graphHost = getGraphHost();
+
 export const graphClient = createGraphClient({
-  url: "http://127.0.0.1:8000/subgraphs/name/holic/example-nft",
+  url: `${graphHost}/subgraphs/name/holic/example-nft`,
 });
 
 const MyApp = ({ Component, pageProps }: AppProps) => {
