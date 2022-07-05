@@ -1,5 +1,5 @@
 import type { NextPage } from "next";
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import { toast } from "react-toastify";
 import { useRouter } from "next/router";
 import SVG from "react-inlinesvg";
@@ -15,6 +15,7 @@ import { Pixels } from "../../../hooks/use-editor";
 import { CANVAS_SIZE, PIXEL_SIZE } from "../../../constants/Editor";
 import useDailyCanvas from "../../../hooks/use-daily-canvas";
 // import useKeyboardShortcut from "use-keyboard-shortcut";
+import useKeyPress from "../../../hooks/use-keypress";
 import { useENS } from "../../../useENS";
 
 const CanvasViewPage: NextPage = () => {
@@ -94,15 +95,43 @@ const CanvasViewPage: NextPage = () => {
   }, [id]);
 
   const ens = useENS(currentCanvas?.author || "");
-  // useKeyboardShortcut(["ArrowLeft"], () => {
-  //   if (previousCanvas) router.push(`/canvas/${previousCanvas.id}/view`);
-  // });
+  // const previousCurrentCanvasId = useRef(id);
+  // const previousHandler = useRef();
 
-  // useKeyboardShortcut(["ArrowRight"], () => {
-  //   if (nextCanvas) {
-  //     router.push(`/canvas/${nextCanvas.id}/view`);
+  useKeyPress(["ArrowLeft"], () => {
+    if (previousCanvas) {
+      router.push(`/canvas/${previousCanvas.id}/view`);
+    }
+  });
+
+  useKeyPress(["ArrowRight"], () => {
+    if (nextCanvas) {
+      router.push(`/canvas/${nextCanvas.id}/view`);
+    }
+  });
+
+  // useEffect(() => {
+  //   const handler = window.addEventListener("keydown", (event) => {
+  //     console.log({ event });
+
+  //     if (event.key == "ArrowLeft" && previousCanvas) {
+  //       router.push(`/canvas/${previousCanvas.id}/view`);
+  //     }
+  //     if (event.key == "ArrowRight" && nextCanvas) {
+  //       router.push(`/canvas/${nextCanvas.id}/view`);
+  //     }
+  //   });
+  //   if (previousCurrentCanvasId.current !== id) {
+  //     window.removeEventListener("keydown", previousHandler.current);
   //   }
-  // });
+
+  //   previousCurrentCanvasId.current = currentCanvas?.id;
+  //   previousHandler.current = handler;
+
+  //   return () => {
+  //     window.removeEventListener("keydown", handler);
+  //   };
+  // }, [router, id, previousCanvas, nextCanvas]);
 
   return (
     <div className="flex flex-col h-screen w-full items-center">
