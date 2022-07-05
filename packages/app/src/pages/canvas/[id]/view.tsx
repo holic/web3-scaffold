@@ -15,6 +15,7 @@ import { Pixels } from "../../../hooks/use-editor";
 import { CANVAS_SIZE, PIXEL_SIZE } from "../../../constants/Editor";
 import useDailyCanvas from "../../../hooks/use-daily-canvas";
 // import useKeyboardShortcut from "use-keyboard-shortcut";
+import { useENS } from "../../../useENS";
 
 const CanvasViewPage: NextPage = () => {
   const router = useRouter();
@@ -92,6 +93,7 @@ const CanvasViewPage: NextPage = () => {
     }
   }, [id]);
 
+  const ens = useENS(currentCanvas?.author || "");
   // useKeyboardShortcut(["ArrowLeft"], () => {
   //   if (previousCanvas) router.push(`/canvas/${previousCanvas.id}/view`);
   // });
@@ -127,13 +129,10 @@ const CanvasViewPage: NextPage = () => {
               <Link
                 href={`https://rinkeby.etherscan.io/address/${currentCanvas?.author}`}
               >
-                <span>{currentCanvas?.author?.slice(-6)}</span>
+                <span className="cursor-pointer">
+                  {ens?.displayName || currentCanvas?.author?.slice(-6)}
+                </span>
               </Link>
-              {/* {currentCanvas?.riffCanvasId > 0 && (
-                <Link href={`/canvas/${currentCanvas?.riffCanvasId}/view`}>
-                  <span>with #{currentCanvas?.riffCanvasId}</span>
-                </Link>
-              )} */}
             </div>
 
             <Link href={`/canvas/${nextCanvas.id}/view`}>
