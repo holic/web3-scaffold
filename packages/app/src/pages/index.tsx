@@ -43,7 +43,7 @@ const HomePage: NextPage = () => {
   const [result, reexecuteQuery] = useDailies();
   const [riffLoading, setRiffLoading] = useState<boolean>(false);
   const [pixels, setPixels] = useState<Pixels | undefined>(undefined);
-  const { setPixels: setCanvasPixels } = usePixels();
+  const { setPixels: setCanvasPixels } = usePixels({ keySuffix: "editor" });
   const router = useRouter();
   // @ts-ignore
   const { data = [] } = result;

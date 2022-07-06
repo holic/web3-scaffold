@@ -16,7 +16,6 @@ const getPixelsFrom = (svgData: string) => {
     const chunk = pixels.slice(i, i + chunkSize);
     outRows.push(chunk);
   }
-  console.log(outRows);
   return outRows;
 };
 
