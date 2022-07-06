@@ -17,7 +17,7 @@
     "@ethersproject/address": "^5.5.0",
     "@ethersproject/contracts": "^5.5.0",
     "@ethersproject/providers": "^5.5.0",
-    "@rainbow-me/rainbowkit": "^0.4.0",
+    "@rainbow-me/rainbowkit": "^0.4.1",
     "@web3-scaffold/contracts": "workspace:*",
     "classnames": "^2.3.1",
     "ethers": "^5.5.2",
