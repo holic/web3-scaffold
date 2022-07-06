@@ -69,6 +69,10 @@ const CanvasViewPage: NextPage = () => {
       if (pixelsHistory?.length === 1) {
         // @ts-ignore
         replacePixels([pixels]);
+      } else {
+        toast(
+          "You have some history with this canvas, we've loaded it for you!"
+        );
       }
       setTimeout(() => {
         router.push(`/canvas/${id}/riff`);
