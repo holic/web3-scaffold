@@ -82,4 +82,4 @@ At this point you're on your own! You'll find additional references to `ExampleN
 
 ## Customizing the subgraph
 
-Coming Soon : )
+Coming Soon ; )
