@@ -92,12 +92,7 @@ const Editor = ({ riffId }: EditorProps) => {
       setPixels(EMPTY);
     }
 
-    if (
-      riffId &&
-      confirm(
-        "Are you sure you want to erase your drawing and clear your riff history? You will sent to the editor if you clear this riff."
-      )
-    ) {
+    if (riffId && confirm("Are you sure you want to erase your drawing?")) {
       resetPixels();
       setTimeout(() => {
         if (riffId) {

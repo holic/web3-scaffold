@@ -54,6 +54,7 @@ export const usePixels = (options?: UsePixelsOptions) => {
 
   const resetPixels = () => {
     global?.localStorage?.removeItem(key);
+    setPixelsState(emptyTile);
   };
 
   const replacePixels = (newPixels: Pixels[]) => {
