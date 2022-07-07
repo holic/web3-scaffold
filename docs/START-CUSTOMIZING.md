@@ -77,6 +77,7 @@ fi
     - Update imports to ensure it is using your contract
 4. Open `packages/app/pages/index.tsx` and update any imports to point to your new contract
 5. Open `packages/app/extractContractError.ts` and update the factory import for your smart contact
+6. Open `packages/app/src/Inventory.tsx` and update the contract import
 
 At this point you're on your own! You'll find additional references to `ExampleNFT` related imports throughout the app. As you start to use these components, update them to your needs : ) 
 
