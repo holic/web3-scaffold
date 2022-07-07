@@ -4,7 +4,7 @@ import { Pixels } from "../hooks/use-editor";
 import { useDebouncedCallback } from "use-debounce";
 import { useLocalStorage } from "react-use";
 
-import { getBinarySVG_2DArr, getRects } from "@exquisite-graphics/js";
+import { getBinarySVG_2DArr } from "@exquisite-graphics/js";
 import PALETTES from "../constants/Palettes";
 
 //TODO: .env
@@ -21,9 +21,14 @@ const serializer = <T,>(value: T): string =>
 const deserializer = <T,>(value: string): T =>
   JSON.parse(gunzipSync(Buffer.from(value, "base64")).toString());
 
-export const usePixels = () => {
-  // pixels:v1:0x65438df4172a9f6ac18a2821283d7cdc4b80b389:-100,-100
-  const key = `pixels:v1:${CONTRACT_ADDRESS}`;
+interface UsePixelsOptions {
+  keySuffix?: string;
+}
+
+export const usePixels = (options?: UsePixelsOptions) => {
+  const { keySuffix = "editor" } = options || {};
+
+  const key = `pixels:v1:${CONTRACT_ADDRESS}:${keySuffix}`;
   const [pixelsHistory, setPixelsHistory] = useLocalStorage<Pixels[]>(
     key,
     [emptyTile],
@@ -49,6 +54,12 @@ export const usePixels = () => {
 
   const resetPixels = () => {
     global?.localStorage?.removeItem(key);
+    setPixelsState(emptyTile);
+  };
+
+  const replacePixels = (newPixels: Pixels[]) => {
+    setPixelsHistory(newPixels);
+    if (newPixels?.[0]) setPixelsState(newPixels[0]);
   };
 
   const setPixels = (newPixels: Pixels) => {
@@ -58,12 +69,20 @@ export const usePixels = () => {
 
   const undo = () => {
     const [_pixels, ...prevPixelsHistory] = pixelsHistory || [emptyTile];
-    console.log({ pixelsHistory });
     setPixelsHistory(prevPixelsHistory);
     setPixelsState(prevPixelsHistory[0] || emptyTile);
   };
 
   const canUndo = pixelsHistory && pixelsHistory.length > 0;
 
-  return { pixels, setPixels, undo, canUndo, getExquisiteData, resetPixels };
+  return {
+    pixels,
+    setPixels,
+    undo,
+    canUndo,
+    getExquisiteData,
+    resetPixels,
+    replacePixels,
+    pixelsHistory,
+  };
 };

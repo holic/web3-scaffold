@@ -13,6 +13,7 @@ import useDailies from "../hooks/use-daily-canvases";
 import Header from "../components/Header";
 import { CANVAS_SIZE, PIXEL_SIZE } from "../constants/Editor";
 import { Pixels } from "../hooks/use-editor";
+import { toast } from "react-toastify";
 
 // // todo: order?
 // const CanvasQuery = `
@@ -43,16 +44,36 @@ const HomePage: NextPage = () => {
   const [result, reexecuteQuery] = useDailies();
   const [riffLoading, setRiffLoading] = useState<boolean>(false);
   const [pixels, setPixels] = useState<Pixels | undefined>(undefined);
-  const { setPixels: setCanvasPixels } = usePixels();
   const router = useRouter();
   // @ts-ignore
   const { data = [] } = result;
   const latestCanvas = data?.[data.length - 1];
 
+  const { pixelsHistory, replacePixels } = usePixels({
+    keySuffix: latestCanvas?.id,
+  });
+
   const handleRiffClick = () => {
+    if (!latestCanvas) return;
+
     setRiffLoading(true);
     try {
-      setCanvasPixels(pixels || []);
+      if (!pixels?.length) {
+        toast(
+          "Unable to read canvas data for riff, why not draw something new instead?"
+        );
+        router.push("/editor");
+        return;
+      }
+
+      if (pixelsHistory?.length === 1) {
+        // @ts-ignore
+        replacePixels([pixels]);
+      } else {
+        toast(
+          "You have some history with this canvas, we've loaded it for you!"
+        );
+      }
       setTimeout(() => {
         router.push(`/canvas/${latestCanvas?.id}/riff`);
       }, 600);
