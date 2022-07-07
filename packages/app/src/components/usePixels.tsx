@@ -28,8 +28,6 @@ interface UsePixelsOptions {
 export const usePixels = (options?: UsePixelsOptions) => {
   const { keySuffix = "editor" } = options || {};
 
-  console.count(`usePixels(${keySuffix}) re-render`);
-
   const key = `pixels:v1:${CONTRACT_ADDRESS}:${keySuffix}`;
   const [pixelsHistory, setPixelsHistory] = useLocalStorage<Pixels[]>(
     key,

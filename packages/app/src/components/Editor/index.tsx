@@ -195,8 +195,6 @@ const Editor = ({ riffId }: EditorProps) => {
 
   const isLoading = isLoadingWrite || isTransactionLoading;
 
-  console.log(pixels);
-
   return (
     <div className="flex flex-col">
       <div className="editor">
