@@ -1,5 +1,5 @@
 import type { NextPage } from "next";
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import { toast } from "react-toastify";
 import { useRouter } from "next/router";
 import SVG from "react-inlinesvg";
@@ -14,6 +14,7 @@ import getPixelsFrom from "../../../utils/getPixelsFrom";
 import { Pixels } from "../../../hooks/use-editor";
 import { CANVAS_SIZE, PIXEL_SIZE } from "../../../constants/Editor";
 import useDailyCanvas from "../../../hooks/use-daily-canvas";
+// import useKeyboardShortcut from "use-keyboard-shortcut";
 import useKeyPress from "../../../hooks/use-keypress";
 import { useENS } from "../../../useENS";
 
@@ -43,13 +44,7 @@ const CanvasViewPage: NextPage = () => {
 
   const [pixels, setPixels] = useState<Pixels | undefined>(undefined);
   const [riffLoading, setRiffLoading] = useState<boolean>(false);
-  const { pixelsHistory, replacePixels } = usePixels(
-    id
-      ? {
-          keySuffix: String(id),
-        }
-      : {}
-  );
+  const { setPixels: setCanvasPixels } = usePixels();
 
   const [result] = useDailies();
   // @ts-ignore
@@ -58,22 +53,7 @@ const CanvasViewPage: NextPage = () => {
   const handleRiffClick = () => {
     setRiffLoading(true);
     try {
-      if (!pixels?.length && !pixelsHistory?.length) {
-        toast(
-          "Unable to read canvas data for riff, why not draw something new instead?"
-        );
-        router.push("/editor");
-        return;
-      }
-
-      if (pixelsHistory?.length === 1) {
-        // @ts-ignore
-        replacePixels([pixels]);
-      } else {
-        toast(
-          "You have some history with this canvas, we've loaded it for you!"
-        );
-      }
+      setCanvasPixels(pixels || []);
       setTimeout(() => {
         router.push(`/canvas/${id}/riff`);
       }, 600);
@@ -107,19 +87,16 @@ const CanvasViewPage: NextPage = () => {
 
       const dataRaw = await dailyCanvasContract.getCanvasPixels(String(id));
       const svgData = getSVG(dataRaw);
-
-      // If history based on riffId in localstorage is only one, then we can safely
-      // reset it to the svgData, otherwise there is riff history and we shouldn't overwrite
-      // console.log({ pixelsHistory, length: pixelsHistory.length });
       setPixels(getPixelsFrom(svgData));
     };
-
     if (id) {
       fetchSVG();
     }
-  }, [id, pixelsHistory, riffLoading]);
+  }, [id]);
 
   const ens = useENS(currentCanvas?.author || "");
+  // const previousCurrentCanvasId = useRef(id);
+  // const previousHandler = useRef();
 
   useKeyPress(["ArrowLeft"], () => {
     if (previousCanvas) {
@@ -132,6 +109,29 @@ const CanvasViewPage: NextPage = () => {
       router.push(`/canvas/${nextCanvas.id}/view`);
     }
   });
+
+  // useEffect(() => {
+  //   const handler = window.addEventListener("keydown", (event) => {
+  //     console.log({ event });
+
+  //     if (event.key == "ArrowLeft" && previousCanvas) {
+  //       router.push(`/canvas/${previousCanvas.id}/view`);
+  //     }
+  //     if (event.key == "ArrowRight" && nextCanvas) {
+  //       router.push(`/canvas/${nextCanvas.id}/view`);
+  //     }
+  //   });
+  //   if (previousCurrentCanvasId.current !== id) {
+  //     window.removeEventListener("keydown", previousHandler.current);
+  //   }
+
+  //   previousCurrentCanvasId.current = currentCanvas?.id;
+  //   previousHandler.current = handler;
+
+  //   return () => {
+  //     window.removeEventListener("keydown", handler);
+  //   };
+  // }, [router, id, previousCanvas, nextCanvas]);
 
   return (
     <div className="flex flex-col h-screen w-full items-center">
@@ -176,9 +176,7 @@ const CanvasViewPage: NextPage = () => {
           <div className="flex justify-center pt-8">
             <Button
               onClick={handleRiffClick}
-              disabled={
-                riffLoading || !pixels?.length || !pixelsHistory?.length
-              }
+              disabled={riffLoading}
               className="h-12 w-48"
             >
               <span>{riffLoading ? "Loading Riff..." : "Riff"}</span>

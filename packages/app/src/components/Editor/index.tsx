@@ -37,7 +37,7 @@ const Editor = ({ riffId }: EditorProps) => {
   const router = useRouter();
 
   const { pixels, setPixels, undo, canUndo, getExquisiteData, resetPixels } =
-    usePixels(riffId ? { keySuffix: String(riffId) } : {});
+    usePixels();
 
   const { activeConnector } = useConnect();
 
@@ -88,12 +88,9 @@ const Editor = ({ riffId }: EditorProps) => {
   };
 
   const handleClear = () => {
-    if (!riffId && confirm("Are you sure you want to erase your drawing?")) {
+    if (confirm("Are you sure you want to erase your drawing?")) {
       setPixels(EMPTY);
-    }
 
-    if (riffId && confirm("Are you sure you want to erase your drawing?")) {
-      resetPixels();
       setTimeout(() => {
         if (riffId) {
           router.push("/editor");
@@ -208,8 +205,7 @@ const Editor = ({ riffId }: EditorProps) => {
               return (
                 <div
                   id={`${x}_${y}`}
-                  // Probably overkill, but we're getting key conflicts and bad-rerenders by using just x_y
-                  key={`${x * Math.random()}_${y * Math.random()}`}
+                  key={`${x}_${y}`}
                   className={`box ${isLoading && "box-disabled"}`}
                   style={{
                     // @ts-ignore
