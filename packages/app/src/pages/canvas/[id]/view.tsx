@@ -185,9 +185,10 @@ const CanvasViewPage: NextPage = () => {
   // }, [router, id, previousCanvas, nextCanvas]);
 
   return currentCanvas ? (
-    <div className="flex flex-col h-screen w-full items-center justify-center -mt-32">
-      <Header title="Daily Canvas"></Header>
-      <div className="h-96 pt-4 p-6">
+    <div className="flex flex-col h-full w-full items-center">
+      <div className="flex-1" />
+      <div className="flex-1 canvas-fix">
+        <Header title="Daily Canvas" className="pb-4"></Header>
         <SVG
           src={currentCanvas.svg}
           width={Number(currentCanvas.prompt.width) * PIXEL_SIZE}
@@ -222,9 +223,6 @@ const CanvasViewPage: NextPage = () => {
               </button>
             </Link>
           </div>
-          <span className="text-white text-gray-800">
-            {/* todo: if self is author, add share btn */}
-          </span>
           <div className="flex justify-center pt-8">
             <Button
               onClick={handleRiffClick}
@@ -238,6 +236,14 @@ const CanvasViewPage: NextPage = () => {
           </div>
         </div>
       </div>
+      <div className="flex-[2]" />
+      <style jsx>
+        {`
+          .canvas-fix {
+            margin-bottom: calc(12rem + 8px);
+          }
+        `}
+      </style>
       <Footer></Footer>
     </div>
   ) : (

@@ -1,9 +1,17 @@
 html,
 body,
-#__next {
+body > div:first-child,
+div#__next,
+div#__next > div {
   width: 100%;
   height: 100%;
   background-color: #131313;
+}
+
+.Toastify {
+  width: unset !important;
+  height: unset !important;
+  background-color: unset !important;
 }
 
 button,
