@@ -15,7 +15,6 @@ const Icon = forwardRef(function Icon(
   props: React.ComponentPropsWithoutRef<"svg"> & IconProps,
   ref: React.Ref<HTMLOrSVGElement>
 ) {
-  console.log({ props });
 
   // const Component = iconSwitch(props.name);
   // return <Component ref={ref} {...props} />;

@@ -32,8 +32,6 @@ export const switchChain = async (
     await activeConnector.switchChain(chainId);
     return;
   }
-  console.log(isRainbow);
-
   // Likely the connected wallet doesn't support chain switching
   throw new Error("Wrong network");
 };

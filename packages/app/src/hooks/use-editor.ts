@@ -28,7 +28,6 @@ const useEditor = ({ palette }: EditorProps) => {
 
   const setActiveColor = (hex: string) => {
     if (activeColorString === hex) return;
-    console.log("setting active color to", hex);
 
     setActiveColorString(hex);
   };
