@@ -454,15 +454,30 @@ const Editor = ({ riffId, palette, height = 20, width = 20 }: EditorProps) => {
           display: flex;
           flex-direction: row;
           column-gap: 0px;
-          flex-wrap: wrap;
           width: calc(5 * 4rem);
+          height: calc(4rem + 16px);
+          overflow-x: auto;
+          overflow-y: hidden;
+          margin-bottom: 16px;
+          scrollbar-color: #404040 #131313;
+        }
+
+        .color-palette::-webkit-scrollbar {
+          background-color: #131313;
+          height: 8px;
+        }
+
+        .color-palette::-webkit-scrollbar-thumb {
+          background: #404040;
+          border-radius: 4px;
         }
 
         .color-palette div {
           position: relative;
-          width: 3.331rem;
-          height: 3.331rem;
+          width: 4rem;
+          height: 4rem;
           cursor: pointer;
+          flex-shrink: 0;
           border: 1px solid #303030;
         }
 
