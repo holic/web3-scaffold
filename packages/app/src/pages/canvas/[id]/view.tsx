@@ -72,7 +72,7 @@ const CanvasViewPage: NextPage = () => {
   const [pixels, setPixels] = useState<Pixels | undefined>(undefined);
   const [riffLoading, setRiffLoading] = useState<boolean>(false);
 
-  const { setPixels: setCanvasPixels } = usePixels({
+  const { pixelsHistory, replacePixels } = usePixels({
     keySuffix: String(id),
     palette: currentCanvas?.prompt?.palette || PALETTES[0],
   });
@@ -85,7 +85,22 @@ const CanvasViewPage: NextPage = () => {
   const handleRiffClick = () => {
     setRiffLoading(true);
     try {
-      setCanvasPixels(pixels || []);
+      if (!pixels?.length && !pixelsHistory?.length) {
+        toast(
+          "Unable to read canvas data for riff, why not draw something new instead?"
+        );
+        router.push("/editor");
+        return;
+      }
+
+      if (pixelsHistory?.length === 1) {
+        // @ts-ignore
+        replacePixels([pixels]);
+      } else {
+        toast(
+          "You have some history with this canvas, we've loaded it for you!"
+        );
+      }
       setTimeout(() => {
         router.push(`/canvas/${id}/riff`);
       }, 600);
@@ -119,6 +134,9 @@ const CanvasViewPage: NextPage = () => {
 
       const dataRaw = await dailyCanvasContract.getCanvasPixels(String(id));
       const svgData = getSVG(dataRaw);
+
+      // If history based on riffId in localstorage is only one, then we can safely
+      // reset it to the svgData, otherwise there is riff history and we shouldn't overwrite
       setPixels(getPixelsFrom(svgData));
     };
     if (id) {
@@ -210,7 +228,9 @@ const CanvasViewPage: NextPage = () => {
           <div className="flex justify-center pt-8">
             <Button
               onClick={handleRiffClick}
-              disabled={riffLoading}
+              disabled={
+                riffLoading || !pixels?.length || !pixelsHistory?.length
+              }
               className="h-12 w-48"
             >
               <span>{riffLoading ? "Loading Riff..." : "Riff"}</span>
