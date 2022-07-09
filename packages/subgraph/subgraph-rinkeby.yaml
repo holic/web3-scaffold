@@ -7,8 +7,8 @@ dataSources:
     network: rinkeby
     source:
       abi: DailyCanvas
-      address: "0xeacbfadbebb57119b6d76ee13b71b63e31f220e6"
-      startBlock: 10946744
+      address: "0xa3ef72d0b0ca56e5ce1ca8876712847267fbedc6"
+      startBlock: 10986487
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.5
@@ -19,6 +19,8 @@ dataSources:
         - name: DailyCanvas
           file: ../contracts/out/DailyCanvas.sol/DailyCanvas.abi.json
       eventHandlers:
+        - event: NewCanvasPrompt(uint256,uint256,uint256,string[],address)
+          handler: handleNewCanvasPrompt
         - event: CanvasDrawn(uint256,bytes,address,uint256,uint256)
-          handler: handleCanvasDrawn
+          handler: handleNewCanvasDrawn
       file: ./src/mapping.ts

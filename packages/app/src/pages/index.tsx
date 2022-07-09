@@ -8,53 +8,41 @@ import { usePixels } from "../components/usePixels";
 import { dailyCanvasContract } from "../contracts";
 import getPixelsFrom from "../utils/getPixelsFrom";
 
-import useDailies from "../hooks/use-daily-canvases";
+import PALETTES from "../constants/Palettes";
 
 import Header from "../components/Header";
-import { CANVAS_SIZE, PIXEL_SIZE } from "../constants/Editor";
+import { PIXEL_SIZE } from "../constants/Editor";
 import { Pixels } from "../hooks/use-editor";
+import { useDailyCanvasPrompt } from "../hooks/use-daily-canvas-prompt";
 
-// // todo: order?
-// const CanvasQuery = `
-//   query {
-//     dailies(first: 100) {
-//       id
-//       author
-//       svg
-//       tokenURI
-//       promptId
-//       riffCanvasId
-//     }
-//   }
-// `;
-
-// const IndividualCanvasQuery = `query IndividualCanvasQuery($canvasId: ID) {
-//     dailies(where: {id: $canvasId}) {
-//       id
-//       author
-//       svg
-//       tokenURI
-//       promptId
-//     }
-//   }
-// `;
+const DEFAULT_PALETTE = PALETTES[0];
 
 const HomePage: NextPage = () => {
-  const [result, reexecuteQuery] = useDailies();
+  const router = useRouter();
+
+  // const [result, reexecuteQuery] = useDailies();
+  const [canvasResult, reexecuteQuery] = useDailyCanvasPrompt({
+    includeResponses: true,
+  });
   const [riffLoading, setRiffLoading] = useState<boolean>(false);
   const [pixels, setPixels] = useState<Pixels | undefined>(undefined);
-  const { setPixels: setCanvasPixels } = usePixels();
-  const router = useRouter();
-  // @ts-ignore
-  const { data = [] } = result;
-  const latestCanvas = data?.[data.length - 1];
+
+  const { data: dailyCanvas, fetching } = canvasResult;
+
+  const { setPixels: setCanvasPixels } = usePixels({
+    palette: dailyCanvas?.palette || DEFAULT_PALETTE,
+  });
+
+  const dailyCanvasReponses = dailyCanvas?.responses || [];
+  const latestCanvasResponse =
+    dailyCanvasReponses?.[dailyCanvasReponses.length - 1];
 
   const handleRiffClick = () => {
     setRiffLoading(true);
     try {
       setCanvasPixels(pixels || []);
       setTimeout(() => {
-        router.push(`/canvas/${latestCanvas?.id}/riff`);
+        router.push(`/canvas/${latestCanvasResponse?.id}/riff`);
       }, 600);
     } catch (e) {
       setRiffLoading(false);
@@ -64,18 +52,17 @@ const HomePage: NextPage = () => {
   // @ts-ignore
   useEffect(() => {
     const fetchSVG = async () => {
-      // const svgData = await dailyCanvasContract.getTileSVG(String(id));
-
       const dataRaw = await dailyCanvasContract.getCanvasPixels(
-        String(latestCanvas?.id)
+        String(latestCanvasResponse?.id)
       );
       const svgData = getSVG(dataRaw);
+      console.log({ svgData });
       setPixels(getPixelsFrom(svgData));
     };
-    if (latestCanvas && latestCanvas.id) {
+    if (latestCanvasResponse && latestCanvasResponse.id) {
       fetchSVG();
     }
-  }, [latestCanvas?.id]);
+  }, [latestCanvasResponse]);
 
   const handleHeaderClick = () => {
     // @ts-ignore
@@ -84,21 +71,24 @@ const HomePage: NextPage = () => {
     });
   };
 
-  return latestCanvas ? (
+  if (canvasResult) {
+    console.log({ promptResult: canvasResult });
+  }
+
+  return canvasResult && dailyCanvas && !fetching ? (
     <div className="flex flex-col h-screen w-full items-center text-white">
       <Header onClick={handleHeaderClick} title="Daily Canvas"></Header>
       <div className="h-96 pt-4 p-6">
-        {data.length ? (
+        {latestCanvasResponse ? (
           <SVG
-            src={latestCanvas.svg}
-            width={CANVAS_SIZE * PIXEL_SIZE}
-            height={CANVAS_SIZE * PIXEL_SIZE}
-            className={"svgFix"}
+            src={latestCanvasResponse?.svg}
+            width={Number(dailyCanvas.width) * PIXEL_SIZE}
+            height={Number(dailyCanvas.height) * PIXEL_SIZE}
           ></SVG>
         ) : null}
         <div className="flex flex-col">
           <div className="flex justify-center pb-2 pt-4 z-50">
-            {data.length ? (
+            {dailyCanvasReponses.length ? (
               <>
                 <button onClick={handleRiffClick}>Edit Canvas</button>
               </>
@@ -111,9 +101,9 @@ const HomePage: NextPage = () => {
             )}
           </div>
           <div className="flex justify-center z-50">
-            {data.length ? (
-              <Link href={`/canvas/${latestCanvas?.id}/view`}>
-                <button>View Feed ({data.length} edits)</button>
+            {dailyCanvasReponses.length ? (
+              <Link href={`/canvas/${latestCanvasResponse?.id}/view`}>
+                <button>View Feed ({dailyCanvasReponses.length} edits)</button>
               </Link>
             ) : null}
           </div>

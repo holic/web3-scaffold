@@ -1,5 +1,13 @@
 import { CANVAS_SIZE } from "../constants/Editor";
 
+function tranpose(matrix: any) {
+  return matrix.reduce(
+    (prev: any, next: any) =>
+      next.map((_: any, i: number) => (prev[i] || []).concat(next[i])),
+    []
+  );
+}
+
 const getPixelsFrom = (svgData: string) => {
   const fillRe = /fill="#(#(.){6})/g;
   const fillRePattern = new RegExp(fillRe);
@@ -17,7 +25,7 @@ const getPixelsFrom = (svgData: string) => {
     outRows.push(chunk);
   }
   console.log(outRows);
-  return outRows;
+  return tranpose(outRows);
 };
 
 export default getPixelsFrom;

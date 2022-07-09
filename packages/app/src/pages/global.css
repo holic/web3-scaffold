@@ -26,9 +26,9 @@ p {
   transition: 500ms linear;
 } */
 
-.svgFix {
+/* .svgFix {
   transform: scaleX(-1) rotate(90deg);
-}
+} */
 
 .Toastify__toast-body div {
   font-family: pixeloid;

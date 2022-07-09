@@ -1,32 +1,37 @@
 import { useQuery } from "urql";
-import { Daily } from "../types/Daily";
+import { CanvasResponse } from "../types/Daily";
 
-const CanvasQuery = `
-  query {
-    dailies(first: 100) {
-      id
-      author
-      svg
-      tokenURI
-      promptId
-      riffCanvasId
-    }
-  }
-`;
+// const IndividualCanvasQuery = `query IndividualCanvasQuery($canvasId: ID) {
+//   canvasResponses(where: {id: $canvasId} ) {
+//     id
+//     author
+//     svg
+//     tokenURI
+//     prompt {
+//       id
+//       palette
+//     }
+//     riffCanvasId
+//   }
+// }
+// `;
 
 const useDailies = () => {
   const [result, reexecuteQuery] = useQuery({
-    query: CanvasQuery,
+    query: 1,
+    variables: {
+      promptId: 3,
+    },
   });
 
-  const parsedData = result.data?.dailies
-    .map((daily: Daily) => {
+  const parsedData = result.data?.canvasResponses
+    .map((canvas: CanvasResponse) => {
       return {
-        ...daily,
-        id: Number(daily.id),
+        ...canvas,
+        id: Number(canvas.id),
       };
     })
-    .sort((a: Daily, b: Daily) => {
+    .sort((a: CanvasResponse, b: CanvasResponse) => {
       return Number(a.id) - Number(b.id);
     });
 

@@ -1,14 +1,17 @@
 import { useQuery } from "urql";
-import { Daily } from "../types/Daily";
+import { CanvasResponse } from "../types/Daily";
 
 // todo: order?
 const IndividualCanvasQuery = `query IndividualCanvasQuery($canvasId: ID) {
-    dailies(where: {id: $canvasId}) {
+    canvasResponses(where: {id: $canvasId}) {
       id
       author
       svg
       tokenURI
-      promptId
+      prompt {
+        id
+        palette
+      }
       riffCanvasId
     }
   }
@@ -18,20 +21,21 @@ interface UseDailyCanvasOptions {
   id: string;
 }
 
-export const useDailyCanvas = ({ id }: UseDailyCanvasOptions) => {
+export const useCanvasResponse = ({ id }: UseDailyCanvasOptions) => {
   const [result, reexecuteQuery] = useQuery({
     query: IndividualCanvasQuery,
     variables: { canvasId: id },
   });
+  console.log({ result });
 
-  const parsedData = result.data?.dailies
-    .map((daily: Daily) => {
+  const parsedData = result.data?.canvasResponses
+    .map((canvas: CanvasResponse) => {
       return {
-        ...daily,
-        id: Number(daily.id),
+        ...canvas,
+        id: Number(canvas.id),
       };
     })
-    .sort((a: Daily, b: Daily) => {
+    .sort((a: CanvasResponse, b: CanvasResponse) => {
       return Number(a.id) - Number(b.id);
     });
 
@@ -40,4 +44,4 @@ export const useDailyCanvas = ({ id }: UseDailyCanvasOptions) => {
   return [{ ...result, data: singleton }, reexecuteQuery];
 };
 
-export default useDailyCanvas;
+export default useCanvasResponse;

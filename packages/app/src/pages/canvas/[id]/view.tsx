@@ -1,9 +1,8 @@
 import type { NextPage } from "next";
-import React, { useEffect, useMemo, useRef, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { toast } from "react-toastify";
 import { useRouter } from "next/router";
 import SVG from "react-inlinesvg";
-import useDailies from "../../../hooks/use-daily-canvases";
 import Link from "next/link";
 import Button from "../../../components/Button";
 import { getSVG } from "@exquisite-graphics/js";
@@ -12,11 +11,33 @@ import Header from "../../../components/Header";
 import { usePixels } from "../../../components/usePixels";
 import getPixelsFrom from "../../../utils/getPixelsFrom";
 import { Pixels } from "../../../hooks/use-editor";
-import { CANVAS_SIZE, PIXEL_SIZE } from "../../../constants/Editor";
-import useDailyCanvas from "../../../hooks/use-daily-canvas";
+import { PIXEL_SIZE } from "../../../constants/Editor";
+import PALETTES from "../../../constants/Palettes";
+import useCanvasResponse from "../../../hooks/use-canvas-response";
 // import useKeyboardShortcut from "use-keyboard-shortcut";
 import useKeyPress from "../../../hooks/use-keypress";
 import { useENS } from "../../../useENS";
+import { CanvasResponse } from "../../../types/Daily";
+
+const CanvasViewQuery = `query IndividualCanvasQuery($canvasId: ID) {
+  canvasResponses(where: {id: $canvasId}) {
+    id
+    author
+    svg
+    tokenURI
+    prompt {
+      id
+      palette
+      height
+      width
+      responses { 
+        id
+      }
+    }
+    riffCanvasId
+  }
+}
+`;
 
 const CanvasViewPage: NextPage = () => {
   const router = useRouter();
@@ -31,9 +52,14 @@ const CanvasViewPage: NextPage = () => {
       // @ts-ignore
       error: currentCanvasError,
     },
-  ] = useDailyCanvas({
-    id: String(id),
-  });
+  ] = useCanvasResponse(
+    {
+      canvasId: String(id),
+    },
+    {
+      query: CanvasViewQuery,
+    }
+  );
 
   useEffect(() => {
     if (!currentCanvasFetching && (!currentCanvas || currentCanvasError)) {
@@ -44,11 +70,15 @@ const CanvasViewPage: NextPage = () => {
 
   const [pixels, setPixels] = useState<Pixels | undefined>(undefined);
   const [riffLoading, setRiffLoading] = useState<boolean>(false);
-  const { setPixels: setCanvasPixels } = usePixels();
 
-  const [result] = useDailies();
+  const { setPixels: setCanvasPixels } = usePixels({
+    palette: currentCanvas?.prompt?.palette || PALETTES[0],
+  });
+
+  // const [result] = useDailies();
   // @ts-ignore
-  const { data: allDailyCanvases = [] } = result;
+  // const { data: allDailyCanvases = [] } = result;
+  const allDailyCanvases = currentCanvas?.prompt.responses;
 
   const handleRiffClick = () => {
     setRiffLoading(true);
@@ -68,16 +98,16 @@ const CanvasViewPage: NextPage = () => {
   // );
   const nextCanvas = useMemo(
     () =>
-      allDailyCanvases?.find((x: any) => {
-        return Number(x.id) === Number(id) + 1;
-      }) || NaN,
+      allDailyCanvases?.find(
+        (x: CanvasResponse) => Number(x.id) === Number(id) + 1
+      ) || null,
     [allDailyCanvases, id]
   );
   const previousCanvas = useMemo(
     () =>
-      allDailyCanvases?.find((x: any) => {
-        return Number(x.id) === Number(id) - 1;
-      }) || NaN,
+      allDailyCanvases?.find(
+        (x: CanvasResponse) => Number(x.id) === Number(id) - 1
+      ) || null,
     [allDailyCanvases, id]
   );
 
@@ -95,6 +125,7 @@ const CanvasViewPage: NextPage = () => {
   }, [id]);
 
   const ens = useENS(currentCanvas?.author || "");
+  // const ens = currentCanvas?.author.slice(8);
   // const previousCurrentCanvasId = useRef(id);
   // const previousHandler = useRef();
 
@@ -133,19 +164,20 @@ const CanvasViewPage: NextPage = () => {
   //   };
   // }, [router, id, previousCanvas, nextCanvas]);
 
-  return (
+  return currentCanvas ? (
     <div className="flex flex-col h-screen w-full items-center">
       <Header title="Daily Canvas"></Header>
       <div className="h-96 pt-4 p-6">
         <SVG
-          src={currentCanvas?.svg}
-          width={CANVAS_SIZE * PIXEL_SIZE}
-          height={CANVAS_SIZE * PIXEL_SIZE}
-          className={"svgFix"}
+          src={currentCanvas.svg}
+          width={Number(currentCanvas.prompt.width) * PIXEL_SIZE}
+          height={Number(currentCanvas.prompt.height) * PIXEL_SIZE}
         ></SVG>
         <div className="flex flex-col h-full">
           <div className="w-full flex flex-row justify-between my-2 font-mono text-white ">
-            <Link href={`/canvas/${previousCanvas.id}/view`}>
+            <Link
+              href={previousCanvas ? `/canvas/${previousCanvas.id}/view` : ""}
+            >
               <button
                 disabled={!previousCanvas}
                 className="disabled:opacity-30"
@@ -164,7 +196,7 @@ const CanvasViewPage: NextPage = () => {
               </Link>
             </div>
 
-            <Link href={`/canvas/${nextCanvas.id}/view`}>
+            <Link href={nextCanvas ? `/canvas/${nextCanvas.id}/view` : ""}>
               <button disabled={!nextCanvas} className="disabled:opacity-30">
                 next ➡️
               </button>
@@ -185,6 +217,8 @@ const CanvasViewPage: NextPage = () => {
         </div>
       </div>
     </div>
+  ) : (
+    <div />
   );
 };
 

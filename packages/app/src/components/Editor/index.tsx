@@ -1,14 +1,13 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
 
-import React, { useState } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import useEditor, { Pixels, Tool } from "../../hooks/use-editor";
 import { useConnect, useContractWrite, useWaitForTransaction } from "wagmi";
+import { useDebounce } from "use-debounce";
 import update from "immutability-helper";
 import { defaultAbiCoder } from "ethers/lib/utils";
 import { usePixels } from "../../components/usePixels";
-import PALETTES from "../../constants/Palettes";
 import { useRouter } from "next/router";
-import { dailyCanvasContract } from "../../contracts";
 import { DailyCanvas__factory } from "../../types";
 import DailyCanvas from "@web3-scaffold/contracts/deploys/rinkeby/DailyCanvas.json";
 
@@ -16,40 +15,50 @@ import SVG from "react-inlinesvg";
 
 import Button from "../../components/Button";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
-import { CANVAS_SIZE } from "../../constants/Editor";
-
 import { getActiveToolStyle } from "./utils";
+import useCanvasResponse from "../../hooks/use-canvas-response";
 
 interface EditorProps {
   riffId?: number;
+  palette: string[];
+  height: number;
+  width: number;
 }
 
-const columns = Array.from(Array(CANVAS_SIZE).keys());
-const rows = Array.from(Array(CANVAS_SIZE).keys());
+const CONTRACT_SUBMITTING_LOADING_MESSAGE = "Submitting...";
+const TRANSACTION_WAITING_LOADING_MESSAGE = "Confirming...";
+const GRAPH_POLLING_LOADING_MESSAGE = "Finalizing...";
 
-const EMPTY: Pixels = columns.map(() => rows.map(() => PALETTES[0][0]));
-
-const Editor = ({ riffId }: EditorProps) => {
-  // const toastId = useRef(null);
-
+const Editor = ({ riffId, palette, height = 20, width = 20 }: EditorProps) => {
   const [drawing, setDrawing] = useState(false);
+  const [pollingInterval, setPollingInterval] = useState<number>();
+  const [publishedCanvasId, setPublishedCanvasId] = useState<number>();
+
+  const columns = useMemo(() => Array.from(Array(width).keys()), [width]);
+  const rows = useMemo(() => Array.from(Array(height).keys()), [height]);
 
   const router = useRouter();
-
-  const { pixels, setPixels, undo, canUndo, getExquisiteData, resetPixels } =
-    usePixels();
-
   const { activeConnector } = useConnect();
 
   const {
-    palette,
+    pixels,
+    setPixels,
+    undo,
+    canUndo,
+    getExquisiteData,
+    resetPixels,
+    emptyTile,
+  } = usePixels({ palette });
+  const EMPTY = emptyTile;
+
+  const {
     activeColor,
     setActiveColor,
     activeTool,
     prevTool,
     setActiveTool,
     getActiveCursor,
-  } = useEditor();
+  } = useEditor({ palette });
 
   const paintNeighbors = (
     color: string,
@@ -60,8 +69,8 @@ const Editor = ({ riffId }: EditorProps) => {
     checked: Record<string, boolean> = {}
   ) => {
     if (color == startColor) return d;
-    if (x < 0 || x >= CANVAS_SIZE) return d;
-    if (y < 0 || y >= CANVAS_SIZE) return d;
+    if (x < 0 || x >= width) return d;
+    if (y < 0 || y >= height) return d;
 
     const key = `${x},${y}`;
     // If we've already checked this pixel don't check again
@@ -89,22 +98,24 @@ const Editor = ({ riffId }: EditorProps) => {
 
   const handleClear = () => {
     if (confirm("Are you sure you want to erase your drawing?")) {
-      setPixels(EMPTY);
+      if (EMPTY != undefined) {
+        setPixels(EMPTY);
 
-      setTimeout(() => {
-        if (riffId) {
-          router.push("/editor");
-        }
-      }, 600);
+        setTimeout(() => {
+          if (riffId) {
+            router.push("/editor");
+          }
+        }, 600);
+      }
     }
   };
 
   const paintPixels = (rawX: number, rawY: number) => {
-    console.log({ rawX, rawY });
     const elem = document.elementFromPoint(rawX, rawY);
     if (!elem) return;
     if (!elem.getAttribute("class")?.includes("box")) return;
 
+    // eslint-disable-next-line
     const [x, y] = elem
       .getAttribute("id")!
       .split("_")
@@ -137,8 +148,28 @@ const Editor = ({ riffId }: EditorProps) => {
     paintPixels(e.clientX, e.clientY);
   };
 
+  const [{ data: publishedCanvasResponse, fetching }] = useCanvasResponse(
+    { canvasId: String(publishedCanvasId) },
+    {
+      pollingInterval,
+      requestPolicy: "network-only",
+    }
+  );
+  const [isPollingForCanvas, { flush }] = useDebounce(fetching, 1200);
+
+  useEffect(() => {
+    if (fetching) flush();
+  }, [fetching, flush]);
+
+  useEffect(() => {
+    if (publishedCanvasResponse && publishedCanvasResponse?.id) {
+      resetPixels();
+      router.push(`/canvas/${publishedCanvasResponse.id}/view`);
+    }
+  }, [publishedCanvasResponse, router, resetPixels]);
+
   const {
-    data,
+    data: contractData,
     write,
     isLoading: isLoadingWrite,
   } = useContractWrite(
@@ -150,14 +181,14 @@ const Editor = ({ riffId }: EditorProps) => {
   );
 
   const { isLoading: isTransactionLoading } = useWaitForTransaction({
-    enabled: Boolean(data?.hash),
-    confirmations: 2,
-    hash: data?.hash,
-    wait: data?.wait,
-    onSuccess(data) {
+    enabled: Boolean(contractData?.hash),
+    confirmations: 1,
+    hash: contractData?.hash,
+    wait: contractData?.wait,
+    onSuccess(contractData) {
       const event = defaultAbiCoder.decode(
         ["uint256", "bytes", "address", "uint256", "uint256"],
-        data.logs[1].data
+        contractData.logs[1].data
       );
 
       const canvasIdHex = event?.[0]?._hex;
@@ -165,9 +196,8 @@ const Editor = ({ riffId }: EditorProps) => {
       if (!canvasIdHex) return;
       const canvasId = Number(canvasIdHex);
 
-      resetPixels();
-
-      router.push(`/canvas/${canvasId}/view`);
+      setPublishedCanvasId(canvasId);
+      setPollingInterval(1000);
     },
   });
 
@@ -177,15 +207,27 @@ const Editor = ({ riffId }: EditorProps) => {
     }
 
     write({
-      args: [
-        getExquisiteData(),
-        dailyCanvasContract.getCurrentPromptId(),
-        riffId ? riffId : 0,
-      ],
+      args: [getExquisiteData(), riffId ? riffId : 0],
     });
   };
 
-  const isLoading = isLoadingWrite || isTransactionLoading;
+  const isLoading =
+    isLoadingWrite || isTransactionLoading || isPollingForCanvas;
+
+  const publishButtonLabel = useMemo(() => {
+    if (isLoading && isLoadingWrite) return CONTRACT_SUBMITTING_LOADING_MESSAGE;
+    if (isLoading && isTransactionLoading)
+      return TRANSACTION_WAITING_LOADING_MESSAGE;
+    if (isLoading && isPollingForCanvas && pollingInterval)
+      return GRAPH_POLLING_LOADING_MESSAGE;
+    return "Publish";
+  }, [
+    isLoading,
+    isLoadingWrite,
+    isTransactionLoading,
+    isPollingForCanvas,
+    pollingInterval,
+  ]);
 
   return (
     <div className="flex flex-col">
@@ -324,7 +366,7 @@ const Editor = ({ riffId }: EditorProps) => {
               className="bg-white text-black flex-1"
               onClick={activeConnector ? onMintPress : openConnectModal}
             >
-              {activeConnector ? "Publish" : "Connect to Publish"}
+              {activeConnector ? publishButtonLabel : "Connect to Publish"}
             </Button>
           )}
         </ConnectButton.Custom>
@@ -333,12 +375,12 @@ const Editor = ({ riffId }: EditorProps) => {
         .canvas {
           display: grid;
           z-index: 100;
-          grid-template-columns: repeat(${CANVAS_SIZE}, 1fr);
+          grid-template-columns: repeat(${width}, 1fr);
           user-select: none;
           touch-action: none;
           cursor: ${getActiveCursor()};
-          width: calc(${CANVAS_SIZE} * 1rem);
-          height: calc(${CANVAS_SIZE} * 1rem);
+          width: calc(${width} * 1rem);
+          height: calc(${height} * 1rem);
         }
 
         .box {
@@ -378,7 +420,7 @@ const Editor = ({ riffId }: EditorProps) => {
         .toolbar {
           display: flex;
           flex-direction: row;
-          width: calc(${CANVAS_SIZE} * 1rem);
+          width: calc(${width} * 1rem);
         }
 
         .icon-active {
@@ -392,8 +434,8 @@ const Editor = ({ riffId }: EditorProps) => {
         .toolbar-button {
           background-color: #1b1919;
           border: 1px solid #404040;
-          width: calc(${CANVAS_SIZE} * 0.25rem);
-          height: calc(${CANVAS_SIZE} * 0.125rem);
+          width: calc(${width} * 0.25rem);
+          height: calc(${height} * 0.125rem);
         }
 
         .brush,

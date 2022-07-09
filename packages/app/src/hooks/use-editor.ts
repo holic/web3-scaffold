@@ -1,5 +1,4 @@
 import { useState } from "react";
-import PALETTES from "../constants/Palettes";
 
 export type Pixels = readonly (readonly string[])[];
 
@@ -9,10 +8,12 @@ export enum Tool {
   EYEDROPPER = "EYEDROPPER",
 }
 
-const useEditor = () => {
-  const palette = PALETTES[0];
+export interface EditorProps {
+  palette: string[];
+}
 
-  const [activeColorString, setActiveColorString] = useState(palette[1]);
+const useEditor = ({ palette }: EditorProps) => {
+  const [activeColorString, setActiveColorString] = useState(palette[0]);
   const [activeToolValue, setActiveToolValue] = useState(Tool.BRUSH);
   const [prevToolValue, setPrevToolValue] = useState(Tool.BRUSH);
 
@@ -27,6 +28,7 @@ const useEditor = () => {
 
   const setActiveColor = (hex: string) => {
     if (activeColorString === hex) return;
+    console.log("setting active color to", hex);
 
     setActiveColorString(hex);
   };

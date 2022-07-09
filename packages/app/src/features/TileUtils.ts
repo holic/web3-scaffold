@@ -27,11 +27,11 @@ function transpose(matrix: any) {
 }
 
 export const getEthPixelData = (pixels: Pixels): string => {
-  let transposed = transpose(pixels);
-  let flattened = transposed.flat();
+  const transposed = transpose(pixels);
+  const flattened = transposed.flat();
   let outputPixels = "0x";
   for (let i = 0; i < flattened.length; i++) {
-    let d = `${flattened[i].toString(16).padStart(2, "0")}`;
+    const d = `${flattened[i].toString(16).padStart(2, "0")}`;
     outputPixels += d;
   }
 
@@ -44,9 +44,9 @@ export const getPathSVGFromPixels = (pixels: Pixels) => {
 };
 
 export const getSVGFromPixels = (pixels: Pixels) => {
-  var output = SVG_OPENER;
-  for (var y = 0; y < pixels.length; y++) {
-    for (var x = 0; x < pixels[y].length; x++) {
+  let output = SVG_OPENER;
+  for (let y = 0; y < pixels.length; y++) {
+    for (let x = 0; x < pixels[y].length; x++) {
       output += `<rect fill="${
         // @ts-ignore
         PALETTES[0][pixels[x][y]]
@@ -65,15 +65,15 @@ export const getSVGFromData = (
   numCols: number
 ) => {
   const dataBytes = hexToBytes(data.slice(2));
-  let numColors = palette.length;
-  let paths = new Array(numColors).fill("");
+  const numColors = palette.length;
+  const paths = new Array(numColors).fill("");
 
   for (let h = 0; h < numRows; h++) {
     for (let m = 0; m < numCols; m) {
-      let index = h * numCols + m;
+      const index = h * numCols + m;
 
-      let c = countConsecutive(index, numCols, dataBytes);
-      let ci = dataBytes[index];
+      const c = countConsecutive(index, numCols, dataBytes);
+      const ci = dataBytes[index];
 
       paths[ci] += `M${m} ${h}h${c}`;
       m += c;
@@ -98,7 +98,7 @@ function hexToBytes(hex: string): number[] {
 }
 
 function countConsecutive(index: number, numCols: number, data: number[]) {
-  var num = 1;
+  let num = 1;
 
   while ((index + num) % numCols != 0) {
     if (data[index] == data[index + num]) num++;

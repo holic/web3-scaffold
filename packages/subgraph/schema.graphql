@@ -1,8 +1,19 @@
-type Daily @entity {
+type CanvasResponse @entity {
   id: ID!
   author: Bytes!
   tokenURI: String!
-  promptId: BigInt!
+  prompt: CanvasPrompt!
   svg: String!
   riffCanvasId: ID!
+  createdAt: Int!
+}
+
+type CanvasPrompt @entity {
+  id: ID!
+  width: BigInt!
+  height: BigInt!
+  author: Bytes!
+  palette: [String!]
+  createdAt: Int!
+  responses: [CanvasResponse!]! @derivedFrom(field: "prompt")
 }

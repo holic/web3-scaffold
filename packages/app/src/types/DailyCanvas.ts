@@ -32,18 +32,16 @@ export interface DailyCanvasInterface extends utils.Interface {
     "approve(address,uint256)": FunctionFragment;
     "balanceOf(address)": FunctionFragment;
     "burn(uint256)": FunctionFragment;
-    "drawCanvas(bytes,uint256,uint256)": FunctionFragment;
+    "drawCanvas(bytes,uint256)": FunctionFragment;
     "getApproved(uint256)": FunctionFragment;
     "getCanvasPixels(uint256)": FunctionFragment;
-    "getCanvasRiffId(uint256)": FunctionFragment;
-    "getCurrentPrompt()": FunctionFragment;
+    "getCanvasPrompt()": FunctionFragment;
+    "getCanvasPromptPalette()": FunctionFragment;
     "getCurrentPromptId()": FunctionFragment;
-    "getPrompt(uint256)": FunctionFragment;
-    "getPromptByCanvasId(uint256)": FunctionFragment;
     "getTileSVG(uint256)": FunctionFragment;
     "isApprovedForAll(address,address)": FunctionFragment;
     "name()": FunctionFragment;
-    "newPrompt(string)": FunctionFragment;
+    "newCanvasPrompt(uint256,uint256,string[])": FunctionFragment;
     "owner()": FunctionFragment;
     "ownerOf(uint256)": FunctionFragment;
     "renounceOwnership()": FunctionFragment;
@@ -57,6 +55,7 @@ export interface DailyCanvasInterface extends utils.Interface {
     "tokenURI(uint256)": FunctionFragment;
     "transferFrom(address,address,uint256)": FunctionFragment;
     "transferOwnership(address)": FunctionFragment;
+    "wipeCanvas(uint256)": FunctionFragment;
   };
 
   getFunction(
@@ -67,15 +66,13 @@ export interface DailyCanvasInterface extends utils.Interface {
       | "drawCanvas"
       | "getApproved"
       | "getCanvasPixels"
-      | "getCanvasRiffId"
-      | "getCurrentPrompt"
+      | "getCanvasPrompt"
+      | "getCanvasPromptPalette"
       | "getCurrentPromptId"
-      | "getPrompt"
-      | "getPromptByCanvasId"
       | "getTileSVG"
       | "isApprovedForAll"
       | "name"
-      | "newPrompt"
+      | "newCanvasPrompt"
       | "owner"
       | "ownerOf"
       | "renounceOwnership"
@@ -89,6 +86,7 @@ export interface DailyCanvasInterface extends utils.Interface {
       | "tokenURI"
       | "transferFrom"
       | "transferOwnership"
+      | "wipeCanvas"
   ): FunctionFragment;
 
   encodeFunctionData(
@@ -105,11 +103,7 @@ export interface DailyCanvasInterface extends utils.Interface {
   ): string;
   encodeFunctionData(
     functionFragment: "drawCanvas",
-    values: [
-      PromiseOrValue<BytesLike>,
-      PromiseOrValue<BigNumberish>,
-      PromiseOrValue<BigNumberish>
-    ]
+    values: [PromiseOrValue<BytesLike>, PromiseOrValue<BigNumberish>]
   ): string;
   encodeFunctionData(
     functionFragment: "getApproved",
@@ -120,24 +114,16 @@ export interface DailyCanvasInterface extends utils.Interface {
     values: [PromiseOrValue<BigNumberish>]
   ): string;
   encodeFunctionData(
-    functionFragment: "getCanvasRiffId",
-    values: [PromiseOrValue<BigNumberish>]
+    functionFragment: "getCanvasPrompt",
+    values?: undefined
   ): string;
   encodeFunctionData(
-    functionFragment: "getCurrentPrompt",
+    functionFragment: "getCanvasPromptPalette",
     values?: undefined
   ): string;
   encodeFunctionData(
     functionFragment: "getCurrentPromptId",
     values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "getPrompt",
-    values: [PromiseOrValue<BigNumberish>]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "getPromptByCanvasId",
-    values: [PromiseOrValue<BigNumberish>]
   ): string;
   encodeFunctionData(
     functionFragment: "getTileSVG",
@@ -149,8 +135,12 @@ export interface DailyCanvasInterface extends utils.Interface {
   ): string;
   encodeFunctionData(functionFragment: "name", values?: undefined): string;
   encodeFunctionData(
-    functionFragment: "newPrompt",
-    values: [PromiseOrValue<string>]
+    functionFragment: "newCanvasPrompt",
+    values: [
+      PromiseOrValue<BigNumberish>,
+      PromiseOrValue<BigNumberish>,
+      PromiseOrValue<string>[]
+    ]
   ): string;
   encodeFunctionData(functionFragment: "owner", values?: undefined): string;
   encodeFunctionData(
@@ -211,6 +201,10 @@ export interface DailyCanvasInterface extends utils.Interface {
     functionFragment: "transferOwnership",
     values: [PromiseOrValue<string>]
   ): string;
+  encodeFunctionData(
+    functionFragment: "wipeCanvas",
+    values: [PromiseOrValue<BigNumberish>]
+  ): string;
 
   decodeFunctionResult(functionFragment: "approve", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "balanceOf", data: BytesLike): Result;
@@ -225,20 +219,15 @@ export interface DailyCanvasInterface extends utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "getCanvasRiffId",
+    functionFragment: "getCanvasPrompt",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "getCurrentPrompt",
+    functionFragment: "getCanvasPromptPalette",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
     functionFragment: "getCurrentPromptId",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(functionFragment: "getPrompt", data: BytesLike): Result;
-  decodeFunctionResult(
-    functionFragment: "getPromptByCanvasId",
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "getTileSVG", data: BytesLike): Result;
@@ -247,7 +236,10 @@ export interface DailyCanvasInterface extends utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "name", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "newPrompt", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "newCanvasPrompt",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(functionFragment: "owner", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "ownerOf", data: BytesLike): Result;
   decodeFunctionResult(
@@ -285,12 +277,13 @@ export interface DailyCanvasInterface extends utils.Interface {
     functionFragment: "transferOwnership",
     data: BytesLike
   ): Result;
+  decodeFunctionResult(functionFragment: "wipeCanvas", data: BytesLike): Result;
 
   events: {
     "Approval(address,address,uint256)": EventFragment;
     "ApprovalForAll(address,address,bool)": EventFragment;
     "CanvasDrawn(uint256,bytes,address,uint256,uint256)": EventFragment;
-    "NewPrompt(uint256,string,address)": EventFragment;
+    "NewCanvasPrompt(uint256,uint256,uint256,string[],address)": EventFragment;
     "OwnershipTransferred(address,address)": EventFragment;
     "Transfer(address,address,uint256)": EventFragment;
   };
@@ -298,7 +291,7 @@ export interface DailyCanvasInterface extends utils.Interface {
   getEvent(nameOrSignatureOrTopic: "Approval"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "ApprovalForAll"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "CanvasDrawn"): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "NewPrompt"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "NewCanvasPrompt"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "OwnershipTransferred"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "Transfer"): EventFragment;
 }
@@ -331,8 +324,8 @@ export interface CanvasDrawnEventObject {
   canvasId: BigNumber;
   pixels: string;
   author: string;
-  promptId: BigNumber;
-  riffCanvasId: BigNumber;
+  canvasPromptId: BigNumber;
+  canvasRiffId: BigNumber;
 }
 export type CanvasDrawnEvent = TypedEvent<
   [BigNumber, string, string, BigNumber, BigNumber],
@@ -341,17 +334,19 @@ export type CanvasDrawnEvent = TypedEvent<
 
 export type CanvasDrawnEventFilter = TypedEventFilter<CanvasDrawnEvent>;
 
-export interface NewPromptEventObject {
+export interface NewCanvasPromptEventObject {
   promptId: BigNumber;
-  promptText: string;
+  width: BigNumber;
+  height: BigNumber;
+  palette: string[];
   author: string;
 }
-export type NewPromptEvent = TypedEvent<
-  [BigNumber, string, string],
-  NewPromptEventObject
+export type NewCanvasPromptEvent = TypedEvent<
+  [BigNumber, BigNumber, BigNumber, string[], string],
+  NewCanvasPromptEventObject
 >;
 
-export type NewPromptEventFilter = TypedEventFilter<NewPromptEvent>;
+export type NewCanvasPromptEventFilter = TypedEventFilter<NewCanvasPromptEvent>;
 
 export interface OwnershipTransferredEventObject {
   previousOwner: string;
@@ -422,7 +417,6 @@ export interface DailyCanvas extends BaseContract {
 
     drawCanvas(
       pixels: PromiseOrValue<BytesLike>,
-      promptId: PromiseOrValue<BigNumberish>,
       riffCanvasId: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
@@ -437,24 +431,11 @@ export interface DailyCanvas extends BaseContract {
       overrides?: CallOverrides
     ): Promise<[string]>;
 
-    getCanvasRiffId(
-      canvasId: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<[BigNumber]>;
+    getCanvasPrompt(overrides?: CallOverrides): Promise<[string]>;
 
-    getCurrentPrompt(overrides?: CallOverrides): Promise<[string]>;
+    getCanvasPromptPalette(overrides?: CallOverrides): Promise<[string[]]>;
 
     getCurrentPromptId(overrides?: CallOverrides): Promise<[BigNumber]>;
-
-    getPrompt(
-      promptId: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<[string]>;
-
-    getPromptByCanvasId(
-      canvasId: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<[string]>;
 
     getTileSVG(
       canvasId: PromiseOrValue<BigNumberish>,
@@ -469,8 +450,10 @@ export interface DailyCanvas extends BaseContract {
 
     name(overrides?: CallOverrides): Promise<[string]>;
 
-    newPrompt(
-      promptText: PromiseOrValue<string>,
+    newCanvasPrompt(
+      width: PromiseOrValue<BigNumberish>,
+      height: PromiseOrValue<BigNumberish>,
+      palette: PromiseOrValue<string>[],
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
@@ -539,6 +522,11 @@ export interface DailyCanvas extends BaseContract {
       newOwner: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
+
+    wipeCanvas(
+      canvasId: PromiseOrValue<BigNumberish>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
   };
 
   approve(
@@ -559,7 +547,6 @@ export interface DailyCanvas extends BaseContract {
 
   drawCanvas(
     pixels: PromiseOrValue<BytesLike>,
-    promptId: PromiseOrValue<BigNumberish>,
     riffCanvasId: PromiseOrValue<BigNumberish>,
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
@@ -574,24 +561,11 @@ export interface DailyCanvas extends BaseContract {
     overrides?: CallOverrides
   ): Promise<string>;
 
-  getCanvasRiffId(
-    canvasId: PromiseOrValue<BigNumberish>,
-    overrides?: CallOverrides
-  ): Promise<BigNumber>;
+  getCanvasPrompt(overrides?: CallOverrides): Promise<string>;
 
-  getCurrentPrompt(overrides?: CallOverrides): Promise<string>;
+  getCanvasPromptPalette(overrides?: CallOverrides): Promise<string[]>;
 
   getCurrentPromptId(overrides?: CallOverrides): Promise<BigNumber>;
-
-  getPrompt(
-    promptId: PromiseOrValue<BigNumberish>,
-    overrides?: CallOverrides
-  ): Promise<string>;
-
-  getPromptByCanvasId(
-    canvasId: PromiseOrValue<BigNumberish>,
-    overrides?: CallOverrides
-  ): Promise<string>;
 
   getTileSVG(
     canvasId: PromiseOrValue<BigNumberish>,
@@ -606,8 +580,10 @@ export interface DailyCanvas extends BaseContract {
 
   name(overrides?: CallOverrides): Promise<string>;
 
-  newPrompt(
-    promptText: PromiseOrValue<string>,
+  newCanvasPrompt(
+    width: PromiseOrValue<BigNumberish>,
+    height: PromiseOrValue<BigNumberish>,
+    palette: PromiseOrValue<string>[],
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
@@ -677,6 +653,11 @@ export interface DailyCanvas extends BaseContract {
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
+  wipeCanvas(
+    canvasId: PromiseOrValue<BigNumberish>,
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
+
   callStatic: {
     approve(
       to: PromiseOrValue<string>,
@@ -696,7 +677,6 @@ export interface DailyCanvas extends BaseContract {
 
     drawCanvas(
       pixels: PromiseOrValue<BytesLike>,
-      promptId: PromiseOrValue<BigNumberish>,
       riffCanvasId: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
@@ -711,24 +691,11 @@ export interface DailyCanvas extends BaseContract {
       overrides?: CallOverrides
     ): Promise<string>;
 
-    getCanvasRiffId(
-      canvasId: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
+    getCanvasPrompt(overrides?: CallOverrides): Promise<string>;
 
-    getCurrentPrompt(overrides?: CallOverrides): Promise<string>;
+    getCanvasPromptPalette(overrides?: CallOverrides): Promise<string[]>;
 
     getCurrentPromptId(overrides?: CallOverrides): Promise<BigNumber>;
-
-    getPrompt(
-      promptId: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<string>;
-
-    getPromptByCanvasId(
-      canvasId: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<string>;
 
     getTileSVG(
       canvasId: PromiseOrValue<BigNumberish>,
@@ -743,8 +710,10 @@ export interface DailyCanvas extends BaseContract {
 
     name(overrides?: CallOverrides): Promise<string>;
 
-    newPrompt(
-      promptText: PromiseOrValue<string>,
+    newCanvasPrompt(
+      width: PromiseOrValue<BigNumberish>,
+      height: PromiseOrValue<BigNumberish>,
+      palette: PromiseOrValue<string>[],
       overrides?: CallOverrides
     ): Promise<void>;
 
@@ -811,6 +780,11 @@ export interface DailyCanvas extends BaseContract {
       newOwner: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<void>;
+
+    wipeCanvas(
+      canvasId: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<void>;
   };
 
   filters: {
@@ -840,27 +814,31 @@ export interface DailyCanvas extends BaseContract {
       canvasId?: null,
       pixels?: null,
       author?: null,
-      promptId?: null,
-      riffCanvasId?: null
+      canvasPromptId?: null,
+      canvasRiffId?: null
     ): CanvasDrawnEventFilter;
     CanvasDrawn(
       canvasId?: null,
       pixels?: null,
       author?: null,
-      promptId?: null,
-      riffCanvasId?: null
+      canvasPromptId?: null,
+      canvasRiffId?: null
     ): CanvasDrawnEventFilter;
 
-    "NewPrompt(uint256,string,address)"(
+    "NewCanvasPrompt(uint256,uint256,uint256,string[],address)"(
       promptId?: null,
-      promptText?: null,
+      width?: null,
+      height?: null,
+      palette?: null,
       author?: null
-    ): NewPromptEventFilter;
-    NewPrompt(
+    ): NewCanvasPromptEventFilter;
+    NewCanvasPrompt(
       promptId?: null,
-      promptText?: null,
+      width?: null,
+      height?: null,
+      palette?: null,
       author?: null
-    ): NewPromptEventFilter;
+    ): NewCanvasPromptEventFilter;
 
     "OwnershipTransferred(address,address)"(
       previousOwner?: PromiseOrValue<string> | null,
@@ -902,7 +880,6 @@ export interface DailyCanvas extends BaseContract {
 
     drawCanvas(
       pixels: PromiseOrValue<BytesLike>,
-      promptId: PromiseOrValue<BigNumberish>,
       riffCanvasId: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
@@ -917,24 +894,11 @@ export interface DailyCanvas extends BaseContract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
-    getCanvasRiffId(
-      canvasId: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
+    getCanvasPrompt(overrides?: CallOverrides): Promise<BigNumber>;
 
-    getCurrentPrompt(overrides?: CallOverrides): Promise<BigNumber>;
+    getCanvasPromptPalette(overrides?: CallOverrides): Promise<BigNumber>;
 
     getCurrentPromptId(overrides?: CallOverrides): Promise<BigNumber>;
-
-    getPrompt(
-      promptId: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
-    getPromptByCanvasId(
-      canvasId: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
 
     getTileSVG(
       canvasId: PromiseOrValue<BigNumberish>,
@@ -949,8 +913,10 @@ export interface DailyCanvas extends BaseContract {
 
     name(overrides?: CallOverrides): Promise<BigNumber>;
 
-    newPrompt(
-      promptText: PromiseOrValue<string>,
+    newCanvasPrompt(
+      width: PromiseOrValue<BigNumberish>,
+      height: PromiseOrValue<BigNumberish>,
+      palette: PromiseOrValue<string>[],
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
@@ -1019,6 +985,11 @@ export interface DailyCanvas extends BaseContract {
       newOwner: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
+
+    wipeCanvas(
+      canvasId: PromiseOrValue<BigNumberish>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
   };
 
   populateTransaction: {
@@ -1040,7 +1011,6 @@ export interface DailyCanvas extends BaseContract {
 
     drawCanvas(
       pixels: PromiseOrValue<BytesLike>,
-      promptId: PromiseOrValue<BigNumberish>,
       riffCanvasId: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
@@ -1055,24 +1025,13 @@ export interface DailyCanvas extends BaseContract {
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
-    getCanvasRiffId(
-      canvasId: PromiseOrValue<BigNumberish>,
+    getCanvasPrompt(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    getCanvasPromptPalette(
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
-
-    getCurrentPrompt(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     getCurrentPromptId(
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
-    getPrompt(
-      promptId: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
-    getPromptByCanvasId(
-      canvasId: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
@@ -1089,8 +1048,10 @@ export interface DailyCanvas extends BaseContract {
 
     name(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    newPrompt(
-      promptText: PromiseOrValue<string>,
+    newCanvasPrompt(
+      width: PromiseOrValue<BigNumberish>,
+      height: PromiseOrValue<BigNumberish>,
+      palette: PromiseOrValue<string>[],
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
@@ -1157,6 +1118,11 @@ export interface DailyCanvas extends BaseContract {
 
     transferOwnership(
       newOwner: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
+    wipeCanvas(
+      canvasId: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
   };
