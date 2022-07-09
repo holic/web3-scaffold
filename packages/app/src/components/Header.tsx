@@ -10,22 +10,11 @@ const Header = ({ title = "Daily Canvas", onClick }: HeaderProps) => {
   return (
     <div
       onClick={onClick}
-      className="flex text-white background font-mono text-2xl pt-6 justify-center items-center cursor-pointer w-full"
+      className="flex text-white font-mono text-2xl justify-center items-center cursor-pointer w-full"
     >
       <Link href="/">
         <span className="z-50">{title}</span>
       </Link>
-      <style jsx>
-        {`
-          .background {
-            background: linear-gradient(
-              0deg,
-              rgba(0, 0, 0, 0) 0%,
-              #000000 100%
-            );
-          }
-        `}
-      </style>
     </div>
   );
 };

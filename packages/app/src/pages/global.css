@@ -11,6 +11,10 @@ p {
   font-family: pixeloid;
 }
 
+.button-secondary {
+  background-color: #343533;
+}
+
 @media (min-width: 900px) {
   html {
     font-size: 18px;

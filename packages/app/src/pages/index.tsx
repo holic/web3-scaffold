@@ -14,6 +14,7 @@ import Header from "../components/Header";
 import { PIXEL_SIZE } from "../constants/Editor";
 import { Pixels } from "../hooks/use-editor";
 import { useDailyCanvasPrompt } from "../hooks/use-daily-canvas-prompt";
+import Button from "../components/Button";
 
 const DEFAULT_PALETTE = PALETTES[0];
 
@@ -76,38 +77,47 @@ const HomePage: NextPage = () => {
   }
 
   return canvasResult && dailyCanvas && !fetching ? (
-    <div className="flex flex-col h-screen w-full items-center text-white">
-      <Header onClick={handleHeaderClick} title="Daily Canvas"></Header>
-      <div className="h-96 pt-4 p-6">
-        {latestCanvasResponse ? (
-          <SVG
-            src={latestCanvasResponse?.svg}
-            width={Number(dailyCanvas.width) * PIXEL_SIZE}
-            height={Number(dailyCanvas.height) * PIXEL_SIZE}
-          ></SVG>
-        ) : null}
-        <div className="flex flex-col">
-          <div className="flex justify-center pb-2 pt-4 z-50">
-            {dailyCanvasReponses.length ? (
-              <>
-                <button onClick={handleRiffClick}>Edit Canvas</button>
-              </>
-            ) : (
-              <>
-                <Link href="/editor">
-                  <button>Edit Canvas</button>
-                </Link>
-              </>
-            )}
-          </div>
-          <div className="flex justify-center z-50">
-            {dailyCanvasReponses.length ? (
-              <Link href={`/canvas/${latestCanvasResponse?.id}/view`}>
-                <button>
-                  View Feed ({dailyCanvasReponses.length} edits today)
-                </button>
-              </Link>
-            ) : null}
+    <div>
+      <div className="flex flex-col h-screen w-full items-center text-white justify-center -mt-32">
+        <Header onClick={handleHeaderClick} title="Daily Canvas"></Header>
+        <div className="h-96 pt-4 p-6">
+          {latestCanvasResponse ? (
+            <SVG
+              src={latestCanvasResponse?.svg}
+              width={Number(dailyCanvas.width) * PIXEL_SIZE}
+              height={Number(dailyCanvas.height) * PIXEL_SIZE}
+            ></SVG>
+          ) : null}
+          <div className="flex flex-col">
+            <div className="flex justify-center pb-2 pt-6 z-50">
+              {dailyCanvasReponses.length ? (
+                <>
+                  <Button className="text-black w-40" onClick={handleRiffClick}>
+                    Edit Canvas
+                  </Button>
+                </>
+              ) : (
+                <>
+                  <Button className="text-black w-40" href="/editor">
+                    <button>Edit Canvas</button>
+                  </Button>
+                </>
+              )}
+            </div>
+            <div className="flex justify-center z-50">
+              {dailyCanvasReponses.length ? (
+                <Button
+                  className="text-white button-secondary w-40"
+                  href={`/canvas/${latestCanvasResponse?.id}/view`}
+                >
+                  View Feed
+                </Button>
+              ) : null}
+            </div>
+
+            <div className="flex justify-center pt-4">
+              <p>{dailyCanvasReponses.length} edits today</p>
+            </div>
           </div>
         </div>
       </div>

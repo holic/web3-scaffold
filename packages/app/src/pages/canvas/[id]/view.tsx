@@ -165,7 +165,7 @@ const CanvasViewPage: NextPage = () => {
   // }, [router, id, previousCanvas, nextCanvas]);
 
   return currentCanvas ? (
-    <div className="flex flex-col h-screen w-full items-center">
+    <div className="flex flex-col h-screen w-full items-center justify-center -mt-32">
       <Header title="Daily Canvas"></Header>
       <div className="h-96 pt-4 p-6">
         <SVG

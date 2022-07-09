@@ -26,4 +26,13 @@ const PALETTES = [
   ],
 ];
 
+const CLOUDFRENZY = [
+  "#61567d",
+  "#f4c4d4",
+  "#ea92ab",
+  "#af7fc2",
+  "#9085d0",
+  "#8c76be",
+];
+
 export default PALETTES;

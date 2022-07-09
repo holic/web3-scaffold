@@ -7,7 +7,7 @@ dataSources:
     network: rinkeby
     source:
       abi: DailyCanvas
-      address: "0xa3ef72d0b0ca56e5ce1ca8876712847267fbedc6"
+      address: "0x5ed57c3f3783c008a687580287a00c1da488bb2c"
       startBlock: 10986487
     mapping:
       kind: ethereum/events
