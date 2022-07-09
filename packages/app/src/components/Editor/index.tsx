@@ -335,7 +335,23 @@ const Editor = ({ riffId, palette, height = 20, width = 20 }: EditorProps) => {
         </button>
       </div>
 
-      <div className={`color-palette pb-8 ${isLoading && "opacity-60"}`}>
+      <div className={`color-palette pb-8 ${isLoading ? "opacity-60" : ""}`}>
+        {palette.map((color) => {
+          return (
+            <div
+              key={`${color}`}
+              className={color == activeColor ? "active" : ""}
+              style={{
+                backgroundColor: color,
+              }}
+              onClick={(e) => setActiveColor(color)}
+            ></div>
+          );
+        })}
+      </div>
+      <div
+        className={`color-palette-mini pb-8 ${isLoading ? "opacity-60" : ""}`}
+      >
         {palette.map((color) => {
           return (
             <div
@@ -451,19 +467,63 @@ const Editor = ({ riffId, palette, height = 20, width = 20 }: EditorProps) => {
         }
 
         .color-palette {
-          display: flex;
+          display: none;
           flex-direction: row;
           column-gap: 0px;
           flex-wrap: wrap;
           width: calc(5 * 4rem);
         }
-
         .color-palette div {
           position: relative;
           width: 3.331rem;
           height: 3.331rem;
           cursor: pointer;
           border: 1px solid #303030;
+        }
+
+        .color-palette-mini {
+          display: flex;
+          flex-direction: row;
+          column-gap: 0px;
+          width: calc(5 * 4rem);
+          height: calc(4rem + 16px);
+          overflow-x: auto;
+          overflow-y: hidden;
+          margin-bottom: 16px;
+          scrollbar-color: #404040 #131313;
+        }
+
+        .color-palette-mini::-webkit-scrollbar {
+          background-color: #131313;
+          height: 8px;
+        }
+
+        .color-palette-mini::-webkit-scrollbar-thumb {
+          background: #404040;
+          border-radius: 4px;
+        }
+
+        .color-palette-mini div {
+          position: relative;
+          width: 4rem;
+          height: 4rem;
+          cursor: pointer;
+          flex-shrink: 0;
+          border: 1px solid #303030;
+        }
+
+        .color-palette-mini-hidden {
+          display: none !important;
+        }
+
+        @media (min-width: 768px) {
+          .color-palette-mini {
+            display: none;
+          }
+
+          .color-palette {
+            display: flex;
+          }
         }
 
         .mint {

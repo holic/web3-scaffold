@@ -14,7 +14,6 @@ import { Pixels } from "../../../hooks/use-editor";
 import { PIXEL_SIZE } from "../../../constants/Editor";
 import PALETTES from "../../../constants/Palettes";
 import useCanvasResponse from "../../../hooks/use-canvas-response";
-// import useKeyboardShortcut from "use-keyboard-shortcut";
 import useKeyPress from "../../../hooks/use-keypress";
 import { useENS } from "../../../useENS";
 import { CanvasResponse } from "../../../types/Daily";
@@ -46,11 +45,8 @@ const CanvasViewPage: NextPage = () => {
 
   const [
     {
-      // @ts-ignore
       data: currentCanvas,
-      // @ts-ignore
       fetching: currentCanvasFetching,
-      // @ts-ignore
       error: currentCanvasError,
     },
   ] = useCanvasResponse(
@@ -77,9 +73,6 @@ const CanvasViewPage: NextPage = () => {
     palette: currentCanvas?.prompt?.palette || PALETTES[0],
   });
 
-  // const [result] = useDailies();
-  // @ts-ignore
-  // const { data: allDailyCanvases = [] } = result;
   const allDailyCanvases = currentCanvas?.prompt.responses;
 
   const handleRiffClick = () => {
@@ -109,10 +102,6 @@ const CanvasViewPage: NextPage = () => {
     }
   };
 
-  // const currentCanvas = useMemo(
-  //   () => allDailyCanvases?.[Number(id) - 1],
-  //   [allDailyCanvases, id]
-  // );
   const nextCanvas = useMemo(
     () =>
       allDailyCanvases?.find(
@@ -145,9 +134,6 @@ const CanvasViewPage: NextPage = () => {
   }, [id]);
 
   const ens = useENS(currentCanvas?.author || "");
-  // const ens = currentCanvas?.author.slice(8);
-  // const previousCurrentCanvasId = useRef(id);
-  // const previousHandler = useRef();
 
   useKeyPress(["ArrowLeft"], () => {
     if (previousCanvas) {
@@ -161,31 +147,8 @@ const CanvasViewPage: NextPage = () => {
     }
   });
 
-  // useEffect(() => {
-  //   const handler = window.addEventListener("keydown", (event) => {
-  //     console.log({ event });
-
-  //     if (event.key == "ArrowLeft" && previousCanvas) {
-  //       router.push(`/canvas/${previousCanvas.id}/view`);
-  //     }
-  //     if (event.key == "ArrowRight" && nextCanvas) {
-  //       router.push(`/canvas/${nextCanvas.id}/view`);
-  //     }
-  //   });
-  //   if (previousCurrentCanvasId.current !== id) {
-  //     window.removeEventListener("keydown", previousHandler.current);
-  //   }
-
-  //   previousCurrentCanvasId.current = currentCanvas?.id;
-  //   previousHandler.current = handler;
-
-  //   return () => {
-  //     window.removeEventListener("keydown", handler);
-  //   };
-  // }, [router, id, previousCanvas, nextCanvas]);
-
   return currentCanvas ? (
-    <div className="flex flex-col h-full w-full items-center">
+    <div className="flex flex-col h-full w-full items-center overflow-hidden">
       <div className="flex-1" />
       <div className="flex-1 canvas-fix">
         <Header title="Daily Canvas" className="pb-4"></Header>
@@ -240,7 +203,12 @@ const CanvasViewPage: NextPage = () => {
       <style jsx>
         {`
           .canvas-fix {
-            margin-bottom: calc(12rem + 8px);
+            margin-bottom: 104px;
+          }
+          @media (min-width: 768px) {
+            .canvas-fix {
+              margin-bottom: calc(12rem + 8px);
+            }
           }
         `}
       </style>
