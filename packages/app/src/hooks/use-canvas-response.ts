@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { useQuery, UseQueryResponse, RequestPolicy } from "urql";
 import { CanvasResponse } from "../types/Daily";
+import store from "../store";
 
 // todo: order?
 const IndividualCanvasQuery = `query IndividualCanvasQuery($canvasId: ID) {
@@ -30,17 +31,36 @@ interface UseCanvasResponseOptions {
   pollingInterval?: number;
 }
 
+const RESOURCE = "CanvasResponse";
+
 export const useCanvasResponse = (
   variables: UseCanvasResponseVariables,
   options?: UseCanvasResponseOptions
 ): UseQueryResponse<CanvasResponse> => {
   const { query, requestPolicy, pollingInterval } = options || {};
 
+  const storeKey = `${RESOURCE}:${variables.canvasId}`;
+
+  const cachedCanvasResponse = store((state) => state.requests[storeKey]);
+
   const [result, reexecuteQuery] = useQuery({
     query: query || IndividualCanvasQuery,
     variables,
     requestPolicy: requestPolicy || "cache-and-network",
   });
+
+  const canvasResponse = result.data?.canvasResponses?.[0] || null;
+
+  useEffect(() => {
+    if (canvasResponse?.id) {
+      store.setState((state) => ({
+        requests: {
+          ...state.requests,
+          [storeKey]: canvasResponse,
+        },
+      }));
+    }
+  }, [canvasResponse, storeKey]);
 
   useEffect(() => {
     // @ts-ignore
@@ -54,9 +74,10 @@ export const useCanvasResponse = (
     };
   }, [reexecuteQuery, pollingInterval]);
 
-  const canvasResponse = result.data?.canvasResponses?.[0] || null;
-
-  return [{ ...result, data: canvasResponse }, reexecuteQuery];
+  return [
+    { ...result, data: canvasResponse || cachedCanvasResponse },
+    reexecuteQuery,
+  ];
 };
 
 export default useCanvasResponse;
