@@ -64,7 +64,7 @@ const CanvasViewPage: NextPage = () => {
 
   useEffect(() => {
     if (!currentCanvasFetching && (!currentCanvas || currentCanvasError)) {
-      toast(`Canvas #${id} not found`);
+      toast(`Canvas ${!id ? "" : `#${id}`} not found`);
       router.push("/");
     }
   }, [currentCanvasFetching, currentCanvas, currentCanvasError, id, router]);
