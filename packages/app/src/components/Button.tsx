@@ -19,7 +19,7 @@ const Button = ({
 }: ButtonProps) => {
   const btn = (
     <button
-      className={`flex font-mono justify-center w-auto border-1 border-black bg-white font-mono px-6 py-3 z-150 ${className} ${
+      className={`flex font-mono justify-center w-auto border-1 border-black bg-white font-mono px-6 py-3 z-150 select-none ${className} ${
         disabled && "opacity-60"
       }`}
       onClick={onClick}

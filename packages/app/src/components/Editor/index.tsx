@@ -421,6 +421,7 @@ const Editor = ({ riffId, palette, height = 20, width = 20 }: EditorProps) => {
           padding-bottom: 40px;
           display: flex;
           flex-direction: column;
+          user-select: none;
           align-items: center;
         }
 
@@ -453,6 +454,7 @@ const Editor = ({ riffId, palette, height = 20, width = 20 }: EditorProps) => {
           border: 1px solid #404040;
           width: calc(${width} * 0.25rem);
           height: calc(${height} * 0.125rem);
+          user-select: none;
         }
 
         .brush,
@@ -472,6 +474,7 @@ const Editor = ({ riffId, palette, height = 20, width = 20 }: EditorProps) => {
           column-gap: 0px;
           flex-wrap: wrap;
           width: calc(5 * 4rem);
+          user-select: none;
         }
         .color-palette div {
           position: relative;
@@ -491,6 +494,7 @@ const Editor = ({ riffId, palette, height = 20, width = 20 }: EditorProps) => {
           overflow-y: hidden;
           margin-bottom: 16px;
           scrollbar-color: #404040 #131313;
+          user-select: none;
         }
 
         .color-palette-mini::-webkit-scrollbar {
