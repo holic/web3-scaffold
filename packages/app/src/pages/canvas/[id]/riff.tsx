@@ -25,10 +25,11 @@ const RiffEditorScreen: NextPage = () => {
   }, [fetching, canvasResponse, error, riffId, router]);
 
   return canvasResponse ? (
-    <div className="flex flex-col justify-center h-full w-full items-center text-white xs:pt-16 sm:pt-24 md:pt-40 lg:pt-40 xl:pt-40 2xl:pt-40 pt-24">
-      <Header title="Daily Canvas"></Header>
-      <div className="flex flex-col items-center pt-4">
-        <div className="flex justify-center h-full">
+    <div className="flex flex-col h-full w-full items-center">
+      <div className="flex-1" />
+      <div className="flex-1 ">
+        <Header title="Daily Canvas" className="pb-4"></Header>
+        <div className="flex flex-col items-center">
           <Editor
             riffId={Number(riffId)}
             palette={canvasResponse.prompt.palette}
@@ -37,6 +38,7 @@ const RiffEditorScreen: NextPage = () => {
           />
         </div>
       </div>
+      <div className="flex-[2]" />
       <Footer></Footer>
     </div>
   ) : (
