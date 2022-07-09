@@ -15,6 +15,7 @@ import { Pixels } from "../hooks/use-editor";
 import { useDailyCanvasPrompt } from "../hooks/use-daily-canvas-prompt";
 import Button from "../components/Button";
 import Footer from "../components/Footer";
+import { toast } from "react-toastify";
 
 const DEFAULT_PALETTE = PALETTES[0];
 
@@ -24,22 +25,47 @@ const HomePage: NextPage = () => {
     includeResponses: true,
   });
   const [pixels, setPixels] = useState<Pixels | undefined>(undefined);
+  const [riffLoading, setRiffLoading] = useState<boolean>(false);
 
   const { data: dailyCanvas, fetching } = canvasResult;
-
-  const { setPixels: setCanvasPixels } = usePixels({
-    palette: dailyCanvas?.palette || DEFAULT_PALETTE,
-  });
 
   const dailyCanvasReponses = dailyCanvas?.responses || [];
   const latestCanvasResponse =
     dailyCanvasReponses?.[dailyCanvasReponses.length - 1];
 
+  const { pixelsHistory, replacePixels } = usePixels({
+    palette: dailyCanvas?.palette || DEFAULT_PALETTE,
+    keySuffix: latestCanvasResponse?.id,
+  });
+
   const handleRiffClick = () => {
-    setCanvasPixels(pixels || []);
-    setTimeout(() => {
-      router.push(`/canvas/${latestCanvasResponse?.id}/riff`);
-    }, 600);
+    if (!latestCanvasResponse?.id) return;
+
+    setRiffLoading(true);
+    try {
+      if (!pixels?.length) {
+        toast(
+          "Unable to read canvas data for riff, why not draw something new instead?"
+        );
+        router.push("/editor");
+        return;
+      }
+
+      if (pixelsHistory?.length === 1) {
+        // @ts-ignore
+        replacePixels([pixels]);
+      } else {
+        toast(
+          "You have some history with this canvas, we've loaded it for you!"
+        );
+      }
+
+      setTimeout(() => {
+        router.push(`/canvas/${latestCanvasResponse?.id}/riff`);
+      }, 600);
+    } catch (e) {
+      setRiffLoading(false);
+    }
   };
 
   // @ts-ignore
@@ -64,10 +90,6 @@ const HomePage: NextPage = () => {
     });
   };
 
-  if (canvasResult) {
-    console.log({ promptResult: canvasResult });
-  }
-
   return canvasResult && dailyCanvas && !fetching ? (
     <div className="flex flex-col h-full w-full items-center text-white xs:pt-20 sm:pt-24 md:pt-40 lg:pt-64 pt-24">
       <Header onClick={handleHeaderClick} title="Daily Canvas"></Header>
@@ -83,7 +105,11 @@ const HomePage: NextPage = () => {
           <div className="flex justify-center z-50 pb-2">
             {dailyCanvasReponses.length ? (
               <>
-                <Button className="text-black w-40" onClick={handleRiffClick}>
+                <Button
+                  className="text-black w-40"
+                  disabled={riffLoading}
+                  onClick={handleRiffClick}
+                >
                   Edit Canvas
                 </Button>
               </>
