@@ -148,7 +148,7 @@ const CanvasViewPage: NextPage = () => {
   });
 
   return currentCanvas ? (
-    <div className="flex flex-col h-full w-full items-center">
+    <div className="flex flex-col h-full w-full items-center overflow-hidden">
       <div className="flex-1" />
       <div className="flex-1 canvas-fix">
         <Header title="Daily Canvas" className="pb-4"></Header>
@@ -203,7 +203,12 @@ const CanvasViewPage: NextPage = () => {
       <style jsx>
         {`
           .canvas-fix {
-            margin-bottom: calc(12rem + 8px);
+            margin-bottom: 104px;
+          }
+          @media (min-width: 768px) {
+            .canvas-fix {
+              margin-bottom: calc(12rem + 8px);
+            }
           }
         `}
       </style>

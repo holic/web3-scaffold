@@ -91,9 +91,9 @@ const HomePage: NextPage = () => {
   };
 
   return canvasResult && dailyCanvas && !fetching ? (
-    <div className="flex flex-col h-full w-full items-center text-white">
+    <div className="flex flex-col h-full w-full items-center text-white overflow-hidden">
       <div className="flex-1" />
-      <div className="flex-1">
+      <div className="flex-1 canvas-fix">
         <Header
           onClick={handleHeaderClick}
           title="Daily Canvas"
@@ -144,6 +144,18 @@ const HomePage: NextPage = () => {
       </div>
       <div className="flex-[2]" />
 
+      <style jsx>
+        {`
+          .canvas-fix {
+            margin-bottom: 48px;
+          }
+          @media (min-width: 768px) {
+            .canvas-fix {
+              margin-bottom: 144px;
+            }
+          }
+        `}
+      </style>
       <Footer></Footer>
     </div>
   ) : (
