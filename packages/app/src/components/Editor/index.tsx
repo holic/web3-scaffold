@@ -357,7 +357,7 @@ const Editor = ({ riffId, palette, height = 20, width = 20 }: EditorProps) => {
             onClick={handleClear}
             className="bg-gray-500 text-white"
           >
-            Clear {riffId}
+            Clear
           </Button>
         </div>
         <ConnectButton.Custom>
