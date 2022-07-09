@@ -69,7 +69,7 @@ const HomePage: NextPage = () => {
   }
 
   return canvasResult && dailyCanvas && !fetching ? (
-    <div className="flex flex-col h-full w-full items-center text-white xs:pt-8 sm:pt-24 md:pt-40 lg:pt-64 pt-24">
+    <div className="flex flex-col h-full w-full items-center text-white xs:pt-20 sm:pt-24 md:pt-40 lg:pt-64 pt-24">
       <Header onClick={handleHeaderClick} title="Daily Canvas"></Header>
       <div className="h-96 pt-6 mb">
         {latestCanvasResponse ? (
