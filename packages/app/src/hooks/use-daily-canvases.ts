@@ -18,6 +18,7 @@ import { CanvasResponse } from "../types/Daily";
 
 const useDailies = () => {
   const [result, reexecuteQuery] = useQuery({
+    // @ts-ignore
     query: 1,
     variables: {
       promptId: 3,
