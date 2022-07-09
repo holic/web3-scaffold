@@ -48,7 +48,8 @@ const Editor = ({ riffId, palette, height = 20, width = 20 }: EditorProps) => {
     getExquisiteData,
     resetPixels,
     emptyTile,
-  } = usePixels({ palette });
+  } = usePixels({ palette, keySuffix: String(riffId) });
+
   const EMPTY = emptyTile;
 
   const {
