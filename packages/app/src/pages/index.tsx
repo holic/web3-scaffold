@@ -103,7 +103,9 @@ const HomePage: NextPage = () => {
           <div className="flex justify-center z-50">
             {dailyCanvasReponses.length ? (
               <Link href={`/canvas/${latestCanvasResponse?.id}/view`}>
-                <button>View Feed ({dailyCanvasReponses.length} edits)</button>
+                <button>
+                  View Feed ({dailyCanvasReponses.length} edits today)
+                </button>
               </Link>
             ) : null}
           </div>
