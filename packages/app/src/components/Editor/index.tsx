@@ -48,7 +48,8 @@ const Editor = ({ riffId, palette, height = 20, width = 20 }: EditorProps) => {
     getExquisiteData,
     resetPixels,
     emptyTile,
-  } = usePixels({ palette });
+  } = usePixels({ palette, keySuffix: String(riffId) });
+
   const EMPTY = emptyTile;
 
   const {
@@ -356,7 +357,7 @@ const Editor = ({ riffId, palette, height = 20, width = 20 }: EditorProps) => {
             onClick={handleClear}
             className="bg-gray-500 text-white"
           >
-            Clear
+            Clear {riffId}
           </Button>
         </div>
         <ConnectButton.Custom>

@@ -73,6 +73,7 @@ const CanvasViewPage: NextPage = () => {
   const [riffLoading, setRiffLoading] = useState<boolean>(false);
 
   const { setPixels: setCanvasPixels } = usePixels({
+    keySuffix: String(id),
     palette: currentCanvas?.prompt?.palette || PALETTES[0],
   });
 

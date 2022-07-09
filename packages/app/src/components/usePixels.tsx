@@ -34,6 +34,7 @@ interface UsePixelsOptions {
 
 export const usePixels = (options: UsePixelsOptions) => {
   const { keySuffix = "editor", palette } = options;
+  console.log(keySuffix);
 
   const emptyTile: Pixels = useMemo(() => {
     return tileColumns.map(() => tileRows.map(() => palette[0]));
