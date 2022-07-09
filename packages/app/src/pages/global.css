@@ -15,11 +15,11 @@ p {
   background-color: #343533;
 }
 
-@media (min-width: 900px) {
+/* @media (min-width: 900px) {
   html {
     font-size: 18px;
   }
-}
+} */
 
 /* .svgFixScale:hover {
   transform: scaleX(1);

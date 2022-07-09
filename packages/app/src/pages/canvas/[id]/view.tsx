@@ -18,6 +18,7 @@ import useCanvasResponse from "../../../hooks/use-canvas-response";
 import useKeyPress from "../../../hooks/use-keypress";
 import { useENS } from "../../../useENS";
 import { CanvasResponse } from "../../../types/Daily";
+import Footer from "../../../components/Footer";
 
 const CanvasViewQuery = `query IndividualCanvasQuery($canvasId: ID) {
   canvasResponses(where: {id: $canvasId}) {
@@ -216,6 +217,7 @@ const CanvasViewPage: NextPage = () => {
           </div>
         </div>
       </div>
+      <Footer></Footer>
     </div>
   ) : (
     <div />
