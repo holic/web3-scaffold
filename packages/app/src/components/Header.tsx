@@ -15,7 +15,7 @@ const Header = ({
   return (
     <div
       onClick={onClick}
-      className={`flex text-white font-mono text-2xl justify-center items-center cursor-pointer w-full ${className}`}
+      className={`flex text-white font-mono text-2xl justify-center items-center cursor-pointer w-full select-none ${className}`}
     >
       <Link href="/">
         <span className="z-50">{title}</span>
