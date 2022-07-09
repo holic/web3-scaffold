@@ -26,8 +26,6 @@ export const useCanvasResponse = ({ id }: UseDailyCanvasOptions) => {
     query: IndividualCanvasQuery,
     variables: { canvasId: id },
   });
-  console.log({ result });
-
   const parsedData = result.data?.canvasResponses
     .map((canvas: CanvasResponse) => {
       return {

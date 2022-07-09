@@ -75,7 +75,6 @@ const HomePage: NextPage = () => {
         String(latestCanvasResponse?.id)
       );
       const svgData = getSVG(dataRaw);
-      console.log({ svgData });
       setPixels(getPixelsFrom(svgData));
     };
     if (latestCanvasResponse && latestCanvasResponse.id) {
