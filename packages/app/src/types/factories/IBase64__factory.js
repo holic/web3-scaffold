@@ -6,33 +6,33 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.IBase64__factory = void 0;
 const ethers_1 = require("ethers");
 const _abi = [
-    {
-        inputs: [
-            {
-                internalType: "bytes",
-                name: "data",
-                type: "bytes",
-            },
-        ],
-        name: "encode",
-        outputs: [
-            {
-                internalType: "string",
-                name: "",
-                type: "string",
-            },
-        ],
-        stateMutability: "pure",
-        type: "function",
-    },
+  {
+    inputs: [
+      {
+        internalType: "bytes",
+        name: "data",
+        type: "bytes",
+      },
+    ],
+    name: "encode",
+    outputs: [
+      {
+        internalType: "string",
+        name: "",
+        type: "string",
+      },
+    ],
+    stateMutability: "pure",
+    type: "function",
+  },
 ];
 class IBase64__factory {
-    static createInterface() {
-        return new ethers_1.utils.Interface(_abi);
-    }
-    static connect(address, signerOrProvider) {
-        return new ethers_1.Contract(address, _abi, signerOrProvider);
-    }
+  static createInterface() {
+    return new ethers_1.utils.Interface(_abi);
+  }
+  static connect(address, signerOrProvider) {
+    return new ethers_1.Contract(address, _abi, signerOrProvider);
+  }
 }
 exports.IBase64__factory = IBase64__factory;
 IBase64__factory.abi = _abi;
