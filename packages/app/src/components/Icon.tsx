@@ -1,4 +1,4 @@
-import { Component, forwardRef } from "react";
+import { forwardRef } from "react";
 import Bucket from "../../public/static/px-icon-bucket.svg";
 import Brush from "../../public/static/px-icon-pencil.svg";
 import Eyedropper from "../../public/static/px-icon-eyedropper.svg";
