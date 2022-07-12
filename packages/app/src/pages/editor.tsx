@@ -3,7 +3,6 @@ import React from "react";
 import Editor from "../components/Editor";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
-
 import useDailyCanvasPrompt from "../hooks/use-daily-canvas-prompt";
 
 const EditorScreen: NextPage = () => {

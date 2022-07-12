@@ -15,11 +15,9 @@ export const switchChain = async (
   const provider = await activeConnector.getProvider();
 
   const clientName = provider.connector?.peerMeta?.name ?? "";
-  console.log({ clientName });
   const isRainbow = /rainbow/i.test(clientName);
 
   const currentChainId = await activeConnector.getChainId();
-  console.log({ currentChainId });
   if (currentChainId === chainId) {
     return;
   }

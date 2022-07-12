@@ -1,16 +1,15 @@
 import React from "react";
 import { useAccount } from "wagmi";
-// import { useENS } from "../useENS";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
 import Button from "./Button";
+import TestnetBanner from "./TestnetBanner";
 
 const Footer = () => {
   const { data: account } = useAccount();
-  // const ensName = useENS(account?.address || "");
 
   return (
-    <div className="flex text-white font-mono text-2xl justify-center items-center cursor-pointer bottom-2 absolute text-base select-none">
-      <div className="flex justify-center items-end flex-">
+    <div className="w-full flex flex-col text-white font-mono text-2xl justify-center items-center cursor-pointer bottom-0 absolute text-base select-none">
+      <div className="flex justify-center items-end">
         {account && (
           <ConnectButton.Custom>
             {({ openAccountModal }) => (

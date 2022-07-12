@@ -2,7 +2,12 @@
 
 import React, { useState, useEffect, useMemo } from "react";
 import useEditor, { Pixels, Tool } from "../../hooks/use-editor";
-import { useConnect, useContractWrite, useWaitForTransaction } from "wagmi";
+import {
+  useNetwork,
+  useConnect,
+  useContractWrite,
+  useWaitForTransaction,
+} from "wagmi";
 import { useDebounce } from "use-debounce";
 import update from "immutability-helper";
 import { defaultAbiCoder } from "ethers/lib/utils";
@@ -10,6 +15,8 @@ import { usePixels } from "../../components/usePixels";
 import { useRouter } from "next/router";
 import { DailyCanvas__factory } from "../../types";
 import DailyCanvas from "@web3-scaffold/contracts/deploys/rinkeby/DailyCanvas.json";
+import { switchChain } from "../../switchChain";
+import { targetChainId } from "../../EthereumProviders";
 
 import SVG from "react-inlinesvg";
 
@@ -39,6 +46,7 @@ const Editor = ({ riffId, palette, height = 20, width = 20 }: EditorProps) => {
 
   const router = useRouter();
   const { activeConnector } = useConnect();
+  const { activeChain } = useNetwork();
 
   const {
     pixels,
@@ -207,6 +215,8 @@ const Editor = ({ riffId, palette, height = 20, width = 20 }: EditorProps) => {
       throw new Error("Wallet not connected");
     }
 
+    await switchChain(activeConnector);
+
     write({
       args: [getExquisiteData(), riffId ? riffId : 0],
     });
@@ -216,11 +226,20 @@ const Editor = ({ riffId, palette, height = 20, width = 20 }: EditorProps) => {
     isLoadingWrite || isTransactionLoading || isPollingForCanvas;
 
   const publishButtonLabel = useMemo(() => {
-    if (isLoading && isLoadingWrite) return CONTRACT_SUBMITTING_LOADING_MESSAGE;
-    if (isLoading && isTransactionLoading)
+    if (isLoading && isLoadingWrite) {
+      return CONTRACT_SUBMITTING_LOADING_MESSAGE;
+    }
+    if (isLoading && isTransactionLoading) {
       return TRANSACTION_WAITING_LOADING_MESSAGE;
-    if (isLoading && isPollingForCanvas && pollingInterval)
+    }
+    if (isLoading && isPollingForCanvas && pollingInterval) {
       return GRAPH_POLLING_LOADING_MESSAGE;
+    }
+
+    if (activeChain?.id !== targetChainId) {
+      return "Switch Chain";
+    }
+
     return "Publish";
   }, [
     isLoading,
@@ -228,6 +247,7 @@ const Editor = ({ riffId, palette, height = 20, width = 20 }: EditorProps) => {
     isTransactionLoading,
     isPollingForCanvas,
     pollingInterval,
+    activeChain?.id,
   ]);
 
   return (
