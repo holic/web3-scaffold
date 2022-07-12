@@ -25,3 +25,26 @@ This is the read-only backend for your project and where you can offload a lot o
 ### Vercel
 
 Vercel supports monorepos and pnpm out-of-the-box, but you'll need to set the "Root Directory" to `packages/app` either during the Vercel project setup or afterwards in the project settings.
+
+
+## Misc install notes
+
+If the submodules in forge are not working, you can remove the directories and reinstall directly with forge:
+```
+$ forge install chiru-labs/ERC721A --no-commit
+
+$ forge install foundry-rs/forge-std --no-commit
+
+$ forge install OpenZeppelin/openzeppelin-contracts --no-commit
+```
+
+If you install any other submodules, remember to re-run the mappings:
+```
+$ forge remappings > remappings.txt 
+```
+
+
+If you need to install jq for Mac (used to in the contracts/deploy.sh script), run:
+```
+$ brew install jq
+```
