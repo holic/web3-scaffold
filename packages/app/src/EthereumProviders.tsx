@@ -1,17 +1,20 @@
 import "@rainbow-me/rainbowkit/styles.css";
 
+import enforceEnvs from "./enforceEnvs";
 import { getDefaultWallets, RainbowKitProvider } from "@rainbow-me/rainbowkit";
 import { chain, configureChains, createClient, WagmiConfig } from "wagmi";
 import { alchemyProvider } from "wagmi/providers/alchemy";
 import { publicProvider } from "wagmi/providers/public";
 
-export const targetChainId = 5;
+export const targetChainId = Number(process.env.NEXT_PUBLIC_CHAIN_ID);
+
+enforceEnvs();
 
 // todo; clean this up
 export const { chains, provider, webSocketProvider } = configureChains(
   [chain.rinkeby],
   [
-    alchemyProvider({ alchemyId: process.env.NEXT_PUBLIC_ALCHEMY_API_KEY! }),
+    alchemyProvider({ alchemyId: process.env.NEXT_PUBLIC_ALCHEMY_API_KEY }),
     publicProvider(),
   ]
 );

@@ -3,8 +3,6 @@ import React from "react";
 import Editor from "../components/Editor";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
-import TestnetBanner from "../components/TestnetBanner";
-
 import useDailyCanvasPrompt from "../hooks/use-daily-canvas-prompt";
 
 const EditorScreen: NextPage = () => {
@@ -14,7 +12,6 @@ const EditorScreen: NextPage = () => {
 
   return canvasPrompt && !fetching ? (
     <div className="flex flex-col justify-center h-full w-full items-center text-white">
-      <TestnetBanner />
       <div className="flex-1" />
       <div className="flex-1">
         <Header title="Daily Canvas"></Header>

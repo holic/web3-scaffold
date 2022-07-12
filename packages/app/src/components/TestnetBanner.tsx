@@ -1,16 +1,32 @@
 import React from "react";
-import { useNetwork } from "wagmi";
+import { useNetwork, useConnect, chain } from "wagmi";
+import { targetChainId } from "../EthereumProviders";
+import { switchChain } from "../switchChain";
 
 const TestnetBanner = () => {
   const network = useNetwork();
-  console.log({ network });
+  const { activeConnector } = useConnect();
 
-  return network?.activeChain?.testnet ? (
-    <div className="bg-yellow-500 w-full flex justify-center items-center h-8 text-white">
-      <p>{network?.activeChain?.network} testnet</p>{" "}
-    </div>
-  ) : (
-    <div />
+  const wrongChain =
+    network?.activeChain?.network === null ||
+    network?.activeChain?.id !== targetChainId;
+
+  const handleClick = () => {
+    if (activeConnector) {
+      switchChain(activeConnector);
+    }
+  };
+
+  return (
+    <button
+      onClick={handleClick}
+      className="bg-yellow-500 w-full flex justify-center items-center h-8 text-white"
+    >
+      <p>
+        {wrongChain ? "switch to " : ""} {chain.rinkeby.name.toLowerCase()}{" "}
+        testnet
+      </p>{" "}
+    </button>
   );
 };
 

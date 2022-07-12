@@ -18,7 +18,6 @@ import useKeyPress from "../../../hooks/use-keypress";
 import { useENS } from "../../../useENS";
 import { CanvasResponse } from "../../../types/Daily";
 import Footer from "../../../components/Footer";
-import TestnetBanner from "../../../components/TestnetBanner";
 
 const CanvasViewQuery = `query IndividualCanvasQuery($canvasId: ID) {
   canvasResponses(where: {id: $canvasId}) {
@@ -150,7 +149,6 @@ const CanvasViewPage: NextPage = () => {
 
   return currentCanvas ? (
     <div className="flex flex-col h-full w-full items-center overflow-hidden">
-      <TestnetBanner />
       <div className="flex-1" />
       <div className="flex-1 canvas-fix">
         <Header title="Daily Canvas" className="pb-4"></Header>

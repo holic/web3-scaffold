@@ -15,7 +15,6 @@ import { Pixels } from "../hooks/use-editor";
 import { useDailyCanvasPrompt } from "../hooks/use-daily-canvas-prompt";
 import Button from "../components/Button";
 import Footer from "../components/Footer";
-import TestnetBanner from "../components/TestnetBanner";
 import { toast } from "react-toastify";
 
 const DEFAULT_PALETTE = PALETTES[0];
@@ -92,7 +91,6 @@ const HomePage: NextPage = () => {
 
   return canvasResult && dailyCanvas && !fetching ? (
     <div className="flex flex-col h-full w-full items-center text-white overflow-hidden">
-      <TestnetBanner />
       <div className="flex-1" />
       <div className="flex-1 canvas-fix">
         <Header
