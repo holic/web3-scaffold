@@ -19,7 +19,9 @@ const TestnetBanner = () => {
   return (
     <button
       onClick={handleClick}
-      className="bg-yellow-500 w-full flex justify-center items-center h-8 text-white"
+      className={`bg-yellow-500 w-full flex justify-center items-center h-8 text-white select-none ${
+        !wrongChain ? "cursor-default" : ""
+      }`}
     >
       <p>
         {wrongChain ? "switch to " : ""} {chain.rinkeby.name.toLowerCase()}{" "}
