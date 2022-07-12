@@ -8,8 +8,7 @@ const TestnetBanner = () => {
   const { activeConnector } = useConnect();
 
   const wrongChain =
-    network?.activeChain?.network === null ||
-    network?.activeChain?.id !== targetChainId;
+    network?.activeChain && network?.activeChain?.id !== targetChainId;
 
   const handleClick = () => {
     if (activeConnector) {
