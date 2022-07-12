@@ -23,7 +23,6 @@ const Footer = () => {
           </ConnectButton.Custom>
         )}
       </div>
-      <TestnetBanner />
     </div>
   );
 };
