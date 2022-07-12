@@ -121,17 +121,17 @@ const CanvasViewPage: NextPage = () => {
     const fetchSVG = async () => {
       // const svgData = await dailyCanvasContract.getTileSVG(String(id));
 
-      if (!currentCanvas) return;
-      const svgData = currentCanvas?.svg;
+      const dataRaw = await dailyCanvasContract.getCanvasPixels(String(id));
+      const svgData = getSVG(dataRaw);
 
       // If history based on riffId in localstorage is only one, then we can safely
       // reset it to the svgData, otherwise there is riff history and we shouldn't overwrite
       setPixels(getPixelsFrom(svgData));
     };
-    if (id && currentCanvas) {
+    if (id) {
       fetchSVG();
     }
-  }, [id, currentCanvas]);
+  }, [id]);
 
   const ens = useENS(currentCanvas?.author || "");
 

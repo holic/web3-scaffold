@@ -71,7 +71,11 @@ const HomePage: NextPage = () => {
   // @ts-ignore
   useEffect(() => {
     const fetchSVG = async () => {
-      setPixels(getPixelsFrom(latestCanvasResponse.svg));
+      const dataRaw = await dailyCanvasContract.getCanvasPixels(
+        String(latestCanvasResponse?.id)
+      );
+      const svgData = getSVG(dataRaw);
+      setPixels(getPixelsFrom(svgData));
     };
     if (latestCanvasResponse && latestCanvasResponse.id) {
       fetchSVG();
