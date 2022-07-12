@@ -63,7 +63,7 @@ export const MintButton = () => {
         mint(1, (message) => {
           toast.update(toastId, { render: message });
         }).then(
-          ({ receipt }) => {
+          () => {
             // TODO: show etherscan link?
             toast.update(toastId, {
               isLoading: false,

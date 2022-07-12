@@ -1,15 +1,16 @@
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import createStore from "zustand";
 import { persist } from "zustand/middleware";
 
 import { cachedFetch } from "./cachedFetch";
 
 type State = {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   resolvedAddresses: Partial<Record<string, any>>;
 };
 
 export const useStore = createStore<State>(
-  persist((set) => ({ resolvedAddresses: {} }), { name: "resolved-ens" })
+  persist(() => ({ resolvedAddresses: {} }), { name: "resolved-ens" })
 );
 
 export const useENS = (address: string) => {

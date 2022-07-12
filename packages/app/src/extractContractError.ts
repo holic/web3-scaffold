@@ -6,6 +6,7 @@ const contractInterface = ExampleNFT__factory.createInterface();
 //   console.log(contractInterface.getSighash(errorFragment), errorFragment.name);
 // }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const extractContractError = (error: any): string => {
   console.dir(error);
 
@@ -13,9 +14,7 @@ export const extractContractError = (error: any): string => {
   const errorData = error.error?.data?.originalError?.data;
   if (typeof errorData === "string") {
     console.log("found error data in original error, write call?", errorData);
-    for (const [error, errorFragment] of Object.entries(
-      contractInterface.errors
-    )) {
+    for (const [, errorFragment] of Object.entries(contractInterface.errors)) {
       if (errorData.startsWith(contractInterface.getSighash(errorFragment))) {
         // const args = contractInterface.decodeErrorResult(errorFragment, errorData)
         return errorFragment.name;
@@ -29,7 +28,7 @@ export const extractContractError = (error: any): string => {
     const errorData = response.error.data;
     console.log("found error data in error response, read call?", errorData);
     if (typeof errorData === "string") {
-      for (const [error, errorFragment] of Object.entries(
+      for (const [, errorFragment] of Object.entries(
         contractInterface.errors
       )) {
         if (errorData.startsWith(contractInterface.getSighash(errorFragment))) {
