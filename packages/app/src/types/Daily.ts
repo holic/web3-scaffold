@@ -4,6 +4,7 @@ export interface CanvasResponse {
   tokenURI: string;
   prompt: CanvasPrompt;
   svg: string;
+  createdAt: bigint;
 }
 
 export interface CanvasResponseQuery {

@@ -18,6 +18,8 @@ import useKeyPress from "../../../hooks/use-keypress";
 import { useENS } from "../../../useENS";
 import { CanvasResponse } from "../../../types/Daily";
 import Footer from "../../../components/Footer";
+import useDailyCanvasPrompt from "../../../hooks/use-daily-canvas-prompt";
+import { formatRelative } from "date-fns";
 
 const CanvasViewQuery = `query IndividualCanvasQuery($canvasId: ID) {
   canvasResponses(where: {id: $canvasId}) {
@@ -25,6 +27,7 @@ const CanvasViewQuery = `query IndividualCanvasQuery($canvasId: ID) {
     author
     svg
     tokenURI
+    createdAt
     prompt {
       id
       palette
@@ -58,9 +61,25 @@ const CanvasViewPage: NextPage = () => {
     }
   );
 
+  const [canvasPromptResult] = useDailyCanvasPrompt();
+  const latestCanvasPromptId = canvasPromptResult?.data?.id;
+  const dateString = useMemo(() => {
+    if (!currentCanvas?.createdAt) return "";
+
+    const string = formatRelative(
+      new Date(Number(currentCanvas.createdAt) * 1000),
+      new Date()
+    );
+
+    // if (string.includes("today")) return " ";
+
+    return string.split(" at ")[0];
+  }, [currentCanvas]);
+
   useEffect(() => {
     if (!currentCanvasFetching && (!currentCanvas || currentCanvasError)) {
       toast(`Canvas ${!id ? "" : `#${id}`} not found`);
+      console.log({ currentCanvasError });
       router.push("/");
     }
   }, [currentCanvasFetching, currentCanvas, currentCanvasError, id, router]);
@@ -72,6 +91,7 @@ const CanvasViewPage: NextPage = () => {
     keySuffix: String(id),
     palette: currentCanvas?.prompt?.palette || PALETTES[0],
   });
+  console.log({ pixelsHistory });
 
   const allDailyCanvases = currentCanvas?.prompt.responses;
 
@@ -116,6 +136,11 @@ const CanvasViewPage: NextPage = () => {
       ) || null,
     [allDailyCanvases, id]
   );
+  const previousCanvasId =
+    previousCanvas?.id || Number(currentCanvas?.id || 2) - 1;
+
+  const disableRiff =
+    currentCanvas?.prompt && currentCanvas?.prompt?.id !== latestCanvasPromptId;
 
   useEffect(() => {
     const fetchSVG = async () => {
@@ -126,6 +151,8 @@ const CanvasViewPage: NextPage = () => {
 
       // If history based on riffId in localstorage is only one, then we can safely
       // reset it to the svgData, otherwise there is riff history and we shouldn't overwrite
+      const ret = getPixelsFrom(svgData);
+      console.log({ ret });
       setPixels(getPixelsFrom(svgData));
     };
     if (id) {
@@ -136,8 +163,8 @@ const CanvasViewPage: NextPage = () => {
   const ens = useENS(currentCanvas?.author || "");
 
   useKeyPress(["ArrowLeft"], () => {
-    if (previousCanvas) {
-      router.push(`/canvas/${previousCanvas.id}/view`);
+    if (previousCanvasId) {
+      router.push(`/canvas/${previousCanvasId}/view`);
     }
   });
 
@@ -159,11 +186,9 @@ const CanvasViewPage: NextPage = () => {
         ></SVG>
         <div className="flex flex-col h-full">
           <div className="w-full flex flex-row justify-between my-2 font-mono text-white ">
-            <Link
-              href={previousCanvas ? `/canvas/${previousCanvas.id}/view` : ""}
-            >
+            <Link href={`/canvas/${previousCanvasId}/view`}>
               <button
-                disabled={!previousCanvas}
+                disabled={!previousCanvasId}
                 className="disabled:opacity-30"
               >
                 ⬅️ prev
@@ -186,11 +211,29 @@ const CanvasViewPage: NextPage = () => {
               </button>
             </Link>
           </div>
-          <div className="flex justify-center pt-8">
+          {disableRiff && (
+            <div className="flex justify-center">
+              <p
+                className={`text-white ${
+                  dateString === "today" ? "invisible" : ""
+                }`}
+              >
+                {dateString}
+              </p>
+            </div>
+          )}
+          <div
+            className={`flex justify-center pt-8 ${
+              disableRiff ? "invisible" : ""
+            }`}
+          >
             <Button
               onClick={handleRiffClick}
               disabled={
-                riffLoading || !pixels?.length || !pixelsHistory?.length
+                riffLoading ||
+                !pixels?.length ||
+                !pixelsHistory?.length ||
+                disableRiff
               }
               className="h-12 w-48"
             >
