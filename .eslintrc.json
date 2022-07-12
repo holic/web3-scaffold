@@ -11,11 +11,12 @@
     "node": true
   },
   "rules": {
-    "prettier/prettier": "error",
-    "simple-import-sort/exports": "error",
-    "import/first": "error",
-    "import/newline-after-import": "error",
-    "import/no-duplicates": "error",
-    "@typescript-eslint/ban-ts-omment": "off"
+    "prettier/prettier": "warn",
+    "simple-import-sort/exports": "warn",
+    "import/first": "warn",
+    "import/newline-after-import": "warn",
+    "import/no-duplicates": "warn",
+    "@typescript-eslint/ban-ts-omment": "off",
+    "@typescript-eslint/no-var-requires": "off"
   }
 }
