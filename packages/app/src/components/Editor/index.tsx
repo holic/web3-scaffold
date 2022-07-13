@@ -498,8 +498,8 @@ const Editor = ({ riffId, palette, height = 20, width = 20 }: EditorProps) => {
         }
         .color-palette div {
           position: relative;
-          width: 3.331rem;
-          height: 3.331rem;
+          width: 2.5rem;
+          height: 2.5rem;
           cursor: pointer;
           border: 1px solid #303030;
         }
