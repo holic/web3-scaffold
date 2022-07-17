@@ -16,7 +16,7 @@ export const useDailyCanvasPrompt = (
   const { includeResponses } = options || {};
 
   const LatestPromptQuery = `{
-    canvasPrompts(first: 1, orderBy: id, orderDirection: desc) {
+    canvasPrompts(first: 1, orderBy: createdAt, orderDirection: desc) {
       id
       width
       height
