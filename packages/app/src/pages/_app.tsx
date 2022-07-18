@@ -10,9 +10,9 @@ import {
 } from "urql";
 
 import { EthereumProviders } from "../EthereumProviders";
-import { getGraphHost } from "../utils/getGraphHost";
+import { getSubgraphURL } from "../utils/getSubgraphURL";
 
-const graphHost = getGraphHost();
+const graphHost = getSubgraphURL();
 
 export const graphClient = createGraphClient({
   url: `${graphHost}/subgraphs/name/holic/example-nft`,
