@@ -5,6 +5,7 @@ import { useExampleNFTContractRead } from "../contracts";
 import { Inventory } from "../Inventory";
 import { MintButton } from "../MintButton";
 import { useIsMounted } from "../useIsMounted";
+import { getChainStatus } from "../utils/getChainStatus";
 
 const HomePage: NextPage = () => {
   const totalSupply = useExampleNFTContractRead({
@@ -18,7 +19,7 @@ const HomePage: NextPage = () => {
   return (
     <div className="min-h-screen flex flex-col">
       <div className="self-end p-2">
-        <ConnectButton />
+        <ConnectButton chainStatus={getChainStatus()} />
       </div>
       <div className="flex-grow flex flex-col gap-4 items-center justify-center p-8 pb-[50vh]">
         <h1 className="text-4xl">Example NFT</h1>
