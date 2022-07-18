@@ -12,10 +12,10 @@ import {
 import { EthereumProviders } from "../EthereumProviders";
 import { getSubgraphURL } from "../utils/getSubgraphURL";
 
-const graphHost = getSubgraphURL();
+const subgraphURL = getSubgraphURL();
 
 export const graphClient = createGraphClient({
-  url: `${graphHost}/subgraphs/name/holic/example-nft`,
+  url: subgraphURL,
 });
 
 const MyApp = ({ Component, pageProps }: AppProps) => {
