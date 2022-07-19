@@ -1,6 +1,6 @@
 import { CANVAS_SIZE } from "../constants/Editor";
 
-function tranpose(matrix: any) {
+function transpose(matrix: any) {
   return matrix.reduce(
     (prev: any, next: any) =>
       next.map((_: any, i: number) => (prev[i] || []).concat(next[i])),
@@ -24,7 +24,7 @@ const getPixelsFrom = (svgData: string) => {
     const chunk = pixels.slice(i, i + chunkSize);
     outRows.push(chunk);
   }
-  return tranpose(outRows);
+  return transpose(outRows);
 };
 
 export default getPixelsFrom;

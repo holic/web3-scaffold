@@ -6,7 +6,7 @@ import { useLocalStorage } from "react-use";
 
 import { getBinarySVG_2DArr } from "@exquisite-graphics/js";
 
-function tranpose(matrix: any) {
+function transpose(matrix: any) {
   return matrix.reduce(
     (prev: any, next: any) =>
       next.map((_: any, i: number) => (prev[i] || []).concat(next[i])),
@@ -52,7 +52,7 @@ export const usePixels = (options: UsePixelsOptions) => {
 
   const getExquisiteData = () => {
     // @ts-ignore
-    const data = getBinarySVG_2DArr(tranpose(pixels)).getPixelBuffer();
+    const data = getBinarySVG_2DArr(transpose(pixels)).getPixelBuffer();
     return data;
   };
 
