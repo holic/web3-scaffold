@@ -14,3 +14,4 @@ verbosity = 2
 bytecode_hash = 'none'
 solc_version = '0.8.13'
 extra_output_files = ['abi']
+script = 'packages/contracts/script'
