@@ -8,10 +8,16 @@ import "../src/IRenderer.sol";
 contract ExampleNFTTest is Test {
     ExampleNFT private nft;
 
-    address private owner =
-        vm.addr(uint256(keccak256(abi.encodePacked("owner"))));
-    address private minter =
-        vm.addr(uint256(keccak256(abi.encodePacked("minter"))));
+    address private owner = mkaddr("owner");
+    address private minter = mkaddr("minter");
+
+    function mkaddr(string memory name) public returns (address) {
+        address addr = address(
+            uint160(uint256(keccak256(abi.encodePacked(name))))
+        );
+        vm.label(addr, name);
+        return addr;
+    }
 
     function setUp() public {
         nft = new ExampleNFT();
