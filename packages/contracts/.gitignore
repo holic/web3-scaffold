@@ -15,3 +15,10 @@ out/console2.sol/**/*.abi.json
 # Why do these globs make this so hard?
 
 .env.*
+
+# Ignore scripting output
+out/*.s.sol/**/*
+
+# Ignore broadcast outputs
+broadcast/*
+
