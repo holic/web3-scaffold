@@ -4,11 +4,11 @@ import React, { useState, useEffect, useMemo } from "react";
 import useEditor, { Pixels, Tool } from "../../hooks/use-editor";
 import {
   useNetwork,
-  useConnect,
   useContractWrite,
   useWaitForTransaction,
+  useAccount,
+  usePrepareContractWrite,
 } from "wagmi";
-import { useDebounce } from "use-debounce";
 import update from "immutability-helper";
 import { defaultAbiCoder } from "ethers/lib/utils";
 import { usePixels } from "../../components/usePixels";
@@ -21,7 +21,7 @@ import { targetChainId } from "../../EthereumProviders";
 import SVG from "react-inlinesvg";
 
 import Button from "../../components/Button";
-import { ConnectButton } from "@rainbow-me/rainbowkit";
+import { useConnectModal } from "@rainbow-me/rainbowkit";
 import { getActiveToolStyle } from "./utils";
 import useCanvasResponse from "../../hooks/use-canvas-response";
 
@@ -45,8 +45,10 @@ const Editor = ({ riffId, palette, height = 20, width = 20 }: EditorProps) => {
   const rows = useMemo(() => Array.from(Array(height).keys()), [height]);
 
   const router = useRouter();
-  const { activeConnector } = useConnect();
-  const { activeChain } = useNetwork();
+  const { connector: activeConnector } = useAccount();
+  const { chain: activeChain } = useNetwork();
+
+  const { openConnectModal } = useConnectModal();
 
   const {
     pixels,
@@ -157,18 +159,13 @@ const Editor = ({ riffId, palette, height = 20, width = 20 }: EditorProps) => {
     paintPixels(e.clientX, e.clientY);
   };
 
-  const [{ data: publishedCanvasResponse, fetching }] = useCanvasResponse(
+  const [{ data: publishedCanvasResponse }] = useCanvasResponse(
     { canvasId: String(publishedCanvasId) },
     {
       pollingInterval,
       requestPolicy: "network-only",
     }
   );
-  const [isPollingForCanvas, { flush }] = useDebounce(fetching, 1200);
-
-  useEffect(() => {
-    if (fetching) flush();
-  }, [fetching, flush]);
 
   useEffect(() => {
     if (publishedCanvasResponse && publishedCanvasResponse?.id) {
@@ -177,38 +174,40 @@ const Editor = ({ riffId, palette, height = 20, width = 20 }: EditorProps) => {
     }
   }, [publishedCanvasResponse, router, resetPixels]);
 
+  const { config: contractConfig } = usePrepareContractWrite({
+    addressOrName: DailyCanvas.deployedTo,
+    contractInterface: DailyCanvas__factory.abi,
+    functionName: "drawCanvas",
+    args: [getExquisiteData(), riffId ? riffId : 0],
+  });
+
   const {
     data: contractData,
     write,
     isLoading: isLoadingWrite,
-  } = useContractWrite(
-    {
-      addressOrName: DailyCanvas.deployedTo,
-      contractInterface: DailyCanvas__factory.abi,
-    },
-    "drawCanvas"
-  );
+  } = useContractWrite(contractConfig);
 
-  const { isLoading: isTransactionLoading } = useWaitForTransaction({
-    enabled: Boolean(contractData?.hash),
-    confirmations: 1,
-    hash: contractData?.hash,
-    wait: contractData?.wait,
-    onSuccess(contractData) {
-      const event = defaultAbiCoder.decode(
-        ["uint256", "bytes", "address", "uint256", "uint256"],
-        contractData.logs[1].data
-      );
+  const { isLoading: isTransactionLoading, isSuccess: isTransactionSuccess } =
+    useWaitForTransaction({
+      enabled: Boolean(contractData?.hash),
+      confirmations: 1,
+      hash: contractData?.hash,
+      wait: contractData?.wait,
+      onSuccess(contractData) {
+        const event = defaultAbiCoder.decode(
+          ["uint256", "bytes", "address", "uint256", "uint256"],
+          contractData.logs[1].data
+        );
 
-      const canvasIdHex = event?.[0]?._hex;
+        const canvasIdHex = event?.[0]?._hex;
 
-      if (!canvasIdHex) return;
-      const canvasId = Number(canvasIdHex);
+        if (!canvasIdHex) return;
+        const canvasId = Number(canvasIdHex);
 
-      setPublishedCanvasId(canvasId);
-      setPollingInterval(1000);
-    },
-  });
+        setPublishedCanvasId(canvasId);
+        setPollingInterval(1000);
+      },
+    });
 
   const onMintPress = async () => {
     if (!activeConnector) {
@@ -217,10 +216,10 @@ const Editor = ({ riffId, palette, height = 20, width = 20 }: EditorProps) => {
 
     await switchChain(activeConnector);
 
-    write({
-      args: [getExquisiteData(), riffId ? riffId : 0],
-    });
+    write?.();
   };
+
+  const isPollingForCanvas = isTransactionSuccess && !publishedCanvasResponse;
 
   const isLoading =
     isLoadingWrite || isTransactionLoading || isPollingForCanvas;
@@ -396,17 +395,13 @@ const Editor = ({ riffId, palette, height = 20, width = 20 }: EditorProps) => {
             Clear
           </Button>
         </div>
-        <ConnectButton.Custom>
-          {({ openConnectModal }) => (
-            <Button
-              disabled={isLoading}
-              className="bg-white text-black flex-1"
-              onClick={activeConnector ? onMintPress : openConnectModal}
-            >
-              {activeConnector ? publishButtonLabel : "Connect to Publish"}
-            </Button>
-          )}
-        </ConnectButton.Custom>
+        <Button
+          disabled={isLoading}
+          className="bg-white text-black flex-1"
+          onClick={activeConnector ? onMintPress : openConnectModal}
+        >
+          {activeConnector ? publishButtonLabel : "Connect to Publish"}
+        </Button>
       </div>
       <style jsx>{`
         .canvas {
