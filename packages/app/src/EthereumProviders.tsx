@@ -14,7 +14,7 @@ enforceEnvs();
 export const { chains, provider, webSocketProvider } = configureChains(
   [chain.rinkeby],
   [
-    alchemyProvider({ alchemyId: process.env.NEXT_PUBLIC_ALCHEMY_API_KEY }),
+    alchemyProvider({ apiKey: process.env.NEXT_PUBLIC_ALCHEMY_API_KEY }),
     publicProvider(),
   ]
 );
