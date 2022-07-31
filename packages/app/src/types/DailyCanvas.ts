@@ -30,6 +30,7 @@ import type {
 export interface DailyCanvasInterface extends utils.Interface {
   functions: {
     "approve(address,uint256)": FunctionFragment;
+    "authorizeRelayer(address)": FunctionFragment;
     "balanceOf(address)": FunctionFragment;
     "burn(uint256)": FunctionFragment;
     "drawCanvas(bytes,uint256)": FunctionFragment;
@@ -40,8 +41,10 @@ export interface DailyCanvasInterface extends utils.Interface {
     "getCurrentPromptId()": FunctionFragment;
     "getTileSVG(uint256)": FunctionFragment;
     "isApprovedForAll(address,address)": FunctionFragment;
+    "isTrustedForwarder(address)": FunctionFragment;
     "name()": FunctionFragment;
     "newCanvasPrompt(uint256,uint256,string[])": FunctionFragment;
+    "newCanvasPromptFromRelay(uint256,uint256,string[])": FunctionFragment;
     "owner()": FunctionFragment;
     "ownerOf(uint256)": FunctionFragment;
     "renounceOwnership()": FunctionFragment;
@@ -61,6 +64,7 @@ export interface DailyCanvasInterface extends utils.Interface {
   getFunction(
     nameOrSignatureOrTopic:
       | "approve"
+      | "authorizeRelayer"
       | "balanceOf"
       | "burn"
       | "drawCanvas"
@@ -71,8 +75,10 @@ export interface DailyCanvasInterface extends utils.Interface {
       | "getCurrentPromptId"
       | "getTileSVG"
       | "isApprovedForAll"
+      | "isTrustedForwarder"
       | "name"
       | "newCanvasPrompt"
+      | "newCanvasPromptFromRelay"
       | "owner"
       | "ownerOf"
       | "renounceOwnership"
@@ -92,6 +98,10 @@ export interface DailyCanvasInterface extends utils.Interface {
   encodeFunctionData(
     functionFragment: "approve",
     values: [PromiseOrValue<string>, PromiseOrValue<BigNumberish>]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "authorizeRelayer",
+    values: [PromiseOrValue<string>]
   ): string;
   encodeFunctionData(
     functionFragment: "balanceOf",
@@ -133,9 +143,21 @@ export interface DailyCanvasInterface extends utils.Interface {
     functionFragment: "isApprovedForAll",
     values: [PromiseOrValue<string>, PromiseOrValue<string>]
   ): string;
+  encodeFunctionData(
+    functionFragment: "isTrustedForwarder",
+    values: [PromiseOrValue<string>]
+  ): string;
   encodeFunctionData(functionFragment: "name", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "newCanvasPrompt",
+    values: [
+      PromiseOrValue<BigNumberish>,
+      PromiseOrValue<BigNumberish>,
+      PromiseOrValue<string>[]
+    ]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "newCanvasPromptFromRelay",
     values: [
       PromiseOrValue<BigNumberish>,
       PromiseOrValue<BigNumberish>,
@@ -207,6 +229,10 @@ export interface DailyCanvasInterface extends utils.Interface {
   ): string;
 
   decodeFunctionResult(functionFragment: "approve", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "authorizeRelayer",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(functionFragment: "balanceOf", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "burn", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "drawCanvas", data: BytesLike): Result;
@@ -235,9 +261,17 @@ export interface DailyCanvasInterface extends utils.Interface {
     functionFragment: "isApprovedForAll",
     data: BytesLike
   ): Result;
+  decodeFunctionResult(
+    functionFragment: "isTrustedForwarder",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(functionFragment: "name", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "newCanvasPrompt",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "newCanvasPromptFromRelay",
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "owner", data: BytesLike): Result;
@@ -405,6 +439,11 @@ export interface DailyCanvas extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
+    authorizeRelayer(
+      newRelayer: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
+
     balanceOf(
       owner: PromiseOrValue<string>,
       overrides?: CallOverrides
@@ -448,9 +487,21 @@ export interface DailyCanvas extends BaseContract {
       overrides?: CallOverrides
     ): Promise<[boolean]>;
 
+    isTrustedForwarder(
+      forwarder: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<[boolean]>;
+
     name(overrides?: CallOverrides): Promise<[string]>;
 
     newCanvasPrompt(
+      width: PromiseOrValue<BigNumberish>,
+      height: PromiseOrValue<BigNumberish>,
+      palette: PromiseOrValue<string>[],
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
+
+    newCanvasPromptFromRelay(
       width: PromiseOrValue<BigNumberish>,
       height: PromiseOrValue<BigNumberish>,
       palette: PromiseOrValue<string>[],
@@ -535,6 +586,11 @@ export interface DailyCanvas extends BaseContract {
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
+  authorizeRelayer(
+    newRelayer: PromiseOrValue<string>,
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
+
   balanceOf(
     owner: PromiseOrValue<string>,
     overrides?: CallOverrides
@@ -578,9 +634,21 @@ export interface DailyCanvas extends BaseContract {
     overrides?: CallOverrides
   ): Promise<boolean>;
 
+  isTrustedForwarder(
+    forwarder: PromiseOrValue<string>,
+    overrides?: CallOverrides
+  ): Promise<boolean>;
+
   name(overrides?: CallOverrides): Promise<string>;
 
   newCanvasPrompt(
+    width: PromiseOrValue<BigNumberish>,
+    height: PromiseOrValue<BigNumberish>,
+    palette: PromiseOrValue<string>[],
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
+
+  newCanvasPromptFromRelay(
     width: PromiseOrValue<BigNumberish>,
     height: PromiseOrValue<BigNumberish>,
     palette: PromiseOrValue<string>[],
@@ -665,6 +733,11 @@ export interface DailyCanvas extends BaseContract {
       overrides?: CallOverrides
     ): Promise<void>;
 
+    authorizeRelayer(
+      newRelayer: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
     balanceOf(
       owner: PromiseOrValue<string>,
       overrides?: CallOverrides
@@ -708,9 +781,21 @@ export interface DailyCanvas extends BaseContract {
       overrides?: CallOverrides
     ): Promise<boolean>;
 
+    isTrustedForwarder(
+      forwarder: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<boolean>;
+
     name(overrides?: CallOverrides): Promise<string>;
 
     newCanvasPrompt(
+      width: PromiseOrValue<BigNumberish>,
+      height: PromiseOrValue<BigNumberish>,
+      palette: PromiseOrValue<string>[],
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    newCanvasPromptFromRelay(
       width: PromiseOrValue<BigNumberish>,
       height: PromiseOrValue<BigNumberish>,
       palette: PromiseOrValue<string>[],
@@ -868,6 +953,11 @@ export interface DailyCanvas extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
+    authorizeRelayer(
+      newRelayer: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
+
     balanceOf(
       owner: PromiseOrValue<string>,
       overrides?: CallOverrides
@@ -911,9 +1001,21 @@ export interface DailyCanvas extends BaseContract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
+    isTrustedForwarder(
+      forwarder: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
     name(overrides?: CallOverrides): Promise<BigNumber>;
 
     newCanvasPrompt(
+      width: PromiseOrValue<BigNumberish>,
+      height: PromiseOrValue<BigNumberish>,
+      palette: PromiseOrValue<string>[],
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
+
+    newCanvasPromptFromRelay(
       width: PromiseOrValue<BigNumberish>,
       height: PromiseOrValue<BigNumberish>,
       palette: PromiseOrValue<string>[],
@@ -999,6 +1101,11 @@ export interface DailyCanvas extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
+    authorizeRelayer(
+      newRelayer: PromiseOrValue<string>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
     balanceOf(
       owner: PromiseOrValue<string>,
       overrides?: CallOverrides
@@ -1046,9 +1153,21 @@ export interface DailyCanvas extends BaseContract {
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
+    isTrustedForwarder(
+      forwarder: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
     name(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     newCanvasPrompt(
+      width: PromiseOrValue<BigNumberish>,
+      height: PromiseOrValue<BigNumberish>,
+      palette: PromiseOrValue<string>[],
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
+    newCanvasPromptFromRelay(
       width: PromiseOrValue<BigNumberish>,
       height: PromiseOrValue<BigNumberish>,
       palette: PromiseOrValue<string>[],

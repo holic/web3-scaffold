@@ -3,18 +3,18 @@
 /* tslint:disable */
 /* eslint-disable */
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.IERC165__factory = void 0;
+exports.ERC2771Context__factory = void 0;
 const ethers_1 = require("ethers");
 const _abi = [
     {
         inputs: [
             {
-                internalType: "bytes4",
-                name: "interfaceId",
-                type: "bytes4",
+                internalType: "address",
+                name: "forwarder",
+                type: "address",
             },
         ],
-        name: "supportsInterface",
+        name: "isTrustedForwarder",
         outputs: [
             {
                 internalType: "bool",
@@ -26,7 +26,7 @@ const _abi = [
         type: "function",
     },
 ];
-class IERC165__factory {
+class ERC2771Context__factory {
     static createInterface() {
         return new ethers_1.utils.Interface(_abi);
     }
@@ -34,5 +34,5 @@ class IERC165__factory {
         return new ethers_1.Contract(address, _abi, signerOrProvider);
     }
 }
-exports.IERC165__factory = IERC165__factory;
-IERC165__factory.abi = _abi;
+exports.ERC2771Context__factory = ERC2771Context__factory;
+ERC2771Context__factory.abi = _abi;

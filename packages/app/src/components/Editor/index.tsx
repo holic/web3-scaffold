@@ -24,6 +24,7 @@ import Button from "../../components/Button";
 import { useConnectModal } from "@rainbow-me/rainbowkit";
 import { getActiveToolStyle } from "./utils";
 import useCanvasResponse from "../../hooks/use-canvas-response";
+import usePreparedMetaTransaction from "../../hooks/use-prepared-meta-transaction";
 
 interface EditorProps {
   riffId?: number;
@@ -180,6 +181,8 @@ const Editor = ({ riffId, palette, height = 20, width = 20 }: EditorProps) => {
     functionName: "drawCanvas",
     args: [getExquisiteData(), riffId ? riffId : 0],
   });
+
+  usePreparedMetaTransaction([getExquisiteData(), riffId ? riffId : 0]);
 
   const {
     data: contractData,

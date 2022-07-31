@@ -1,9 +1,12 @@
 // import ExampleNFTGoerli from "@web3-scaffold/contracts/deploys/goerli/ExampleNFT.json";
 import DailyCanvas from "@web3-scaffold/contracts/deploys/rinkeby/DailyCanvas.json";
-// import { ExampleNFT__factory } from "@web3-scaffold/contracts/types";
+import MinimalForwarder from "@web3-scaffold/contracts/deploys/goerli/MinimalForwarder.json";
 
 import { provider, targetChainId } from "./EthereumProviders";
-import { DailyCanvas__factory } from "./types/factories";
+import {
+  DailyCanvas__factory,
+  MinimalForwarder__factory,
+} from "./types/factories";
 
 // I would have used `ExampleNFT__factory.connect` to create this, but we may
 // not have a provider ready to go. Any interactions with this contract should

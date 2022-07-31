@@ -5,12 +5,15 @@ import { Ownable } from "openzeppelin-contracts/contracts/access/Ownable.sol";
 import { ERC721 } from "openzeppelin-contracts/contracts/token/ERC721/ERC721.sol";
 import { ERC721Burnable } from "openzeppelin-contracts/contracts/token/ERC721/extensions/ERC721Burnable.sol";
 import { Counters } from "@openzeppelin/contracts/utils/Counters.sol";
+import { Context } from "@openzeppelin/contracts/utils/Context.sol";
 import { IExquisiteGraphics } from "./interfaces/IExquisiteGraphics.sol";
+// import { MinimalForwarderRecipient } from "./MinimalForwarderRecipient.sol";
+import { ERC2771Context } from "openzeppelin-contracts/contracts/metatx/ERC2771Context.sol";
 
 import "@sstore2/contracts/SSTORE2.sol";
 import "./Base64.sol";
 
-contract DailyCanvas is ERC721, ERC721Burnable, Ownable {
+contract DailyCanvas is ERC2771Context, ERC721, ERC721Burnable, Ownable {
     using Counters for Counters.Counter;
     
     event NewCanvasPrompt(uint256 promptId, uint256 width, uint256 height, string[] palette, address author);
@@ -21,7 +24,7 @@ contract DailyCanvas is ERC721, ERC721Burnable, Ownable {
 
     IExquisiteGraphics gfx = IExquisiteGraphics(payable(0xDf01A4040493B514605392620B3a0a05Eb8Cd295));
 
-    constructor() ERC721("Canvas", "CAN") {}
+    constructor(address trustedForwarder) ERC721("Canvas", "CAN") ERC2771Context(address(trustedForwarder)) {}
 
     // todo: canvas id on prompt?; canvas-as-prompt
 
@@ -51,7 +54,7 @@ contract DailyCanvas is ERC721, ERC721Burnable, Ownable {
         _promptCanvasHeight[newPromptId] = height;
         _promptCanvasPalette[newPromptId] = palette;
 
-        emit NewCanvasPrompt(newPromptId, width, height, palette, msg.sender);
+        emit NewCanvasPrompt(newPromptId, width, height, palette, _msgSender());
     }
 
     function newCanvasPromptFromRelay(uint256 width, uint256 height, string[] memory palette) public {
@@ -122,28 +125,19 @@ contract DailyCanvas is ERC721, ERC721Burnable, Ownable {
         returns (string memory)
     {
         string memory output;
-        string memory description;
-
-        // todo: fix this mess
         output = 'data:image/svg+xml;base64,';
         output = string(
             abi.encodePacked(
-            output,
-            Base64.encode(abi.encodePacked(getTileSVG(uint256(canvasId))))
+                output,
+                Base64.encode(abi.encodePacked(getTileSVG(uint256(canvasId))))
             )
-        );
-
-        description = string(
-            abi.encodePacked('Daily Canvas')
         );
 
         string memory json = Base64.encode(
             bytes(
                 string(
                     abi.encodePacked(
-                        '{"name": "Daily Canvas", "description": "a daily canvas", "image": "', 
-                        output, 
-                        '"}'
+                        '{"name": "Daily Canvas", "description": "One new canvas, everyday, for your pixels.", "image": "', output, '"}'
                     )
                 )
             )
@@ -154,9 +148,19 @@ contract DailyCanvas is ERC721, ERC721Burnable, Ownable {
         return output;
     }
 
+    function _msgSender() internal view override(Context, ERC2771Context) returns(address) {
+        return ERC2771Context._msgSender();
+    } 
+
+    function _msgData() internal view override(Context, ERC2771Context) returns(bytes memory) 
+    {
+            return ERC2771Context._msgData();
+    }
+
+
     function safeMint(address to) public {
-        uint256 canvasId = _canvasDraw.current();
         _canvasDraw.increment();
+        uint256 canvasId = _canvasDraw.current();
         _safeMint(to, canvasId);
     }
 }
