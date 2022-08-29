@@ -1,18 +1,14 @@
 import type { NextPage } from "next";
-import React, { useState, useMemo } from "react";
+import React, { useMemo } from "react";
 import SVG from "react-inlinesvg";
 // import { useRouter } from "next/router";
 
-import { Pixels } from "../hooks/use-editor";
+// import { Pixels } from "../hooks/use-editor";
 import { useDailyCanvasPrompts } from "../hooks/use-daily-canvas-prompts";
 import Footer from "../components/Footer";
 import { CanvasResponse } from "../types/Daily";
 
-const calc = (num: number) => {
-  const initial = Math.floor(((1 - (num / 3 - Math.floor(num / 3))) / 3) * 10);
-
-  return initial;
-};
+const calc = (num: number) => 3 - (num % 3);
 
 const HomePageScrollable: NextPage = () => {
   // const router = useRouter();
