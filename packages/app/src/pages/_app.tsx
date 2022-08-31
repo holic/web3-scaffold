@@ -21,7 +21,7 @@ const MyApp = ({ Component, pageProps }: AppProps) => {
   return (
     <>
       <Head>
-        <title>Daily Canvas</title>
+        <title>The Scroll</title>
         <meta
           name="description"
           content="One new canvas, everyday, for your pixels."
