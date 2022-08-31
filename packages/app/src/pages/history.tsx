@@ -1,7 +1,8 @@
 import type { NextPage } from "next";
 import React, { useEffect, useMemo, useState } from "react";
 import SVG from "react-inlinesvg";
-// import { useRouter } from "next/router";
+import { useRouter } from "next/router";
+import { useEnsStore } from "../useENS";
 
 // import { Pixels } from "../hooks/use-editor";
 import { useDailyCanvasPrompts } from "../hooks/use-daily-canvas-prompts";
@@ -13,12 +14,15 @@ const COLUMN_COUNT = 3;
 const calc = (totalTiles: number) => COLUMN_COUNT - (totalTiles % COLUMN_COUNT);
 
 const HomePageScrollable: NextPage = () => {
-  // const router = useRouter();
+  const router = useRouter();
   const [canvasResults] = useDailyCanvasPrompts({
     includeResponses: true,
   });
-  const [SelectedTile, setSelectedTile] = useState<string>("");
-  const [gridTiles, setGridTiles] = useState<string[]>([]);
+
+  const ensNames = useEnsStore((state) => state.resolvedAddresses);
+
+  // const [SelectedTile, setSelectedTile] = useState<string>("");
+  // const [gridTiles, setGridTiles] = useState<string[]>([]);
 
   // const [pixels, setPixels] = useState<Pixels | undefined>(undefined);
   // const [riffLoading, setRiffLoading] = useState<boolean>(false);
@@ -26,7 +30,10 @@ const HomePageScrollable: NextPage = () => {
   const { data: dailyCanvases, fetching } = canvasResults;
 
   const handleTileClick = (event: React.MouseEvent<HTMLButtonElement>) => {
-    setSelectedTile(event.currentTarget.name);
+    // setSelectedTile(event.currentTarget.name);
+    if (!event.currentTarget?.name) return;
+
+    router.push(`/canvas/${event.currentTarget.name}/view`);
   };
 
   const dailyCanvasResponses = useMemo(() => {
@@ -47,39 +54,39 @@ const HomePageScrollable: NextPage = () => {
     ));
   }, [dailyCanvasResponses]);
 
-  useEffect(() => {
-    const selectedTileIndex = dailyCanvasResponses.findIndex(
-      (canvasPrompt) => canvasPrompt.id === SelectedTile
-    );
-    const selectedTileColumn = selectedTileIndex % COLUMN_COUNT;
+  // useEffect(() => {
+  //   const selectedTileIndex = dailyCanvasResponses.findIndex(
+  //     (canvasPrompt) => canvasPrompt.id === SelectedTile
+  //   );
+  //   const selectedTileColumn = selectedTileIndex % COLUMN_COUNT;
+  //
+  //   // Regardless of which column you click, we reference the center tile
+  //   // in the clicked row.
+  //   //
+  //   // [2, 1, 0]
+  //   // [2, 1, 0]
+  //   // [2, 1, 0]
+  //   //
+  //   // Example: Clicking column 2, will subtract 1 to center to 1,
+  //   // Clicking column 1 will add 1 to center to 1.
+  //   let selectedTileIndexCenter;
+  //   if (selectedTileColumn == 2) {
+  //     selectedTileIndexCenter = selectedTileIndex - 1;
+  //   } else if (selectedTileColumn == 0) {
+  //     selectedTileIndexCenter = selectedTileIndex + 1;
+  //   } else {
+  //     selectedTileIndexCenter = selectedTileIndex;
+  //   }
+  //
+  //   // Adds offsets based on column count
+  //   const ids = dailyCanvasResponses.slice(
+  //     selectedTileIndexCenter - (COLUMN_COUNT + Math.floor(COLUMN_COUNT / 2)),
+  //     selectedTileIndexCenter + (COLUMN_COUNT + Math.ceil(COLUMN_COUNT / 2))
+  //   );
 
-    // Regardless of which column you click, we reference the center tile
-    // in the clicked row.
-    //
-    // [2, 1, 0]
-    // [2, 1, 0]
-    // [2, 1, 0]
-    //
-    // Example: Clicking column 2, will subtract 1 to center to 1,
-    // Clicking column 1 will add 1 to center to 1.
-    let selectedTileIndexCenter;
-    if (selectedTileColumn == 2) {
-      selectedTileIndexCenter = selectedTileIndex - 1;
-    } else if (selectedTileColumn == 0) {
-      selectedTileIndexCenter = selectedTileIndex + 1;
-    } else {
-      selectedTileIndexCenter = selectedTileIndex;
-    }
-
-    // Adds offsets based on column count
-    const ids = dailyCanvasResponses.slice(
-      selectedTileIndexCenter - (COLUMN_COUNT + Math.floor(COLUMN_COUNT / 2)),
-      selectedTileIndexCenter + (COLUMN_COUNT + Math.ceil(COLUMN_COUNT / 2))
-    );
-
-    const tiles = ids.map((response) => response.id).sort();
-    setGridTiles(tiles);
-  }, [dailyCanvasResponses, SelectedTile]);
+  //   const tiles = ids.map((response) => response.id).sort();
+  //   setGridTiles(tiles);
+  // }, [dailyCanvasResponses, SelectedTile]);
 
   return canvasResults && dailyCanvases && !fetching ? (
     <div className="flex justify-center w-full text-white">
@@ -102,7 +109,7 @@ const HomePageScrollable: NextPage = () => {
         {dailyCanvasResponses.map((c) => (
           <button
             className="relative flex justify-center items-end"
-            // onClick={handleTileClick}
+            onClick={handleTileClick}
             name={c.id}
             key={c.id + "canvas"}
           >
@@ -110,15 +117,11 @@ const HomePageScrollable: NextPage = () => {
               className="absolute flex justify-center items-end p-2 show-on-hover bg-gradient-to-t from-[#131313] to-background-opacity-0"
               style={{ height: 120, width: 120 }}
             >
-              <span className="white text-xs">{c.author.slice(-6)}</span>
+              <span className="white text-xs">
+                {ensNames[c?.author?.toLowerCase()]?.name || c.author.slice(-6)}
+              </span>
             </div>
-            <SVG
-              src={c.svg}
-              // width="33%"
-              // height="33%"
-              width={120}
-              height={120}
-            ></SVG>
+            <SVG src={c.svg} width={120} height={120}></SVG>
           </button>
         ))}
       </div>

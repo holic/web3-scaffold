@@ -121,6 +121,16 @@ const Editor = ({ riffId, palette, height = 20, width = 20 }: EditorProps) => {
     }
   };
 
+  const handleBack = () => {
+    if (
+      confirm(
+        "Are you sure you'd like to go back? Your current progress will be saved."
+      )
+    ) {
+      router.push("/");
+    }
+  };
+
   const paintPixels = (rawX: number, rawY: number) => {
     const elem = document.elementFromPoint(rawX, rawY);
     if (!elem) return;
@@ -387,13 +397,19 @@ const Editor = ({ riffId, palette, height = 20, width = 20 }: EditorProps) => {
 
       <div className="flex flex-row h-12">
         <div className="flex-2 mr-1">
-          <Button
-            disabled={isLoading}
-            onClick={handleClear}
-            className="bg-gray-500 text-white"
-          >
-            Clear
-          </Button>
+          {!activeConnector ? (
+            <Button onClick={handleBack} className="bg-gray-500 text-white">
+              Back
+            </Button>
+          ) : (
+            <Button
+              disabled={isLoading}
+              onClick={handleClear}
+              className="bg-gray-500 text-white"
+            >
+              Clear
+            </Button>
+          )}
         </div>
         <Button
           disabled={isLoading}
