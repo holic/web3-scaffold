@@ -2,13 +2,15 @@ import type { NextPage } from "next";
 import React, { useEffect, useMemo, useState } from "react";
 import SVG from "react-inlinesvg";
 import { useRouter } from "next/router";
+import Link from "next/link";
+
+import Countdown from "../components/Countdown";
 import { useEnsStore } from "../useENS";
 
 // import { Pixels } from "../hooks/use-editor";
 import { useDailyCanvasPrompts } from "../hooks/use-daily-canvas-prompts";
 import Footer from "../components/Footer";
 import { CanvasResponse } from "../types/Daily";
-import Link from "next/link";
 
 const COLUMN_COUNT = 3;
 const calc = (totalTiles: number) => COLUMN_COUNT - (totalTiles % COLUMN_COUNT);
@@ -94,7 +96,7 @@ const HomePageScrollable: NextPage = () => {
         The Scroll
       </div>
       <div className="fixed bottom-0 p-5 z-50 text-lg w-[360px] text-center font-mono bg-gradient-to-t from-[#131313] to-background-opacity-0">
-        00:20:12
+        <Countdown />
       </div>
       <div className="mt-32 flex flex-row-reverse	justify-end items-end	flex-wrap min-w-[360px] max-w-[360px]">
         {renderAdditionalTilesArray}
