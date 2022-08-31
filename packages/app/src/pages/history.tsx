@@ -99,7 +99,7 @@ const HomePageScrollable: NextPage = () => {
             +
           </div>
         </Link>
-        {dailyCanvasResponses.map((c, index) => (
+        {dailyCanvasResponses.map((c) => (
           <button
             className="relative flex justify-center items-center"
             onClick={handleTileClick}
@@ -112,9 +112,9 @@ const HomePageScrollable: NextPage = () => {
               {index % COLUMN_COUNT} */}
             </span>
             <SVG
-              style={{
-                opacity: gridTiles.includes(c.id) ? 0.1 : 1,
-              }}
+              // style={{
+              //   opacity: gridTiles.includes(c.id) ? 0.1 : 1,
+              // }}
               src={c.svg}
               // width="33%"
               // height="33%"
