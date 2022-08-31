@@ -7,6 +7,7 @@ import SVG from "react-inlinesvg";
 import { useDailyCanvasPrompts } from "../hooks/use-daily-canvas-prompts";
 import Footer from "../components/Footer";
 import { CanvasResponse } from "../types/Daily";
+import Link from "next/link";
 
 const COLUMN_COUNT = 3;
 const calc = (totalTiles: number) => COLUMN_COUNT - (totalTiles % COLUMN_COUNT);
@@ -40,7 +41,7 @@ const HomePageScrollable: NextPage = () => {
   const renderAdditionalTilesArray = useMemo(() => {
     // Build array and remove one to leave room for button
     return [...Array(calc(dailyCanvasResponses.length || 1) - 1)].map(() => (
-      <div key={Math.random()} className="flex h-40 w-40 opacity-0">
+      <div key={Math.random()} className="flex h-[120px] w-[120px] opacity-0">
         +
       </div>
     ));
@@ -81,15 +82,23 @@ const HomePageScrollable: NextPage = () => {
   }, [dailyCanvasResponses, SelectedTile]);
 
   return canvasResults && dailyCanvases && !fetching ? (
-    <div className="flex justify-center w-full text-white pt-4">
-      <div className="flex-grid">
+    <div className="flex justify-center w-full text-white">
+      <div className="fixed p-10 z-50 text-lg w-full text-center font-mono bg-gradient-to-b from-[#131313] to-background-opacity-0">
+        Scratchpad
+      </div>
+      <div className="fixed bottom-0 p-5 z-50 text-lg w-[360px] text-center font-mono bg-gradient-to-t from-[#131313] to-background-opacity-0">
+        00:20:12
+      </div>
+      <div className="mt-32 flex flex-row-reverse	justify-end items-end	flex-wrap min-w-[360px] max-w-[360px]">
         {renderAdditionalTilesArray}
-        <div
-          key={Math.random()}
-          className="flex h-40 w-40 bg-stone-700 justify-center items-center text-6xl"
-        >
-          +
-        </div>
+        <Link href="/editor">
+          <div
+            key={Math.random()}
+            className="flex h-[120px] w-[120px] animate-pulse cursor-pointer bg-stone-700 justify-center items-center text-6xl"
+          >
+            +
+          </div>
+        </Link>
         {dailyCanvasResponses.map((c, index) => (
           <button
             className="relative flex justify-center items-center"
@@ -97,18 +106,20 @@ const HomePageScrollable: NextPage = () => {
             name={c.id}
             key={c.id + "canvas"}
           >
-            <span className="absolute white bg-slate-900 p-2 text-xs">
+            <span className="absolute white  p-2 text-xs">
               {/* ts-ignore */}
-              id: {c.id} <br /> index: {index} <br /> column:{" "}
-              {index % COLUMN_COUNT}
+              {/* id: {c.id} <br /> index: {index} <br /> column:{" "}
+              {index % COLUMN_COUNT} */}
             </span>
             <SVG
               style={{
                 opacity: gridTiles.includes(c.id) ? 0.1 : 1,
               }}
               src={c.svg}
-              width={160}
-              height={160}
+              // width="33%"
+              // height="33%"
+              width={120}
+              height={120}
             ></SVG>
           </button>
         ))}
