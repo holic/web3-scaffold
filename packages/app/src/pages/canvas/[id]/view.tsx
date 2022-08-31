@@ -176,9 +176,9 @@ const CanvasViewPage: NextPage = () => {
 
   return currentCanvas ? (
     <div className="flex flex-col h-full w-full items-center overflow-hidden">
+      <Header title="The Scroll" className="pb-4"></Header>
       <div className="flex-1" />
       <div className="flex-1 canvas-fix">
-        <Header title="Daily Canvas" className="pb-4"></Header>
         <SVG
           src={currentCanvas.svg}
           width={Number(currentCanvas.prompt.width) * PIXEL_SIZE}

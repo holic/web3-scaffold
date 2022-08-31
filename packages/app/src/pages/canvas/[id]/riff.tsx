@@ -26,9 +26,10 @@ const RiffEditorScreen: NextPage = () => {
 
   return canvasResponse ? (
     <div className="flex flex-col h-full w-full items-center">
+      <Header title="The Scroll" className="pb-4"></Header>
+
       <div className="flex-1" />
       <div className="flex-1 ">
-        <Header title="Daily Canvas" className="pb-4"></Header>
         <div className="flex flex-col items-center">
           <Editor
             riffId={Number(riffId)}
