@@ -1,148 +1,147 @@
 import type { NextPage } from "next";
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import SVG from "react-inlinesvg";
-import { getSVG } from "@exquisite-graphics/js";
 import { useRouter } from "next/router";
-import { usePixels } from "../components/usePixels";
-import { dailyCanvasContract } from "../contracts";
-import getPixelsFrom from "../utils/getPixelsFrom";
+import Link from "next/link";
+import Image from "next/image";
 
-import PALETTES from "../constants/Palettes";
+import Countdown from "../components/Countdown";
+import { useEnsStore } from "../useENS";
 
-import Header from "../components/Header";
-import { PIXEL_SIZE } from "../constants/Editor";
-import { Pixels } from "../hooks/use-editor";
-import { useDailyCanvasPrompt } from "../hooks/use-daily-canvas-prompt";
-import Button from "../components/Button";
+// import { Pixels } from "../hooks/use-editor";
+import { useDailyCanvasPrompts } from "../hooks/use-daily-canvas-prompts";
 import Footer from "../components/Footer";
-import { toast } from "react-toastify";
+import { CanvasResponse } from "../types/Daily";
 
-const DEFAULT_PALETTE = PALETTES[0];
+const COLUMN_COUNT = 3;
+const calc = (totalTiles: number) => COLUMN_COUNT - (totalTiles % COLUMN_COUNT);
 
-const HomePage: NextPage = () => {
+const HomePageScrollable: NextPage = () => {
   const router = useRouter();
-  const [canvasResult, reexecuteQuery] = useDailyCanvasPrompt({
+  const [canvasResults] = useDailyCanvasPrompts({
     includeResponses: true,
   });
-  const [pixels, setPixels] = useState<Pixels | undefined>(undefined);
-  const [riffLoading, setRiffLoading] = useState<boolean>(false);
 
-  const { data: dailyCanvas, fetching } = canvasResult;
+  const ensNames = useEnsStore((state) => state.resolvedAddresses);
 
-  const dailyCanvasReponses = dailyCanvas?.responses || [];
-  const latestCanvasResponse =
-    dailyCanvasReponses?.[dailyCanvasReponses.length - 1];
+  // const [SelectedTile, setSelectedTile] = useState<string>("");
+  // const [gridTiles, setGridTiles] = useState<string[]>([]);
 
-  const { pixelsHistory, replacePixels } = usePixels({
-    palette: dailyCanvas?.palette || DEFAULT_PALETTE,
-    keySuffix: latestCanvasResponse?.id,
-  });
+  // const [pixels, setPixels] = useState<Pixels | undefined>(undefined);
+  // const [riffLoading, setRiffLoading] = useState<boolean>(false);
 
-  const handleRiffClick = () => {
-    if (!latestCanvasResponse?.id) return;
+  const { data: dailyCanvases, fetching } = canvasResults;
 
-    setRiffLoading(true);
-    try {
-      if (!pixels?.length) {
-        toast(
-          "Unable to read canvas data for riff, why not draw something new instead?"
-        );
-        router.push("/editor");
-        return;
-      }
+  const handleTileClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+    // setSelectedTile(event.currentTarget.name);
+    if (!event.currentTarget?.name) return;
 
-      if (pixelsHistory?.length === 1) {
-        // @ts-ignore
-        replacePixels([pixels]);
-      } else {
-        toast(
-          "You have some history with this canvas, we've loaded it for you!"
-        );
-      }
-
-      setTimeout(() => {
-        router.push(`/canvas/${latestCanvasResponse?.id}/riff`);
-      }, 600);
-    } catch (e) {
-      setRiffLoading(false);
-    }
+    router.push(`/canvas/${event.currentTarget.name}/view`);
   };
 
-  // @ts-ignore
-  useEffect(() => {
-    const fetchSVG = async () => {
-      const dataRaw = await dailyCanvasContract.getCanvasPixels(
-        String(latestCanvasResponse?.id)
-      );
-      const svgData = getSVG(dataRaw);
-      setPixels(getPixelsFrom(svgData));
-    };
-    if (latestCanvasResponse && latestCanvasResponse.id) {
-      fetchSVG();
-    }
-  }, [latestCanvasResponse]);
-
-  const handleHeaderClick = () => {
-    // @ts-ignore
-    reexecuteQuery({
-      requestPolicy: "cache-and-network",
+  const dailyCanvasResponses = useMemo(() => {
+    let responses: CanvasResponse[] = [];
+    dailyCanvases?.forEach((dc) => {
+      responses = [...responses, ...dc.responses];
     });
-  };
 
-  return canvasResult && dailyCanvas && !fetching ? (
-    <div className="flex flex-col h-full w-full items-center text-white overflow-hidden">
-      <div className="flex-1" />
-      <div className="flex-1 canvas-fix">
-        <Header
-          onClick={handleHeaderClick}
-          title="Daily Canvas"
-          className="pb-4"
-        ></Header>
-        {latestCanvasResponse ? (
-          <SVG
-            src={latestCanvasResponse?.svg}
-            width={Number(dailyCanvas.width) * PIXEL_SIZE}
-            height={Number(dailyCanvas.height) * PIXEL_SIZE}
-          ></SVG>
-        ) : null}
-        <div className="flex flex-col pt-6">
-          <div className="flex justify-center z-50 pb-2">
-            {dailyCanvasReponses.length ? (
-              <>
-                <Button
-                  className="text-black w-40"
-                  disabled={riffLoading}
-                  onClick={handleRiffClick}
-                >
-                  Edit Canvas
-                </Button>
-              </>
-            ) : (
-              <>
-                <Button className="text-black w-40" href="/editor">
-                  <button>Edit Canvas</button>
-                </Button>
-              </>
-            )}
-          </div>
-          <div className="flex justify-center z-50">
-            {dailyCanvasReponses.length ? (
-              <Button
-                className="text-white button-secondary w-40"
-                href={`/canvas/${latestCanvasResponse?.id}/view`}
-              >
-                View Feed
-              </Button>
-            ) : null}
-          </div>
+    return responses;
+  }, [dailyCanvases]);
 
-          <div className="flex justify-center pt-6">
-            <p>{dailyCanvasReponses.length} edits today</p>
-          </div>
-        </div>
+  const renderAdditionalTilesArray = useMemo(() => {
+    // Build array and remove one to leave room for button
+    return [...Array(calc(dailyCanvasResponses.length || 1) - 1)].map(() => (
+      <div key={Math.random()} className="flex h-[120px] w-[120px] opacity-0">
+        +
       </div>
-      <div className="flex-[2]" />
+    ));
+  }, [dailyCanvasResponses]);
 
+  // useEffect(() => {
+  //   const selectedTileIndex = dailyCanvasResponses.findIndex(
+  //     (canvasPrompt) => canvasPrompt.id === SelectedTile
+  //   );
+  //   const selectedTileColumn = selectedTileIndex % COLUMN_COUNT;
+  //
+  //   // Regardless of which column you click, we reference the center tile
+  //   // in the clicked row.
+  //   //
+  //   // [2, 1, 0]
+  //   // [2, 1, 0]
+  //   // [2, 1, 0]
+  //   //
+  //   // Example: Clicking column 2, will subtract 1 to center to 1,
+  //   // Clicking column 1 will add 1 to center to 1.
+  //   let selectedTileIndexCenter;
+  //   if (selectedTileColumn == 2) {
+  //     selectedTileIndexCenter = selectedTileIndex - 1;
+  //   } else if (selectedTileColumn == 0) {
+  //     selectedTileIndexCenter = selectedTileIndex + 1;
+  //   } else {
+  //     selectedTileIndexCenter = selectedTileIndex;
+  //   }
+  //
+  //   // Adds offsets based on column count
+  //   const ids = dailyCanvasResponses.slice(
+  //     selectedTileIndexCenter - (COLUMN_COUNT + Math.floor(COLUMN_COUNT / 2)),
+  //     selectedTileIndexCenter + (COLUMN_COUNT + Math.ceil(COLUMN_COUNT / 2))
+  //   );
+
+  //   const tiles = ids.map((response) => response.id).sort();
+  //   setGridTiles(tiles);
+  // }, [dailyCanvasResponses, SelectedTile]);
+
+  return (
+    <div className="flex justify-center w-full text-white">
+      <div className="fixed p-10 z-50 text-lg w-full text-center font-mono bg-gradient-to-b from-[#131313] to-background-opacity-0">
+        The Scroll
+      </div>
+      {canvasResults && dailyCanvases && !fetching ? (
+        <>
+          <div className="fixed bottom-0 p-5 z-50 text-lg w-[360px] text-center font-mono bg-gradient-to-t from-[#131313] to-background-opacity-0">
+            <Countdown />
+          </div>
+          <div className="mt-32 flex flex-row-reverse	justify-end items-end	flex-wrap min-w-[360px] max-w-[360px]">
+            {renderAdditionalTilesArray}
+            <Link href="/editor">
+              <div
+                key={Math.random()}
+                className="flex h-[120px] w-[120px] animate-pulse cursor-pointer bg-stone-700 justify-center items-center text-6xl"
+              >
+                +
+              </div>
+            </Link>
+            {dailyCanvasResponses.map((c) => (
+              <button
+                className="relative flex justify-center items-end"
+                onClick={handleTileClick}
+                name={c.id}
+                key={c.id + "canvas"}
+              >
+                <div
+                  className="absolute flex justify-center items-end p-2 show-on-hover bg-gradient-to-t from-[#131313] to-background-opacity-0"
+                  style={{ height: 120, width: 120 }}
+                >
+                  <span className="white text-xs">
+                    {ensNames[c?.author?.toLowerCase()]?.name ||
+                      c.author.slice(-6)}
+                  </span>
+                </div>
+                <SVG src={c.svg} width={120} height={120}></SVG>
+              </button>
+            ))}
+          </div>
+        </>
+      ) : (
+        <div className="mt-48">
+          <Image
+            alt="Loader"
+            src="/loading.gif"
+            height="100"
+            width="100"
+          ></Image>
+        </div>
+      )}
       <style jsx>
         {`
           .canvas-fix {
@@ -153,13 +152,31 @@ const HomePage: NextPage = () => {
               margin-bottom: 144px;
             }
           }
+
+          .flex-grid {
+            gap: 4px;
+            display: flex;
+            flex-flow: row-reverse wrap;
+            align-items: flex-end;
+            justify-content: flex-end;
+            width: 488px;
+          }
+
+          .show-on-hover {
+            opacity: 0;
+          }
+
+          div.show-on-hover-parent + .show-on-hover {
+          }
+
+          div.show-on-hover:hover {
+            opacity: 1;
+          }
         `}
       </style>
       <Footer></Footer>
     </div>
-  ) : (
-    <div />
   );
 };
 
-export default HomePage;
+export default HomePageScrollable;
