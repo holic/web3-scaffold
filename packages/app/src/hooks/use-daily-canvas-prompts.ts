@@ -28,6 +28,7 @@ export const useDailyCanvasPrompts = (
           responses {
             id
             svg
+            author
           }
         `
           : ""

@@ -101,20 +101,18 @@ const HomePageScrollable: NextPage = () => {
         </Link>
         {dailyCanvasResponses.map((c) => (
           <button
-            className="relative flex justify-center items-center"
-            onClick={handleTileClick}
+            className="relative flex justify-center items-end"
+            // onClick={handleTileClick}
             name={c.id}
             key={c.id + "canvas"}
           >
-            <span className="absolute white  p-2 text-xs">
-              {/* ts-ignore */}
-              {/* id: {c.id} <br /> index: {index} <br /> column:{" "}
-              {index % COLUMN_COUNT} */}
-            </span>
+            <div
+              className="absolute flex justify-center items-end p-2 show-on-hover bg-gradient-to-t from-[#131313] to-background-opacity-0"
+              style={{ height: 120, width: 120 }}
+            >
+              <span className="white text-xs">{c.author.slice(-6)}</span>
+            </div>
             <SVG
-              // style={{
-              //   opacity: gridTiles.includes(c.id) ? 0.1 : 1,
-              // }}
               src={c.svg}
               // width="33%"
               // height="33%"
@@ -143,6 +141,17 @@ const HomePageScrollable: NextPage = () => {
             align-items: flex-end;
             justify-content: flex-end;
             width: 488px;
+          }
+
+          .show-on-hover {
+            opacity: 0;
+          }
+
+          div.show-on-hover-parent + .show-on-hover {
+          }
+
+          div.show-on-hover:hover {
+            opacity: 1;
           }
         `}
       </style>
