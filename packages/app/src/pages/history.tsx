@@ -84,7 +84,7 @@ const HomePageScrollable: NextPage = () => {
   return canvasResults && dailyCanvases && !fetching ? (
     <div className="flex justify-center w-full text-white">
       <div className="fixed p-10 z-50 text-lg w-full text-center font-mono bg-gradient-to-b from-[#131313] to-background-opacity-0">
-        Scratchpad
+        The Scroll
       </div>
       <div className="fixed bottom-0 p-5 z-50 text-lg w-[360px] text-center font-mono bg-gradient-to-t from-[#131313] to-background-opacity-0">
         00:20:12
