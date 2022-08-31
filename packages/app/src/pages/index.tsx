@@ -11,6 +11,7 @@ import { useEnsStore } from "../useENS";
 // import { Pixels } from "../hooks/use-editor";
 import { useDailyCanvasPrompts } from "../hooks/use-daily-canvas-prompts";
 import Footer from "../components/Footer";
+import Header from "../components/Header";
 import { CanvasResponse } from "../types/Daily";
 
 const COLUMN_COUNT = 3;
@@ -93,9 +94,7 @@ const HomePageScrollable: NextPage = () => {
 
   return (
     <div className="flex justify-center w-full text-white">
-      <div className="fixed p-10 z-50 text-lg w-full text-center font-mono bg-gradient-to-b from-[#131313] to-background-opacity-0">
-        The Scroll
-      </div>
+      <Header title="The Scroll" className="fixed" />
       {canvasResults && dailyCanvases && !fetching ? (
         <>
           <div className="fixed bottom-0 p-5 z-50 text-lg w-[360px] text-center font-mono bg-gradient-to-t from-[#131313] to-background-opacity-0">
