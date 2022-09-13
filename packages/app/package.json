@@ -14,9 +14,9 @@
     "prettier": "prettier --write src"
   },
   "dependencies": {
-    "@ethersproject/address": "^5.7.0",
-    "@ethersproject/contracts": "^5.7.0",
-    "@ethersproject/providers": "^5.7.0",
+    "@ethersproject/address": "5.7.0",
+    "@ethersproject/contracts": "5.7.0",
+    "@ethersproject/providers": "5.7.0",
     "@rainbow-me/rainbowkit": "0.5.2",
     "@web3-scaffold/contracts": "workspace:*",
     "classnames": "^2.3.1",
