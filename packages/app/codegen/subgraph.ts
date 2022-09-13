@@ -1,6 +1,5 @@
 import { gql } from 'urql';
 import * as Urql from 'urql';
-
 export type Maybe<T> = T | null;
 export type InputMaybe<T> = Maybe<T>;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
@@ -155,6 +154,8 @@ export type _Block_ = {
   readonly hash?: Maybe<Scalars['Bytes']>;
   /** The block number */
   readonly number: Scalars['Int'];
+  /** Timestamp of the block if available, format depends on the chain */
+  readonly timestamp?: Maybe<Scalars['String']>;
 };
 
 /** The type for the top-level _meta field */
@@ -198,6 +199,6 @@ export const InventoryDocument = gql`
 }
     `;
 
-export function useInventoryQuery(options: Omit<Urql.UseQueryArgs<InventoryQueryVariables>, 'query'> = {}) {
-  return Urql.useQuery<InventoryQuery>({ query: InventoryDocument, ...options });
+export function useInventoryQuery(options: Omit<Urql.UseQueryArgs<InventoryQueryVariables>, 'query'>) {
+  return Urql.useQuery<InventoryQuery, InventoryQueryVariables>({ query: InventoryDocument, ...options });
 };
