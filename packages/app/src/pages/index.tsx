@@ -1,4 +1,4 @@
-import { ConnectButton } from "@rainbow-me/rainbowkit";
+import { ConnectKitButton } from "connectkit";
 import type { NextPage } from "next";
 
 import { useExampleNFTContractRead } from "../contracts";
@@ -18,7 +18,7 @@ const HomePage: NextPage = () => {
   return (
     <div className="min-h-screen flex flex-col">
       <div className="self-end p-2">
-        <ConnectButton />
+        <ConnectKitButton />
       </div>
       <div className="flex-grow flex flex-col gap-4 items-center justify-center p-8 pb-[50vh]">
         <h1 className="text-4xl">Example NFT</h1>
