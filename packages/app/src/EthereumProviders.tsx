@@ -1,15 +1,5 @@
-import "@rainbow-me/rainbowkit/styles.css";
-
-import { getDefaultWallets, RainbowKitProvider } from "@rainbow-me/rainbowkit";
-import {
-  chain,
-  configureChains,
-  createClient,
-  defaultChains,
-  WagmiConfig,
-} from "wagmi";
-import { alchemyProvider } from "wagmi/providers/alchemy";
-import { publicProvider } from "wagmi/providers/public";
+import { ConnectKitProvider, getDefaultClient } from "connectkit";
+import { createClient, defaultChains, WagmiConfig } from "wagmi";
 
 // Will default to goerli if nothing set in the ENV
 export const targetChainId =
@@ -21,28 +11,16 @@ const targetChains = defaultChains.filter(
   (chain) => chain.id === 1 || chain.id === targetChainId
 );
 
-export const { chains, provider, webSocketProvider } = configureChains(
-  targetChains,
-  [
-    alchemyProvider({ alchemyId: process.env.NEXT_PUBLIC_ALCHEMY_API_KEY }),
-    publicProvider(),
-  ]
+export const wagmiClient = createClient(
+  getDefaultClient({
+    appName: "Web3 App",
+    alchemyId: process.env.NEXT_PUBLIC_ALCHEMY_API_KEY,
+    chains: targetChains,
+  })
 );
-
-const { connectors } = getDefaultWallets({
-  appName: "Example NFT",
-  chains,
-});
-
-export const wagmiClient = createClient({
-  autoConnect: true,
-  connectors,
-  provider,
-  webSocketProvider,
-});
 
 export const EthereumProviders: React.FC = ({ children }) => (
   <WagmiConfig client={wagmiClient}>
-    <RainbowKitProvider chains={chains}>{children}</RainbowKitProvider>
+    <ConnectKitProvider>{children}</ConnectKitProvider>
   </WagmiConfig>
 );
