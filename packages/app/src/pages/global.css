@@ -8,6 +8,11 @@ div#__next > div {
   background-color: black;
 }
 
+/* body {
+  transform: scale(2);
+  transform-origin: 0 0;
+} */
+
 .Toastify {
   width: unset !important;
   height: unset !important;

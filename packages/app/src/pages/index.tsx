@@ -97,9 +97,22 @@ const HomePageScrollable: NextPage = () => {
       <Header title="The Scroll" className="fixed" />
       {canvasResults && dailyCanvases && !fetching ? (
         <>
-          <div className="fixed bottom-0 p-5 z-50 text-lg w-[360px] text-center font-mono bg-gradient-to-t from-[#131313] to-background-opacity-0">
-            <Countdown />
+          <div className="fixed bottom-0 border-gray-500 items-center justify-center	 z-50 text-lg w-[360px] text-center font-mono bg-gradient-to-t from-[#131313] to-background-opacity-0">
+            <div className="flex  p-3 justify-between">
+              <div className="cursor-pointer">Twitter</div>
+              <div className="cursor-pointer">
+                <Link href="/about">WTF?</Link>
+              </div>
+            </div>
+            <div className="p-3 flex border-t border-gray-500 ">
+              <div className="w-[35%] text-sm text-left">Season 1</div>
+
+              <div className="w-full mt-auto mb-auto bg-gray-200 h-2.5 dark:bg-gray-700">
+                <div className="bg-white h-2.5 border dark:bg-white w-[15%]"></div>
+              </div>
+            </div>
           </div>
+          <div className="fixed bottom-0 border-gray-500	 p-5 z-10 text-lg h-[50px] w-[360px] text-center font-mono bg-gradient-to-t from-[#131313] to-background-opacity-0"></div>
           <div className="mt-32 flex flex-row-reverse	justify-end items-end	flex-wrap min-w-[360px] max-w-[360px]">
             {renderAdditionalTilesArray}
             <Link href="/editor">
