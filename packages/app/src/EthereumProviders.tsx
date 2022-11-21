@@ -23,7 +23,7 @@ const targetChains = defaultChains.filter(
 
 export const { chains, provider, webSocketProvider } = configureChains(
   targetChains,
-  [alchemyProvider({ apiKey: process.env.NEXT_PUBLIC_ALCHEMY_KEY })],
+  [alchemyProvider({ apiKey: process.env.NEXT_PUBLIC_ALCHEMY_KEY }), publicProvider()],
 );
 
 const { connectors } = getDefaultWallets({
