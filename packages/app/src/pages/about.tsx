@@ -63,18 +63,37 @@ export default function About() {
           ></Image>
         </div>
         <div className="mt-5 text-4xl text-center font-mono">
-          Season 1 Rewards{" "}
+          Then Own Your Piece
+        </div>
+        <div className="mt-5 mb-8 flex justify-center">
+          <Image
+            src="/nft.png"
+            height="140"
+            width="150"
+            alt="test"
+            className="mt-10"
+          ></Image>
         </div>
         <div className="mt-5 text-4xl text-center font-mono">
-          When the treasury reaches 20 ETH, our panel of judges will reward
-          their fave riffs
+          Share it, sell it, frame it for your office.
+        </div>
+        <div className="mt-8 mb-8 flex justify-center">
+          <Image
+            src="/row.png"
+            height="231"
+            width="800"
+            alt="test"
+            className="mt-10"
+          ></Image>
         </div>
         <div className="mt-5 text-4xl text-center font-mono font-bold	">
           Join!
         </div>
         <div className="mt-5 text-4xl text-center font-mono">
-          To publish, you need a tile. Get one from a friend or pick one up on
-          secondary.
+          We&apos;re starting this with friends and slowly opening it up.
+          <br></br>
+          <br></br>
+          Hit us up on twitter for an invite.
         </div>
         <div className="w-full flex justify-center mt-10">
           <Image
