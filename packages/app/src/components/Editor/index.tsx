@@ -395,6 +395,15 @@ const Editor = ({ riffId, palette, height = 20, width = 20 }: EditorProps) => {
         })}
       </div>
 
+      <div className="flex w-full mb-2">
+        <div className="border p-3 w-[50%] opacity-60 text-center cursor-pointer hover:opacity-100 mr-2">
+          + Upgrade Res
+        </div>
+        <div className="border p-3 w-[50%] opacity-60 text-center cursor-pointer hover:opacity-100">
+          + Add Color
+        </div>
+      </div>
+
       <div className="flex flex-row h-12">
         <div className="flex-2 mr-1">
           {!activeConnector ? (
