@@ -74,13 +74,13 @@ export default function About() {
             className="mt-10"
           ></Image>
         </div>
-        <div className="mt-5 text-4xl text-center font-mono">
-          Share it, sell it, frame it for your office.
+        <div className="mt-5 text-2xl text-center font-mono">
+          (Share it, sell it, burn it)
         </div>
         <div className="mt-8 mb-8 flex justify-center">
           <Image
             src="/row.png"
-            height="231"
+            height="299"
             width="800"
             alt="test"
             className="mt-10"
