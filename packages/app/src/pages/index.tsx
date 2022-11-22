@@ -105,7 +105,7 @@ const HomePageScrollable: NextPage = () => {
               </div>
             </div>
             <div className="p-3 flex border-t border-gray-500 ">
-              <div className="w-[35%] text-sm text-left">Season 1</div>
+              <div className="w-[35%] text-sm text-left">Season 0</div>
 
               <div className="w-full mt-auto mb-auto bg-gray-200 h-2.5 dark:bg-gray-700">
                 <div className="bg-white h-2.5 border dark:bg-white w-[15%]"></div>
