@@ -69,7 +69,7 @@ fi
 1. You should have already setup your ENV, but if not, copy `.env` to `.env.local`
     - Add your alchemy key to the `NEXT_PUBLIC_ALCHEMY_API_KEY` ENV var
 
-2. Open `packages/app/contracts.ts` and update this to use your contract
+2. Open `packages/app/src/contracts.ts` and update this to use your contract
     - There are several places to update, FYI!
 
 3. Open `packages/app/contracts.ts`
