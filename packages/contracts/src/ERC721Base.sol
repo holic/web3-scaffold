@@ -14,9 +14,9 @@ import {IRenderer} from "./IRenderer.sol";
 /// @notice ERC721-specific functionality to keep the actual NFT contract more
 ///         readable and focused on the mint/project mechanics.
 abstract contract ERC721Base is ERC721A, Ownable, IERC2981 {
-    uint256 public immutable PRICE;
-    uint256 public immutable MAX_SUPPLY;
-    uint256 public immutable ROYALTY = 500;
+    uint256 public immutable price;
+    uint256 public immutable maxSupply;
+    uint256 public immutable royaltyBasisPoints = 500;
 
     IRenderer public renderer;
     string public baseTokenURI;
@@ -32,13 +32,13 @@ abstract contract ERC721Base is ERC721A, Ownable, IERC2981 {
     // ****************** //
 
     constructor(
-        string memory name,
-        string memory symbol,
-        uint256 price,
-        uint256 maxSupply
-    ) ERC721A(name, symbol) {
-        PRICE = price;
-        MAX_SUPPLY = maxSupply;
+        string memory _name,
+        string memory _symbol,
+        uint256 _price,
+        uint256 _maxSupply
+    ) ERC721A(_name, _symbol) {
+        price = _price;
+        maxSupply = _maxSupply;
         emit Initialized();
     }
 
@@ -77,14 +77,14 @@ abstract contract ERC721Base is ERC721A, Ownable, IERC2981 {
     }
 
     modifier withinMaxSupply(uint256 numToBeMinted) {
-        if (_totalMinted() + numToBeMinted > MAX_SUPPLY) {
-            revert MintSupplyExceeded(MAX_SUPPLY);
+        if (_totalMinted() + numToBeMinted > maxSupply) {
+            revert MintSupplyExceeded(maxSupply);
         }
         _;
     }
 
     modifier hasExactPayment(uint256 numToBeMinted) {
-        if (msg.value != PRICE * numToBeMinted) {
+        if (msg.value != price * numToBeMinted) {
             revert WrongPayment();
         }
         _;
@@ -154,7 +154,7 @@ abstract contract ERC721Base is ERC721A, Ownable, IERC2981 {
         view
         returns (address, uint256)
     {
-        return (address(this), (salePrice * ROYALTY) / 10000);
+        return (address(this), (salePrice * royaltyBasisPoints) / 10000);
     }
 
     // ************* //

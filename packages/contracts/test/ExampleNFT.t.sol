@@ -12,9 +12,8 @@ contract ExampleNFTTest is Test {
     address private minter = mkaddr("minter");
 
     function mkaddr(string memory name) public returns (address) {
-        address addr = address(
-            uint160(uint256(keccak256(abi.encodePacked(name))))
-        );
+        address addr =
+            address(uint160(uint256(keccak256(abi.encodePacked(name)))));
         vm.label(addr, name);
         return addr;
     }

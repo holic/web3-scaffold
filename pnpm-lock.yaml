@@ -92,9 +92,7 @@ importers:
       '@ethersproject/providers': ^5.0.0
       '@typechain/ethers-v5': ^10.0.0
       ethers: ^5.5.2
-      prettier-plugin-solidity: ^1.0.0-beta.19
       solhint: ^3.3.7
-      solhint-plugin-prettier: ^0.0.5
       typechain: ^8.0.0
       typescript: ^4.5.5
     devDependencies:
@@ -103,9 +101,7 @@ importers:
       '@ethersproject/providers': 5.5.2
       '@typechain/ethers-v5': 10.1.0_zdcqgsj655eauyq4wzlhfvtx4e
       ethers: 5.5.3
-      prettier-plugin-solidity: 1.0.0-beta.19
       solhint: 3.3.7
-      solhint-plugin-prettier: 0.0.5_xomengis57hgd3ed2qqiexjvwu
       typechain: 8.1.0_typescript@4.7.3
       typescript: 4.7.3
 
@@ -4546,10 +4542,6 @@ packages:
       minimalistic-assert: 1.0.1
       minimalistic-crypto-utils: 1.0.1
 
-  /emoji-regex/10.1.0:
-    resolution: {integrity: sha512-xAEnNCT3w2Tg6MA7ly6QqYJvEoY1tm9iIjJ3yMKK9JPlWuRHAMoe5iETwQnx3M9TVbFMfsrBgWKR+IsmswwNjg==}
-    dev: true
-
   /emoji-regex/7.0.3:
     resolution: {integrity: sha512-CwBLREIQ7LvYFB0WyRvwhq5N5qPhc6PMjD6bYggFlI5YyDgl+0vxq5VHbMOFqLg7hfWzmu8T5Z1QofhmTIhItA==}
 
@@ -8123,20 +8115,6 @@ packages:
       fast-diff: 1.2.0
     dev: true
 
-  /prettier-plugin-solidity/1.0.0-beta.19:
-    resolution: {integrity: sha512-xxRQ5ZiiZyUoMFLE9h7HnUDXI/daf1tnmL1msEdcKmyh7ZGQ4YklkYLC71bfBpYU2WruTb5/SFLUaEb3RApg5g==}
-    engines: {node: '>=12'}
-    peerDependencies:
-      prettier: ^2.3.0
-    dependencies:
-      '@solidity-parser/parser': 0.14.2
-      emoji-regex: 10.1.0
-      escape-string-regexp: 4.0.0
-      semver: 7.3.7
-      solidity-comments-extractor: 0.0.7
-      string-width: 4.2.3
-    dev: true
-
   /prettier/1.19.1:
     resolution: {integrity: sha512-s7PoyDv/II1ObgQunCbB9PdLmUcBZcnWOcxDh7O0N/UwDEsHyqkW+Qh28jW+mVuCdx7gLB0BotYI1Y6uI9iyew==}
     engines: {node: '>=4'}
@@ -8905,16 +8883,6 @@ packages:
       tslib: 2.4.0
     dev: true
 
-  /solhint-plugin-prettier/0.0.5_xomengis57hgd3ed2qqiexjvwu:
-    resolution: {integrity: sha512-7jmWcnVshIrO2FFinIvDQmhQpfpS2rRRn3RejiYgnjIE68xO2bvrYvjqVNfrio4xH9ghOqn83tKuTzLjEbmGIA==}
-    peerDependencies:
-      prettier: ^1.15.0 || ^2.0.0
-      prettier-plugin-solidity: ^1.0.0-alpha.14
-    dependencies:
-      prettier-linter-helpers: 1.0.0
-      prettier-plugin-solidity: 1.0.0-beta.19
-    dev: true
-
   /solhint/3.3.7:
     resolution: {integrity: sha512-NjjjVmXI3ehKkb3aNtRJWw55SUVJ8HMKKodwe0HnejA+k0d2kmhw7jvpa+MCTbcEgt8IWSwx0Hu6aCo/iYOZzQ==}
     hasBin: true
@@ -8937,10 +8905,6 @@ packages:
       prettier: 1.19.1
     transitivePeerDependencies:
       - supports-color
-    dev: true
-
-  /solidity-comments-extractor/0.0.7:
-    resolution: {integrity: sha512-wciNMLg/Irp8OKGrh3S2tfvZiZ0NEyILfcRCXCD4mp7SgK/i9gzLfhY2hY7VMCQJ3kH9UB9BzNdibIVMchzyYw==}
     dev: true
 
   /source-map-js/1.0.2:
@@ -9780,7 +9744,7 @@ packages:
     dev: false
 
   /wcwidth/1.0.1:
-    resolution: {integrity: sha1-8LDc+RW8X/FSivrbLA4XtTLaL+g=}
+    resolution: {integrity: sha512-XHPEwS0q6TaxcvG85+8EYkbiCux2XtWG2mkc47Ng2A77BQu9+DqIOJldST4HgPkuea7dvKSj5VgX3P1d4rW8Tg==}
     dependencies:
       defaults: 1.0.3
 

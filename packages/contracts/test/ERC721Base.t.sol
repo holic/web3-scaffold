@@ -10,7 +10,7 @@ import "../src/IRenderer.sol";
 contract CustomNFT is ERC721Base {
     constructor() ERC721Base("Custom NFT", "NFT", 0.1 ether, 100) {}
 
-    function mint(uint numToBeMinted)
+    function mint(uint256 numToBeMinted)
         external
         payable
         hasExactPayment(numToBeMinted)
@@ -19,7 +19,7 @@ contract CustomNFT is ERC721Base {
         _mintMany(_msgSender(), numToBeMinted);
     }
 
-    function uncappedMint(uint numToBeMinted)
+    function uncappedMint(uint256 numToBeMinted)
         external
         payable
         hasExactPayment(numToBeMinted)
@@ -27,17 +27,13 @@ contract CustomNFT is ERC721Base {
         _mintMany(_msgSender(), numToBeMinted);
     }
 
-    function startTimestamp(uint256 tokenId)
-        public
-        view
-        returns (uint256)
-    {
+    function startTimestamp(uint256 tokenId) public view returns (uint256) {
         return _ownershipOf(tokenId).startTimestamp;
     }
 }
 
 contract CustomRenderer is IRenderer {
-    function tokenURI(uint tokenId) public pure returns (string memory) {
+    function tokenURI(uint256 tokenId) public pure returns (string memory) {
         return string.concat("{\"tokenId\":", Strings.toString(tokenId), "}");
     }
 }
@@ -53,9 +49,10 @@ contract CustomCoin is ERC20 {
 contract ERC721BaseTest is Test {
     CustomNFT private nft;
 
-    address private owner = vm.addr(uint256(keccak256(abi.encodePacked("owner"))));
-    address private minter = vm.addr(uint256(keccak256(abi.encodePacked("minter"))));
-
+    address private owner =
+        vm.addr(uint256(keccak256(abi.encodePacked("owner"))));
+    address private minter =
+        vm.addr(uint256(keccak256(abi.encodePacked("minter"))));
 
     function setUp() public {
         nft = new CustomNFT();
@@ -66,7 +63,9 @@ contract ERC721BaseTest is Test {
 
     function testMintPayment() public {
         vm.startPrank(minter);
-        vm.expectRevert(abi.encodeWithSelector(ERC721Base.WrongPayment.selector));
+        vm.expectRevert(
+            abi.encodeWithSelector(ERC721Base.WrongPayment.selector)
+        );
         nft.mint(2);
         nft.mint{value: 0.2 ether}(2);
     }
@@ -75,20 +74,28 @@ contract ERC721BaseTest is Test {
         vm.startPrank(minter);
         nft.mint{value: 0.2 ether}(2);
         nft.mint{value: 0.1 ether}(1);
-        vm.expectRevert(abi.encodeWithSelector(ERC721Base.MintLimitExceeded.selector, 4));
+        vm.expectRevert(
+            abi.encodeWithSelector(ERC721Base.MintLimitExceeded.selector, 4)
+        );
         nft.mint{value: 0.2 ether}(2);
         nft.mint{value: 0.1 ether}(1);
-        vm.expectRevert(abi.encodeWithSelector(ERC721Base.MintLimitExceeded.selector, 4));
+        vm.expectRevert(
+            abi.encodeWithSelector(ERC721Base.MintLimitExceeded.selector, 4)
+        );
         nft.mint{value: 0.1 ether}(1);
     }
 
     function testMaxSupply() public {
         vm.startPrank(minter);
         nft.uncappedMint{value: 6 ether}(60);
-        vm.expectRevert(abi.encodeWithSelector(ERC721Base.MintSupplyExceeded.selector, 100));
+        vm.expectRevert(
+            abi.encodeWithSelector(ERC721Base.MintSupplyExceeded.selector, 100)
+        );
         nft.uncappedMint{value: 6 ether}(60);
         nft.uncappedMint{value: 4 ether}(40);
-        vm.expectRevert(abi.encodeWithSelector(ERC721Base.MintSupplyExceeded.selector, 100));
+        vm.expectRevert(
+            abi.encodeWithSelector(ERC721Base.MintSupplyExceeded.selector, 100)
+        );
         nft.uncappedMint{value: 0.1 ether}(1);
     }
 
