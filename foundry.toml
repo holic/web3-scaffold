@@ -4,7 +4,7 @@
 #
 # See https://github.com/holic/web3-scaffold/pull/23
 
-[default]
+[profile.default]
 src = 'packages/contracts/src'
 test = 'packages/contracts/test'
 out = 'packages/contracts/out'
@@ -15,3 +15,6 @@ bytecode_hash = 'none'
 solc_version = '0.8.13'
 extra_output_files = ['abi']
 script = 'packages/contracts/script'
+
+[fmt]
+line_length = 80

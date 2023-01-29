@@ -4,7 +4,9 @@ pragma solidity ^0.8.9;
 import {ERC721A} from "erc721a/contracts/ERC721A.sol";
 import {Ownable} from "@openzeppelin/contracts/access/Ownable.sol";
 import {IERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
-import {IERC2981, IERC165} from "@openzeppelin/contracts/interfaces/IERC2981.sol";
+import {
+    IERC2981, IERC165
+} from "@openzeppelin/contracts/interfaces/IERC2981.sol";
 import {IRenderer} from "./IRenderer.sol";
 
 /// @author frolic.eth
@@ -22,8 +24,7 @@ abstract contract ERC721Base is ERC721A, Ownable, IERC2981 {
     event Initialized();
     event RendererUpdated(IRenderer previousRenderer, IRenderer newRenderer);
     event BaseTokenURIUpdated(
-        string previousBaseTokenURI,
-        string newBaseTokenURI
+        string previousBaseTokenURI, string newBaseTokenURI
     );
 
     // ****************** //
@@ -97,14 +98,13 @@ abstract contract ERC721Base is ERC721A, Ownable, IERC2981 {
         _mintMany(to, numToBeMinted, "");
     }
 
-    function _mintMany(
-        address to,
-        uint256 numToBeMinted,
-        bytes memory data
-    ) internal withinMaxSupply(numToBeMinted) {
+    function _mintMany(address to, uint256 numToBeMinted, bytes memory data)
+        internal
+        withinMaxSupply(numToBeMinted)
+    {
         uint256 batchSize = 10;
         uint256 length = numToBeMinted / batchSize;
-        for (uint256 i = 0; i < length; ) {
+        for (uint256 i = 0; i < length;) {
             _safeMint(to, batchSize, data);
             unchecked {
                 ++i;
@@ -145,9 +145,8 @@ abstract contract ERC721Base is ERC721A, Ownable, IERC2981 {
         override(ERC721A, IERC165)
         returns (bool)
     {
-        return
-            _interfaceId == type(IERC2981).interfaceId ||
-            super.supportsInterface(_interfaceId);
+        return _interfaceId == type(IERC2981).interfaceId
+            || super.supportsInterface(_interfaceId);
     }
 
     function royaltyInfo(uint256, uint256 salePrice)
@@ -167,14 +166,17 @@ abstract contract ERC721Base is ERC721A, Ownable, IERC2981 {
         renderer = _renderer;
     }
 
-    function setBaseTokenURI(string calldata _baseTokenURI) external onlyOwner {
+    function setBaseTokenURI(string calldata _baseTokenURI)
+        external
+        onlyOwner
+    {
         emit BaseTokenURIUpdated(baseTokenURI, _baseTokenURI);
         baseTokenURI = _baseTokenURI;
     }
 
     function withdrawAll() external {
         require(address(this).balance > 0, "Zero balance");
-        (bool sent, ) = owner().call{value: address(this).balance}("");
+        (bool sent,) = owner().call{value: address(this).balance}("");
         require(sent, "Failed to withdraw");
     }
 
