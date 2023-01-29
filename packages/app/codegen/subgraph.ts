@@ -116,7 +116,11 @@ export type Token_Filter = {
   readonly id_not_in?: InputMaybe<ReadonlyArray<Scalars['ID']>>;
   readonly owner?: InputMaybe<Scalars['Bytes']>;
   readonly owner_contains?: InputMaybe<Scalars['Bytes']>;
+  readonly owner_gt?: InputMaybe<Scalars['Bytes']>;
+  readonly owner_gte?: InputMaybe<Scalars['Bytes']>;
   readonly owner_in?: InputMaybe<ReadonlyArray<Scalars['Bytes']>>;
+  readonly owner_lt?: InputMaybe<Scalars['Bytes']>;
+  readonly owner_lte?: InputMaybe<Scalars['Bytes']>;
   readonly owner_not?: InputMaybe<Scalars['Bytes']>;
   readonly owner_not_contains?: InputMaybe<Scalars['Bytes']>;
   readonly owner_not_in?: InputMaybe<ReadonlyArray<Scalars['Bytes']>>;

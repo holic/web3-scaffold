@@ -1,6 +1,5 @@
 import ExampleNFTGoerli from "@web3-scaffold/contracts/deploys/goerli/ExampleNFT.json";
 import { ExampleNFT__factory } from "@web3-scaffold/contracts/types";
-import { useContractRead } from "wagmi";
 
 import { provider, targetChainId } from "./EthereumProviders";
 
@@ -17,15 +16,3 @@ export const exampleNFTContract = ExampleNFT__factory.connect(
   ExampleNFTGoerli.deployedTo,
   provider({ chainId: targetChainId })
 );
-
-export const useExampleNFTContractRead = (
-  readConfig: Omit<
-    Parameters<typeof useContractRead>[0],
-    "addressOrName" | "contractInterface"
-  >
-) =>
-  useContractRead({
-    ...readConfig,
-    addressOrName: ExampleNFTGoerli.deployedTo,
-    contractInterface: ExampleNFT__factory.abi,
-  });
