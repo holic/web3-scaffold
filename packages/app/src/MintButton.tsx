@@ -22,7 +22,7 @@ export const MintButton = () => {
       await switchChain(connector);
       const signer = await connector.getSigner();
       const contract = exampleNFTContract.connect(signer);
-      const price = await contract.PRICE();
+      const price = await contract.price();
 
       try {
         onProgress(`Minting ${pluralize(quantity, "token", "tokens")}…`);

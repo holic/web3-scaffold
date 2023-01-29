@@ -47,7 +47,11 @@ export const wagmiClient = createClient({
   webSocketProvider,
 });
 
-export const EthereumProviders: React.FC = ({ children }) => (
+type Props = {
+  children: React.ReactNode;
+};
+
+export const EthereumProviders = ({ children }: Props) => (
   <WagmiConfig client={wagmiClient}>
     <RainbowKitProvider chains={chains}>{children}</RainbowKitProvider>
   </WagmiConfig>
